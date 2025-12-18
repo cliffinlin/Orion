@@ -9,11 +9,13 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,11 +23,12 @@ public class TradeLevelPicker extends NumberPicker {
 
     private static final String TAG = "TradeLevelPicker";
     private static final int MSG_PLAY_SOUND = 1;
-    private static final long MIN_PLAY_INTERVAL = 80;
 
     private MediaPlayer mediaPlayer;
     private Handler soundHandler;
-    private long lastPlayTime = 0;
+
+    // 关键：记录上一次播放声音时的值
+    private int lastPlayedValue = -1;
 
     // 用于存储多个监听器
     private List<OnValueChangeListener> valueChangeListeners = new ArrayList<>();
@@ -65,6 +68,9 @@ public class TradeLevelPicker extends NumberPicker {
     }
 
     private void init() {
+        // 设置长按更新间隔为0，禁用长按连续滚动
+        setOnLongPressUpdateInterval(0);
+
         // 初始化媒体播放器
         initMediaPlayer();
 
@@ -75,13 +81,22 @@ public class TradeLevelPicker extends NumberPicker {
         super.setOnValueChangedListener(new OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                // 播放声音
-                if (oldVal != newVal && isSoundEnabled) {
-                    sendPlayMessage();
-                }
+                Log.d(TAG, "onValueChange: " + oldVal + " -> " + newVal);
 
                 // 更新文本颜色
                 updateTextColor(newVal);
+
+                // 关键：只有值真正变化时才播放声音
+                if (oldVal != newVal && isSoundEnabled) {
+                    // 检查是否是连续滚动产生的重复值变化
+                    if (newVal != lastPlayedValue) {
+                        lastPlayedValue = newVal;
+                        sendPlayMessage();
+                        Log.d(TAG, "播放声音，值变化: " + oldVal + " -> " + newVal);
+                    } else {
+                        Log.d(TAG, "跳过声音播放，值与上次播放时相同: " + newVal);
+                    }
+                }
 
                 // 通知所有注册的监听器
                 for (OnValueChangeListener listener : valueChangeListeners) {
@@ -96,6 +111,133 @@ public class TradeLevelPicker extends NumberPicker {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int action = event.getActionMasked();
+
+        switch (action) {
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                // 手指抬起时，重置lastPlayedValue，确保下一次触摸可以从头开始
+                lastPlayedValue = -1;
+                Log.d(TAG, "触摸结束，重置lastPlayedValue");
+                break;
+        }
+
+        // 阻止触摸事件传递给内部EditText
+        try {
+            Field field = NumberPicker.class.getDeclaredField("mInputText");
+            field.setAccessible(true);
+            EditText inputText = (EditText) field.get(this);
+
+            if (inputText != null && inputText.isFocused()) {
+                inputText.clearFocus();
+            }
+        } catch (Exception e) {
+            // 忽略异常
+        }
+
+        return super.onTouchEvent(event);
+    }
+
+    /**
+     * 禁用内部EditText的点击和聚焦，防止弹出键盘
+     */
+    private void disableInputEditText() {
+        try {
+            // 通过反射获取内部EditText
+            Field field = NumberPicker.class.getDeclaredField("mInputText");
+            field.setAccessible(true);
+            EditText inputText = (EditText) field.get(this);
+
+            if (inputText != null) {
+                // 禁用所有交互
+                inputText.setClickable(false);
+                inputText.setFocusable(false);
+                inputText.setFocusableInTouchMode(false);
+                inputText.setLongClickable(false);
+                inputText.setCursorVisible(false);
+                inputText.setSoundEffectsEnabled(false);
+
+                // 设置背景透明，看起来像普通文本
+                inputText.setBackgroundColor(Color.TRANSPARENT);
+
+                // 对于Android 4.4及以上版本，设置inputType
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    inputText.setShowSoftInputOnFocus(false);
+                }
+
+                // 添加触摸监听器，阻止所有触摸事件
+                inputText.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        return true; // 消费所有触摸事件，不传递给父控件
+                    }
+                });
+
+                Log.d(TAG, "已禁用内部EditText的点击和聚焦");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "禁用内部EditText失败: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        // 阻止内部EditText获取焦点
+        clearFocus();
+        return super.onInterceptTouchEvent(event);
+    }
+
+    @Override
+    public void addView(View child) {
+        super.addView(child);
+        updateView(child);
+        disableChildView(child);
+    }
+
+    @Override
+    public void addView(View child, int index, ViewGroup.LayoutParams params) {
+        super.addView(child, index, params);
+        updateView(child);
+        disableChildView(child);
+    }
+
+    @Override
+    public void addView(View child, ViewGroup.LayoutParams params) {
+        super.addView(child, params);
+        updateView(child);
+        disableChildView(child);
+    }
+
+    /**
+     * 禁用子视图的点击和聚焦
+     */
+    private void disableChildView(View child) {
+        if (child instanceof EditText) {
+            EditText editText = (EditText) child;
+            editText.setClickable(false);
+            editText.setFocusable(false);
+            editText.setFocusableInTouchMode(false);
+            editText.setLongClickable(false);
+            editText.setCursorVisible(false);
+
+            // 设置触摸监听器，阻止所有触摸事件
+            editText.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    // 消费所有触摸事件
+                    return true;
+                }
+            });
+
+            // 对于Android 4.4及以上版本
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                editText.setShowSoftInputOnFocus(false);
+            }
+        }
     }
 
     @Override
@@ -230,17 +372,10 @@ public class TradeLevelPicker extends NumberPicker {
     private void sendPlayMessage() {
         if (soundHandler == null || mediaPlayer == null || !isSoundEnabled) return;
 
-        long currentTime = System.currentTimeMillis();
-        long timeSinceLastPlay = currentTime - lastPlayTime;
-
-        if (timeSinceLastPlay >= MIN_PLAY_INTERVAL) {
-            soundHandler.removeMessages(MSG_PLAY_SOUND);
-            soundHandler.sendEmptyMessage(MSG_PLAY_SOUND);
-        } else {
-            soundHandler.removeMessages(MSG_PLAY_SOUND);
-            long delay = MIN_PLAY_INTERVAL - timeSinceLastPlay;
-            soundHandler.sendEmptyMessageDelayed(MSG_PLAY_SOUND, delay);
-        }
+        // 移除之前的播放消息
+        soundHandler.removeMessages(MSG_PLAY_SOUND);
+        // 发送新的播放消息
+        soundHandler.sendEmptyMessage(MSG_PLAY_SOUND);
     }
 
     private void playSound() {
@@ -254,9 +389,6 @@ public class TradeLevelPicker extends NumberPicker {
             } else {
                 mediaPlayer.start();
             }
-            lastPlayTime = System.currentTimeMillis();
-            Log.d(TAG, "播放拨轮声音");
-
         } catch (IllegalStateException e) {
             Log.e(TAG, "媒体播放器状态异常: " + e.getMessage());
             // 重新初始化媒体播放器
@@ -295,6 +427,8 @@ public class TradeLevelPicker extends NumberPicker {
         Log.d(TAG, "附加到窗口");
         // 初始颜色更新
         updateTextColor(getValue());
+        // 确保内部EditText被禁用
+        disableInputEditText();
     }
 
     @Override
@@ -306,24 +440,6 @@ public class TradeLevelPicker extends NumberPicker {
             soundHandler.removeCallbacksAndMessages(null);
         }
         valueChangeListeners.clear();
-    }
-
-    @Override
-    public void addView(View child) {
-        super.addView(child);
-        updateView(child);
-    }
-
-    @Override
-    public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        super.addView(child, index, params);
-        updateView(child);
-    }
-
-    @Override
-    public void addView(View child, ViewGroup.LayoutParams params) {
-        super.addView(child, params);
-        updateView(child);
     }
 
     private void updateView(View view) {

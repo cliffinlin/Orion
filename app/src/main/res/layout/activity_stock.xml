@@ -9,92 +9,370 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- 新的stock_name_code布局，在编辑模式下显示 -->
+        <!-- 显示模式：名称和代码紧挨着显示（编辑时显示） -->
         <LinearLayout
             android:id="@+id/layout_stock_name_code_display"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:padding="14dp"
+            android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:background="?android:attr/selectableItemBackground">
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:visibility="gone">
 
+            <!-- 名称和代码在同一水平布局中 -->
             <TextView
                 android:id="@+id/textview_display_stock_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_gravity="center_horizontal"
-                android:paddingBottom="4dp" />
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:maxWidth="200dp" />
 
+            <!-- 代码紧跟在名称后面 -->
             <TextView
                 android:id="@+id/textview_display_stock_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="14sp"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@android:color/darker_gray" />
+                android:ellipsize="end"
+                android:singleLine="true" />
         </LinearLayout>
 
-        <!-- 原有的编辑布局，在添加模式下显示 -->
+        <!-- 编辑模式：名称和代码输入 -->
         <LinearLayout
             android:id="@+id/layout_stock_name_code_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
 
+            <!-- 股票名称输入 -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingLeft="12dp"
+                android:paddingRight="6dp">
 
                 <TextView
                     android:id="@+id/textview_stock_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
                     android:labelFor="@+id/edittext_stock_name"
-                    android:text="@string/stock_name" />
+                    android:text="@string/stock_name"
+                    android:textSize="13sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:paddingBottom="3dp" />
 
                 <EditText
                     android:id="@+id/edittext_stock_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginBottom="14dp"
-                    android:inputType="text" />
+                    android:minHeight="42dp"
+                    android:inputType="text"
+                    android:textSize="15sp"
+                    android:background="@android:drawable/editbox_background_normal"
+                    android:padding="8dp" />
             </LinearLayout>
 
+            <!-- 股票代码输入 -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingLeft="6dp"
+                android:paddingRight="12dp">
 
                 <TextView
                     android:id="@+id/textview_stock_code"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
                     android:labelFor="@+id/edittext_stock_code"
-                    android:text="@string/stock_code" />
+                    android:text="@string/stock_code"
+                    android:textSize="13sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:paddingBottom="3dp" />
 
                 <EditText
                     android:id="@+id/edittext_stock_code"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginBottom="14dp"
-                    android:inputType="numberDecimal" />
+                    android:minHeight="42dp"
+                    android:inputType="numberDecimal"
+                    android:textSize="15sp"
+                    android:background="@android:drawable/editbox_background_normal"
+                    android:padding="8dp" />
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@drawable/divider_line" />
+
+        <!-- 持仓、分红、收益率统计 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="3"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp">
+
+                <TextView
+                    android:id="@+id/textview_stock_hold_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="2dp"
+                    android:text="@string/hold"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/textview_stock_hold_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <!-- 持仓一致性检查提示 -->
+                <TextView
+                    android:id="@+id/textview_hold_consistency_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="提示持仓数量与分账户总和不一致"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp">
+
+                <TextView
+                    android:id="@+id/textview_stock_bonus_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="2dp"
+                    android:text="@string/bonus"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/textview_stock_bonus_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp">
+
+                <TextView
+                    android:id="@+id/textview_stock_yield_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="2dp"
+                    android:text="@string/yield"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/textview_stock_yield_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0%"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 账户A、B、C显示区域 - 压缩高度 -->
+        <LinearLayout
+            android:id="@+id/layout_stock_hold_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="3"
+            android:visibility="gone"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp">
+
+            <!-- 账户A - 压缩高度 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp">
+
+                <TextView
+                    android:id="@+id/textview_stock_account_a_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="1dp"
+                    android:text="@string/account_a"
+                    android:textColor="@android:color/black"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/textview_stock_account_a_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <!-- 账户A分红显示 - 更紧凑 -->
+                <TextView
+                    android:id="@+id/textview_stock_dividend_a_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dividend"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="9sp" />
+
+                <TextView
+                    android:id="@+id/textview_stock_dividend_a_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <!-- 账户B - 压缩高度 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp">
+
+                <TextView
+                    android:id="@+id/textview_stock_account_b_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="1dp"
+                    android:text="@string/account_b"
+                    android:textColor="@android:color/black"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/textview_stock_account_b_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <!-- 账户B分红显示 - 更紧凑 -->
+                <TextView
+                    android:id="@+id/textview_stock_dividend_b_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dividend"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="9sp" />
+
+                <TextView
+                    android:id="@+id/textview_stock_dividend_b_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <!-- 账户C - 压缩高度 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp">
+
+                <TextView
+                    android:id="@+id/textview_stock_account_c_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="1dp"
+                    android:text="@string/account_c"
+                    android:textColor="@android:color/black"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/textview_stock_account_c_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <!-- 账户C分红显示 - 更紧凑 -->
+                <TextView
+                    android:id="@+id/textview_stock_dividend_c_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dividend"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="9sp" />
+
+                <TextView
+                    android:id="@+id/textview_stock_dividend_c_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 交易设置区域 -->
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dip"
@@ -104,471 +382,525 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingLeft="12dp"
             android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp">
+            android:paddingRight="12dp"
+            android:paddingBottom="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="6dp">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
                     android:gravity="start">
 
                     <CheckBox
                         android:id="@+id/checkbox_trade"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/trade" />
+                        android:text="@string/trade"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
                     android:gravity="end">
 
                     <ImageView
                         android:id="@+id/imageview_restore_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_restore"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
                         android:clickable="true"
-                        android:focusable="true" />
+                        android:focusable="true"
+                        android:src="@drawable/ic_restore"
+                        android:padding="3dp" />
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- 交易级别选择器 -->
             <LinearLayout
                 android:id="@+id/layout_trade_level_pickers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:weightSum="7"
-                android:gravity="center">
+                android:weightSum="7">
 
-                <!-- Month Picker -->
                 <LinearLayout
                     android:id="@+id/layout_month_picker"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
                     android:gravity="center"
+                    android:orientation="vertical"
                     android:padding="4dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingBottom="3dp"
                         android:text="Month"
-                        android:textStyle="bold"
-                        android:paddingBottom="4dp"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
                     <com.android.orion.widget.TradeLevelPicker
                         android:id="@+id/trade_level_picker_month"
-                        android:layout_width="80dp"
-                        android:layout_height="60dp" />
+                        android:layout_width="72dp"
+                        android:layout_height="54dp" />
 
                     <TextView
                         android:id="@+id/textview_month_net"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:paddingTop="2dp" />
+                        android:paddingTop="2dp"
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:id="@+id/imageview_month_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_unchecked"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:clickable="true"
-                        android:focusable="true" />
+                        android:focusable="true"
+                        android:src="@drawable/ic_unchecked"
+                        android:padding="2dp" />
                 </LinearLayout>
 
-                <!-- Week Picker -->
                 <LinearLayout
                     android:id="@+id/layout_week_picker"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
                     android:gravity="center"
+                    android:orientation="vertical"
                     android:padding="4dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingBottom="3dp"
                         android:text="Week"
-                        android:textStyle="bold"
-                        android:paddingBottom="4dp"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
                     <com.android.orion.widget.TradeLevelPicker
                         android:id="@+id/trade_level_picker_week"
-                        android:layout_width="80dp"
-                        android:layout_height="60dp" />
+                        android:layout_width="72dp"
+                        android:layout_height="54dp" />
 
                     <TextView
                         android:id="@+id/textview_week_net"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:paddingTop="2dp" />
+                        android:paddingTop="2dp"
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:id="@+id/imageview_week_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_unchecked"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:clickable="true"
-                        android:focusable="true" />
+                        android:focusable="true"
+                        android:src="@drawable/ic_unchecked"
+                        android:padding="2dp" />
                 </LinearLayout>
 
-                <!-- Day Picker -->
                 <LinearLayout
                     android:id="@+id/layout_day_picker"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
                     android:gravity="center"
+                    android:orientation="vertical"
                     android:padding="4dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingBottom="3dp"
                         android:text="Day"
-                        android:textStyle="bold"
-                        android:paddingBottom="4dp"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
                     <com.android.orion.widget.TradeLevelPicker
                         android:id="@+id/trade_level_picker_day"
-                        android:layout_width="80dp"
-                        android:layout_height="60dp" />
+                        android:layout_width="72dp"
+                        android:layout_height="54dp" />
 
                     <TextView
                         android:id="@+id/textview_day_net"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:paddingTop="2dp" />
+                        android:paddingTop="2dp"
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:id="@+id/imageview_day_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_unchecked"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:clickable="true"
-                        android:focusable="true" />
+                        android:focusable="true"
+                        android:src="@drawable/ic_unchecked"
+                        android:padding="2dp" />
                 </LinearLayout>
 
-                <!-- Min60 Picker -->
                 <LinearLayout
                     android:id="@+id/layout_min60_picker"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
                     android:gravity="center"
+                    android:orientation="vertical"
                     android:padding="4dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingBottom="3dp"
                         android:text="Min60"
-                        android:textStyle="bold"
-                        android:paddingBottom="4dp"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
                     <com.android.orion.widget.TradeLevelPicker
                         android:id="@+id/trade_level_picker_min60"
-                        android:layout_width="80dp"
-                        android:layout_height="60dp" />
+                        android:layout_width="72dp"
+                        android:layout_height="54dp" />
 
                     <TextView
                         android:id="@+id/textview_min60_net"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:paddingTop="2dp" />
+                        android:paddingTop="2dp"
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:id="@+id/imageview_min60_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_unchecked"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:clickable="true"
-                        android:focusable="true" />
+                        android:focusable="true"
+                        android:src="@drawable/ic_unchecked"
+                        android:padding="2dp" />
                 </LinearLayout>
 
-                <!-- Min30 Picker -->
                 <LinearLayout
                     android:id="@+id/layout_min30_picker"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
                     android:gravity="center"
+                    android:orientation="vertical"
                     android:padding="4dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingBottom="3dp"
                         android:text="Min30"
-                        android:textStyle="bold"
-                        android:paddingBottom="4dp"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
                     <com.android.orion.widget.TradeLevelPicker
                         android:id="@+id/trade_level_picker_min30"
-                        android:layout_width="80dp"
-                        android:layout_height="60dp" />
+                        android:layout_width="72dp"
+                        android:layout_height="54dp" />
 
                     <TextView
                         android:id="@+id/textview_min30_net"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:paddingTop="2dp" />
+                        android:paddingTop="2dp"
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:id="@+id/imageview_min30_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_unchecked"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:clickable="true"
-                        android:focusable="true" />
+                        android:focusable="true"
+                        android:src="@drawable/ic_unchecked"
+                        android:padding="2dp" />
                 </LinearLayout>
 
-                <!-- Min15 Picker -->
                 <LinearLayout
                     android:id="@+id/layout_min15_picker"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
                     android:gravity="center"
+                    android:orientation="vertical"
                     android:padding="4dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingBottom="3dp"
                         android:text="Min15"
-                        android:textStyle="bold"
-                        android:paddingBottom="4dp"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
                     <com.android.orion.widget.TradeLevelPicker
                         android:id="@+id/trade_level_picker_min15"
-                        android:layout_width="80dp"
-                        android:layout_height="60dp" />
+                        android:layout_width="72dp"
+                        android:layout_height="54dp" />
 
                     <TextView
                         android:id="@+id/textview_min15_net"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:paddingTop="2dp" />
+                        android:paddingTop="2dp"
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:id="@+id/imageview_min15_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_unchecked"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:clickable="true"
-                        android:focusable="true" />
+                        android:focusable="true"
+                        android:src="@drawable/ic_unchecked"
+                        android:padding="2dp" />
                 </LinearLayout>
 
-                <!-- Min5 Picker -->
                 <LinearLayout
                     android:id="@+id/layout_min5_picker"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
                     android:gravity="center"
+                    android:orientation="vertical"
                     android:padding="4dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingBottom="3dp"
                         android:text="Min5"
-                        android:textStyle="bold"
-                        android:paddingBottom="4dp"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
                     <com.android.orion.widget.TradeLevelPicker
                         android:id="@+id/trade_level_picker_min5"
-                        android:layout_width="80dp"
-                        android:layout_height="60dp" />
+                        android:layout_width="72dp"
+                        android:layout_height="54dp" />
 
                     <TextView
                         android:id="@+id/textview_min5_net"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:paddingTop="2dp" />
+                        android:paddingTop="2dp"
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:id="@+id/imageview_min5_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_unchecked"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:clickable="true"
-                        android:focusable="true" />
+                        android:focusable="true"
+                        android:src="@drawable/ic_unchecked"
+                        android:padding="2dp" />
                 </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@drawable/divider_line" />
+
+        <!-- 交易和配额设置 - 进一步压缩高度 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp">
+
+                <TextView
+                    android:id="@+id/textview_stock_trading_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="1dp"
+                    android:text="@string/trading"
+                    android:textColor="@android:color/black"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/textview_stock_trading_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp">
 
+                <TextView
+                    android:id="@+id/textView_stock_quota_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="1dp"
+                    android:text="@string/quota"
+                    android:textColor="@android:color/black"
+                    android:textSize="11sp" />
+
+                <!-- 带加减号的配额编辑框 - 更紧凑 -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingTop="2dp">
 
-                    <TextView
-                        android:id="@+id/textview_stock_window"
+                    <!-- 加减号和输入框的横向布局 -->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="14dp"
-                        android:layout_marginRight="14dp"
-                        android:labelFor="@+id/edittext_stock_window"
-                        android:text="@string/window" />
+                        android:orientation="horizontal"
+                        android:gravity="center">
 
-                    <EditText
-                        android:id="@+id/edittext_stock_window"
-                        android:layout_width="match_parent"
+                        <!-- 减号按钮 - 红色 -->
+                        <Button
+                            android:id="@+id/button_quota_minus"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:text="-"
+                            android:textSize="18sp"
+                            android:textColor="@android:color/holo_red_dark"
+                            android:gravity="center"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:padding="0dp" />
+
+                        <!-- 配额数值输入 -->
+                        <EditText
+                            android:id="@+id/edittext_stock_quota"
+                            android:layout_width="80dp"
+                            android:layout_height="28dp"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:inputType="numberSigned|number"
+                            android:digits="0123456789"
+                            android:background="@android:drawable/editbox_background_normal"
+                            android:padding="4dp"
+                            android:layout_marginLeft="1dp"
+                            android:layout_marginRight="1dp" />
+
+                        <!-- 加号按钮 - 红色 -->
+                        <Button
+                            android:id="@+id/button_quota_plus"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:text="+"
+                            android:textSize="18sp"
+                            android:textColor="@android:color/holo_red_dark"
+                            android:gravity="center"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:padding="0dp" />
+                    </LinearLayout>
+
+                    <!-- 配额验证提示文字 -->
+                    <TextView
+                        android:id="@+id/textview_quota_hint"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="18dp"
-                        android:layout_marginRight="14dp"
-                        android:layout_marginBottom="14dp"
-                        android:focusable="true"
-                        android:clickable="true"
-                        android:inputType="text" />
+                        android:text="配额必须是100的整数倍"
+                        android:textColor="@android:color/holo_red_dark"
+                        android:textSize="10sp"
+                        android:visibility="gone"
+                        android:layout_marginTop="2dp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dip"
-            android:background="@drawable/divider_line" />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp">
 
                 <TextView
-                    android:id="@+id/textview_stock_trading"
+                    android:id="@+id/textview_stock_trading_cost_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:labelFor="@+id/edittext_stock_trading"
-                    android:text="@string/trade" />
+                    android:paddingBottom="1dp"
+                    android:text="@string/cost"
+                    android:textColor="@android:color/black"
+                    android:textSize="11sp" />
 
-                <EditText
-                    android:id="@+id/edittext_stock_trading"
-                    android:enabled="false"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/textview_stock_trading_cost_value"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginBottom="14dp"
-                    android:inputType="numberDecimal" />
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp">
 
                 <TextView
-                    android:id="@+id/textView_stock_quota"
+                    android:id="@+id/textView_stock_quota_est_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:labelFor="@+id/edittext_stock_quota"
-                    android:text="@string/quota" />
-
-                <EditText
-                    android:id="@+id/edittext_stock_quota"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginBottom="14dp"
-                    android:inputType="number" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
+                    android:paddingBottom="1dp"
+                    android:text="@string/quota_est"
+                    android:textColor="@android:color/black"
+                    android:textSize="11sp" />
 
                 <TextView
-                    android:id="@+id/textview_stock_trading_cost"
+                    android:id="@+id/textview_stock_quota_est_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:labelFor="@+id/edittext_stock_trading_cost"
-                    android:text="@string/cost" />
-
-                <EditText
-                    android:id="@+id/edittext_stock_trading_cost"
-                    android:enabled="false"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginBottom="14dp"
-                    android:inputType="numberDecimal" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/textView_stock_quota_est"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:labelFor="@+id/edittext_stock_quota_est"
-                    android:text="@string/quota_est" />
-
-                <EditText
-                    android:id="@+id/edittext_stock_quota_est"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginBottom="14dp"
-                    android:inputType="number" />
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
 
@@ -577,128 +909,14 @@
             android:layout_height="1dip"
             android:background="@drawable/divider_line" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/textView_stock_hold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:labelFor="@+id/edittext_stock_hold"
-                    android:text="@string/hold" />
-
-                <EditText
-                    android:id="@+id/edittext_stock_hold"
-                    android:enabled="false"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginBottom="14dp"
-                    android:inputType="number" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/textview_stock_yield"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:labelFor="@+id/edittext_stock_yield"
-                    android:text="@string/yield" />
-
-                <EditText
-                    android:id="@+id/edittext_stock_yield"
-                    android:enabled="false"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginBottom="14dp"
-                    android:inputType="numberDecimal" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_stock_hold_account"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/textview_stock_hold_a"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:labelFor="@+id/edittext_stock_hold_a"
-                    android:text="@string/hold_a" />
-
-                <EditText
-                    android:id="@+id/edittext_stock_hold_a"
-                    android:enabled="false"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginBottom="14dp"
-                    android:inputType="number" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/textview_stock_hold_b"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:labelFor="@+id/edittext_stock_hold_b"
-                    android:text="@string/hold_b" />
-
-                <EditText
-                    android:id="@+id/edittext_stock_hold_b"
-                    android:enabled="false"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginBottom="14dp"
-                    android:inputType="numberDecimal" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dip"
-            android:background="@drawable/divider_line" />
-
+        <!-- 按钮区域 -->
         <LinearLayout
             style="?android:buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
             <Button
                 android:id="@+id/button_cancel"
@@ -706,7 +924,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/cancel" />
+                android:text="@string/cancel"
+                android:textSize="15sp"
+                android:padding="10dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="6dp" />
 
             <Button
                 android:id="@+id/button_ok"
@@ -714,7 +936,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/ok" />
+                android:text="@string/ok"
+                android:textSize="15sp"
+                android:padding="10dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="12dp" />
         </LinearLayout>
 
     </LinearLayout>

@@ -88,7 +88,6 @@ public class DatabaseContract {
 	public static final String COLUMN_ROE = "roe";
 	public static final String COLUMN_PE = "pe";
 	public static final String COLUMN_PB = "pb";
-	public static final String COLUMN_PR = "pr";
 	public static final String COLUMN_BONUS = "bonus";
 	public static final String COLUMN_BONUS_IN_YEAR = "bonus_in_year";
 	public static final String COLUMN_DIVIDEND = "dividend";
@@ -124,7 +123,6 @@ public class DatabaseContract {
 
 	public static final String COLUMN_TYPE = "type";
 	public static final String COLUMN_CONTENT = "content";
-	public static final String COLUMN_WINDOW = "window";
 
 	// http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600900.phtml
 	public static final String COLUMN_BOOK_VALUE_PER_SHARE = "book_value_per_share";
@@ -323,7 +321,7 @@ public class DatabaseContract {
 				COLUMN_MONTH_THUMBNAIL, COLUMN_WEEK_THUMBNAIL, COLUMN_DAY_THUMBNAIL, COLUMN_MIN60_THUMBNAIL, COLUMN_MIN30_THUMBNAIL, COLUMN_MIN15_THUMBNAIL, COLUMN_MIN5_THUMBNAIL,
 				COLUMN_ADAPTIVE, COLUMN_TARGET, COLUMN_TREND,
 				COLUMN_FLAG,
-				COLUMN_ROI, COLUMN_IR, COLUMN_IRR, COLUMN_ROE, COLUMN_PE, COLUMN_PB, COLUMN_PR,
+				COLUMN_ROI, COLUMN_IR, COLUMN_IRR, COLUMN_ROE, COLUMN_PE, COLUMN_PB,
 				COLUMN_QUOTA, COLUMN_TRADING, COLUMN_TRADING_COST, COLUMN_HOLD, COLUMN_PROFIT, COLUMN_BONUS, COLUMN_BONUS_IN_YEAR, COLUMN_VALUATION, COLUMN_COST,
 				COLUMN_SHARE, COLUMN_MARKET_VALUE,
 				COLUMN_MAIN_BUSINESS_INCOME, COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR,
@@ -339,7 +337,6 @@ public class DatabaseContract {
 				COLUMN_YIELD, COLUMN_YIELD_IN_YEAR,
 				COLUMN_DIVIDEND_RATIO, COLUMN_DIVIDEND_RATIO_IN_YEAR,
 				COLUMN_R_DATE, COLUMN_STATUS,
-				COLUMN_WINDOW,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -376,7 +373,6 @@ public class DatabaseContract {
 				+ COLUMN_ROE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_PE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_PB + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_PR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_QUOTA + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_TRADING + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_TRADING_COST + DOUBLE_TYPE + COMMA_SEP
@@ -407,7 +403,6 @@ public class DatabaseContract {
 				+ COLUMN_DIVIDEND_RATIO_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_R_DATE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_STATUS + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_WINDOW + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME

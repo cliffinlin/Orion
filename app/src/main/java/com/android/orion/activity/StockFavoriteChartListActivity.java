@@ -373,9 +373,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	CursorLoader getStockDataCursorLoader(String period) {
 		String selection = DatabaseContract.SELECTION_STOCK_PERIOD(mStock.getSE(), mStock.getCode(), period);
 		String sortOrder = DatabaseContract.ORDER_DATE_TIME_ASC;
-		if (Period.isMinutePeriod(period) && mStock.hasFlag(Stock.FLAG_TRADE) && !TextUtils.isEmpty(mStock.getWindow())) {
-			selection = DatabaseContract.SELECTION_STOCK_PERIOD_DATE_NOT_BEFORE(mStock.getSE(), mStock.getCode(), period, mStock.getWindow());
-		}
 		return new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,
 				DatabaseContract.StockData.PROJECTION_ALL, selection, null,
 				sortOrder);
@@ -482,13 +479,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 					for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
 						updateTrendEntryList(stockDataChart, i, index);
-					}
-
-					if (mStockData.getPeriod().equals(Period.DAY)) {
-						if (mStock.hasFlag(Stock.FLAG_TRADE) && TextUtils.equals(mStock.getWindow(), mStockData.getDate())) {
-							Entry entry = new Entry((float) mStockData.getCandle().getLow(), index);
-							stockDataChart.mWindowEntryList.add(entry);
-						}
 					}
 
 					Entry difEntry = new Entry((float) mStockData.getMacd().getDIF(), index);

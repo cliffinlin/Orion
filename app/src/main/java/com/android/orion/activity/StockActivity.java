@@ -40,19 +40,35 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 	long mHoldA = 0;
 	long mHoldB = 0;
-	String mOrginStockWindow = "";
+	long mHoldC = 0;
+	double mDividendA = 0.0;
+	double mDividendB = 0.0;
+	double mDividendC = 0.0;
 	CheckBox mCheckBoxTrade;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
-	EditText mEditTextStockWindow;
-	EditText mEditTextStockQuota;
-	EditText mEditTextStockQuotaEst;
-	EditText mEditTextStockTrading;
-	EditText mEditTextStockTradingCost;
-	EditText mEditTextStockHold;
-	EditText mEditTextStockYield;
-	EditText mEditTextStockHoldA;
-	EditText mEditTextStockHoldB;
+	EditText mEditTextStockQuota; // 改为EditText
+	TextView mTextViewStockQuotaEstValue;
+	TextView mTextViewStockTradingValue;
+	TextView mTextViewStockTradingCostValue;
+	TextView mTextViewStockHoldLabel;
+	TextView mTextViewStockHoldValue;
+	TextView mTextViewStockYieldLabel;
+	TextView mTextViewStockYieldValue;
+	TextView mTextViewStockBonusLabel;
+	TextView mTextViewStockBonusValue;
+	TextView mTextViewStockAccountALabel;
+	TextView mTextViewStockAccountAValue;
+	TextView mTextViewStockDividendALabel;
+	TextView mTextViewStockDividendAValue;
+	TextView mTextViewStockAccountBLabel;
+	TextView mTextViewStockAccountBValue;
+	TextView mTextViewStockDividendBLabel;
+	TextView mTextViewStockDividendBValue;
+	TextView mTextViewStockAccountCLabel;
+	TextView mTextViewStockAccountCValue;
+	TextView mTextViewStockDividendCLabel;
+	TextView mTextViewStockDividendCValue;
 	TextView mTextviewMonthNet;
 	TextView mTextviewWeekNet;
 	TextView mTextviewDayNet;
@@ -78,6 +94,16 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	Button mButtonOk;
 	Button mButtonCancel;
 
+	// 配额加减按钮
+	Button mButtonQuotaMinus;
+	Button mButtonQuotaPlus;
+
+	// 配额提示文字
+	TextView mTextViewQuotaHint;
+
+	// 持仓一致性检查提示文字
+	TextView mTextViewHoldConsistencyHint;
+
 	LinearLayout mLayoutTradeLevelPickers;
 	LinearLayout mLayoutMonthPicker;
 	LinearLayout mLayoutWeekPicker;
@@ -91,6 +117,12 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	LinearLayout mLayoutStockNameCodeEdit;
 	TextView mTextViewDisplayStockName;
 	TextView mTextViewDisplayStockCode;
+
+	// 用于临时存储配额的变量
+	private boolean mIsQuotaEditable = false;
+
+	// TextWatcher引用
+	private TextWatcher mQuotaTextWatcher;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -108,15 +140,28 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mCheckBoxTrade = findViewById(R.id.checkbox_trade);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
-		mEditTextStockWindow = findViewById(R.id.edittext_stock_window);
-		mEditTextStockQuota = findViewById(R.id.edittext_stock_quota);
-		mEditTextStockQuotaEst = findViewById(R.id.edittext_stock_quota_est);
-		mEditTextStockTrading = findViewById(R.id.edittext_stock_trading);
-		mEditTextStockTradingCost = findViewById(R.id.edittext_stock_trading_cost);
-		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);
-		mEditTextStockYield = findViewById(R.id.edittext_stock_yield);
-		mEditTextStockHoldA = findViewById(R.id.edittext_stock_hold_a);
-		mEditTextStockHoldB = findViewById(R.id.edittext_stock_hold_b);
+		mEditTextStockQuota = findViewById(R.id.edittext_stock_quota); // 改为EditText
+		mTextViewStockQuotaEstValue = findViewById(R.id.textview_stock_quota_est_value);
+		mTextViewStockTradingValue = findViewById(R.id.textview_stock_trading_value);
+		mTextViewStockTradingCostValue = findViewById(R.id.textview_stock_trading_cost_value);
+		mTextViewStockHoldLabel = findViewById(R.id.textview_stock_hold_label);
+		mTextViewStockHoldValue = findViewById(R.id.textview_stock_hold_value);
+		mTextViewStockYieldLabel = findViewById(R.id.textview_stock_yield_label);
+		mTextViewStockYieldValue = findViewById(R.id.textview_stock_yield_value);
+		mTextViewStockBonusLabel = findViewById(R.id.textview_stock_bonus_label);
+		mTextViewStockBonusValue = findViewById(R.id.textview_stock_bonus_value);
+		mTextViewStockAccountALabel = findViewById(R.id.textview_stock_account_a_label);
+		mTextViewStockAccountAValue = findViewById(R.id.textview_stock_account_a_value);
+		mTextViewStockDividendALabel = findViewById(R.id.textview_stock_dividend_a_label);
+		mTextViewStockDividendAValue = findViewById(R.id.textview_stock_dividend_a_value);
+		mTextViewStockAccountBLabel = findViewById(R.id.textview_stock_account_b_label);
+		mTextViewStockAccountBValue = findViewById(R.id.textview_stock_account_b_value);
+		mTextViewStockDividendBLabel = findViewById(R.id.textview_stock_dividend_b_label);
+		mTextViewStockDividendBValue = findViewById(R.id.textview_stock_dividend_b_value);
+		mTextViewStockAccountCLabel = findViewById(R.id.textview_stock_account_c_label);
+		mTextViewStockAccountCValue = findViewById(R.id.textview_stock_account_c_value);
+		mTextViewStockDividendCLabel = findViewById(R.id.textview_stock_dividend_c_label);
+		mTextViewStockDividendCValue = findViewById(R.id.textview_stock_dividend_c_value);
 		mTextviewMonthNet = findViewById(R.id.textview_month_net);
 		mTextviewWeekNet = findViewById(R.id.textview_week_net);
 		mTextviewDayNet = findViewById(R.id.textview_day_net);
@@ -142,6 +187,16 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
+		// 初始化配额加减按钮
+		mButtonQuotaMinus = findViewById(R.id.button_quota_minus);
+		mButtonQuotaPlus = findViewById(R.id.button_quota_plus);
+
+		// 初始化配额提示TextView
+		mTextViewQuotaHint = findViewById(R.id.textview_quota_hint);
+
+		// 初始化持仓一致性检查提示TextView
+		mTextViewHoldConsistencyHint = findViewById(R.id.textview_hold_consistency_hint);
+
 		mLayoutTradeLevelPickers = findViewById(R.id.layout_trade_level_pickers);
 		mLayoutMonthPicker = findViewById(R.id.layout_month_picker);
 		mLayoutWeekPicker = findViewById(R.id.layout_week_picker);
@@ -159,13 +214,10 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mCheckBoxTrade.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
-		mEditTextStockWindow.setOnClickListener(this);
 		mEditTextStockQuota.setOnClickListener(this);
-		mEditTextStockQuotaEst.setOnClickListener(this);
-		mEditTextStockTrading.setOnClickListener(this);
-		mEditTextStockTradingCost.setOnClickListener(this);
-		mEditTextStockHold.setOnClickListener(this);
-		mEditTextStockYield.setOnClickListener(this);
+		mTextViewStockQuotaEstValue.setOnClickListener(this);
+		mTextViewStockTradingValue.setOnClickListener(this);
+		mTextViewStockTradingCostValue.setOnClickListener(this);
 		mImageViewRestoreTarget.setOnClickListener(this);
 		mImageViewMonthTarget.setOnClickListener(this);
 		mImageViewWeekTarget.setOnClickListener(this);
@@ -176,6 +228,32 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mImageViewMin5Target.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
+
+		// 设置配额加减按钮的点击监听
+		mButtonQuotaMinus.setOnClickListener(this);
+		mButtonQuotaPlus.setOnClickListener(this);
+
+		// 创建并添加配额EditText的文本变化监听器
+		mQuotaTextWatcher = new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// 文本变化时更新预估金额
+				updateQuotaEstimation();
+
+				// 检查输入是否为100的整数倍
+				validateQuotaInput(s);
+			}
+		};
+
+		mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
 
 		if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 			mLayoutStockNameCodeDisplay.setOnClickListener(this);
@@ -217,19 +295,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 			}
 		});
 
-		mEditTextStockQuota.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				updateQuotaEstimation();
-			}
+		// 添加Trade复选框的监听器来控制Quota的编辑状态
+		mCheckBoxTrade.setOnCheckedChangeListener((buttonView, isChecked) -> {
+			updateQuotaEditState(isChecked);
 		});
 
 		if (TextUtils.equals(mAction, Constant.ACTION_STOCK_NEW)) {
@@ -243,20 +311,193 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 			mStock.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_ID,
 					DatabaseContract.INVALID_ID));
 			mStockDatabaseManager.getStockById(mStock);
-			mOrginStockWindow = mStock.getWindow();
+			mHoldA = mStockDatabaseManager.getStockDealBuy(mStock, Stock.ACCOUNT_A);
 			mHoldB = mStockDatabaseManager.getStockDealBuy(mStock, Stock.ACCOUNT_B);
-			if (mHoldB > 0) {
+			mHoldC = mStockDatabaseManager.getStockDealBuy(mStock, Stock.ACCOUNT_C);
+
+			// 检查持仓一致性
+			checkHoldConsistency();
+
+			if (mHoldB > 0 || mHoldC > 0) {
 				findViewById(R.id.layout_stock_hold_account).setVisibility(View.VISIBLE);
-				mHoldA = mStock.getHold() - mHoldB;
-				mEditTextStockHoldA.setText(String.valueOf(mHoldA));
-				mEditTextStockHoldB.setText(String.valueOf(mHoldB));
 			}
+			calculateDividends();
+			updateAccountViews();
+
 			mStockDatabaseManager.getStockTrendMap(mStock, mStock.getStockTrendMap());
 			mLayoutStockNameCodeDisplay.setVisibility(View.VISIBLE);
 			mLayoutStockNameCodeEdit.setVisibility(View.GONE);
 			mTextViewDisplayStockName.setText(mStock.getName());
 			mTextViewDisplayStockCode.setText(mStock.getCode());
 		}
+	}
+
+	/**
+	 * 检查持仓数量与分账户总和是否一致
+	 */
+	private void checkHoldConsistency() {
+		long totalAccountHold = mHoldA + mHoldB + mHoldC;
+		long mainHold = mStock.getHold();
+
+		// 计算差值
+		long diff = Math.abs(mainHold - totalAccountHold);
+
+		if (diff != 0) {
+			// 显示提示
+			mTextViewHoldConsistencyHint.setVisibility(View.VISIBLE);
+
+			// 计算差值百分比
+			double diffPercentage = 0;
+			if (mainHold > 0) {
+				diffPercentage = (double) diff / mainHold * 100;
+			}
+
+			// 设置提示文字
+			if (mainHold > totalAccountHold) {
+				// 主持仓大于分账户总和
+				mTextViewHoldConsistencyHint.setText(String.format(Locale.getDefault(),
+						"持仓不一致: 主持仓(%d) > 分账户总和(%d) 差值: %d (%.2f%%)",
+						mainHold, totalAccountHold, diff, diffPercentage));
+			} else if (mainHold < totalAccountHold) {
+				// 主持仓小于分账户总和
+				mTextViewHoldConsistencyHint.setText(String.format(Locale.getDefault(),
+						"持仓不一致: 主持仓(%d) < 分账户总和(%d) 差值: %d (%.2f%%)",
+						mainHold, totalAccountHold, diff, diffPercentage));
+			}
+		} else {
+			// 隐藏提示
+			mTextViewHoldConsistencyHint.setVisibility(View.GONE);
+		}
+	}
+
+	/**
+	 * 检查配额输入是否为100的整数倍
+	 */
+	private void validateQuotaInput(Editable s) {
+		if (TextUtils.isEmpty(s)) {
+			// 隐藏提示
+			mTextViewQuotaHint.setVisibility(View.GONE);
+			return;
+		}
+
+		try {
+			String input = s.toString();
+			long value = Long.parseLong(input);
+
+			// 检查是否为100的整数倍
+			if (value % 100 != 0) {
+				// 显示提示文字，并提示最接近的100的整数倍
+				long nearestMultiple = Math.round(value / 100.0) * 100;
+				if (nearestMultiple < 0) nearestMultiple = 0;
+
+				mTextViewQuotaHint.setVisibility(View.VISIBLE);
+				mTextViewQuotaHint.setText(String.format(Locale.getDefault(),
+						"配额必须是100的整数倍 (建议: %d)", nearestMultiple));
+			} else {
+				// 隐藏提示文字
+				mTextViewQuotaHint.setVisibility(View.GONE);
+			}
+		} catch (NumberFormatException e) {
+			// 如果不是数字，显示错误提示
+			mTextViewQuotaHint.setVisibility(View.VISIBLE);
+			mTextViewQuotaHint.setText("请输入有效的数字");
+		}
+	}
+
+	/**
+	 * 根据Trade复选框状态更新Quota的可编辑状态
+	 */
+	private void updateQuotaEditState(boolean isTradeChecked) {
+		mIsQuotaEditable = isTradeChecked;
+
+		// 更新配额EditText和加减按钮的状态
+		mEditTextStockQuota.setEnabled(isTradeChecked);
+		mButtonQuotaMinus.setEnabled(isTradeChecked);
+		mButtonQuotaPlus.setEnabled(isTradeChecked);
+
+		// 更新Quota的显示样式
+		if (isTradeChecked) {
+			// Trade勾选时，显示正常颜色和背景
+			mEditTextStockQuota.setTextColor(Color.BLACK);
+			mEditTextStockQuota.setBackgroundResource(android.R.drawable.editbox_background_normal);
+
+			// 检查当前配额值是否符合要求
+			try {
+				String quotaText = mEditTextStockQuota.getText().toString();
+				if (!TextUtils.isEmpty(quotaText)) {
+					long quota = Long.parseLong(quotaText);
+					if (quota % 100 != 0) {
+						mTextViewQuotaHint.setVisibility(View.VISIBLE);
+						mTextViewQuotaHint.setText(String.format(Locale.getDefault(),
+								"配额必须是100的整数倍 (建议: %d)", Math.round(quota / 100.0) * 100));
+					} else {
+						mTextViewQuotaHint.setVisibility(View.GONE);
+					}
+				}
+			} catch (Exception e) {
+				mTextViewQuotaHint.setVisibility(View.GONE);
+			}
+		} else {
+			// Trade未勾选时，显示灰色表示不可编辑
+			mEditTextStockQuota.setTextColor(Color.GRAY);
+			mEditTextStockQuota.setBackgroundResource(android.R.drawable.editbox_background);
+
+			// 隐藏提示文字
+			mTextViewQuotaHint.setVisibility(View.GONE);
+
+			// 如果Trade未勾选，确保配额为0
+			mEditTextStockQuota.removeTextChangedListener(mQuotaTextWatcher);
+			mEditTextStockQuota.setText("0");
+			mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
+		}
+	}
+
+	private void calculateDividends() {
+		double dividendInYear = mStock.getDividendInYear() / 10.0;
+
+		mDividendA = mHoldA * dividendInYear;
+		mDividendB = mHoldB * dividendInYear;
+		mDividendC = mHoldC * dividendInYear;
+
+		// 更新分红显示
+		updateDividendViews();
+	}
+
+	/**
+	 * 更新分红显示
+	 */
+	private void updateDividendViews() {
+		String dividendFormat = "%.2f";
+		mTextViewStockDividendAValue.setText(String.format(Locale.getDefault(), dividendFormat, mDividendA));
+		mTextViewStockDividendBValue.setText(String.format(Locale.getDefault(), dividendFormat, mDividendB));
+		mTextViewStockDividendCValue.setText(String.format(Locale.getDefault(), dividendFormat, mDividendC));
+
+		if (mDividendA > 0) {
+			mTextViewStockDividendAValue.setTextColor(Color.RED);
+		} else {
+			mTextViewStockDividendAValue.setTextColor(Color.BLACK);
+		}
+
+		if (mDividendB > 0) {
+			mTextViewStockDividendBValue.setTextColor(Color.RED);
+		} else {
+			mTextViewStockDividendBValue.setTextColor(Color.BLACK);
+		}
+
+		if (mDividendC > 0) {
+			mTextViewStockDividendCValue.setTextColor(Color.RED);
+		} else {
+			mTextViewStockDividendCValue.setTextColor(Color.BLACK);
+		}
+	}
+
+	private void updateAccountViews() {
+		mTextViewStockAccountAValue.setText(String.valueOf(mHoldA));
+		mTextViewStockAccountBValue.setText(String.valueOf(mHoldB));
+		mTextViewStockAccountCValue.setText(String.valueOf(mHoldC));
+
+		// 更新分红显示
+		updateDividendViews();
 	}
 
 	private void updateQuotaEstimation() {
@@ -266,14 +507,99 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 				long quota = Long.parseLong(quotaText);
 				double price = mStock.getPrice();
 				double estimatedValue = quota * price;
-
-				mEditTextStockQuotaEst.setText(String.format(Locale.getDefault(), "%.2f", estimatedValue));
+				mTextViewStockQuotaEstValue.setText(String.format(Locale.getDefault(), "%.2f", estimatedValue));
 			} else {
-				mEditTextStockQuotaEst.setText("");
+				mTextViewStockQuotaEstValue.setText("");
 			}
 		} catch (Exception e) {
-			mEditTextStockQuotaEst.setText("");
+			mTextViewStockQuotaEstValue.setText("");
 		}
+	}
+
+	/**
+	 * 增加配额值（每次增加100）
+	 */
+	private void increaseQuota() {
+		try {
+			String currentText = mEditTextStockQuota.getText().toString();
+			long currentValue = TextUtils.isEmpty(currentText) ? 0 : Long.parseLong(currentText);
+			long newValue = currentValue + 100;
+
+			// 确保不会出现负数（虽然增加不会，但为了安全）
+			if (newValue < 0) {
+				newValue = 0;
+			}
+
+			mEditTextStockQuota.removeTextChangedListener(mQuotaTextWatcher);
+			mEditTextStockQuota.setText(String.valueOf(newValue));
+			mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
+
+			// 更新配额估算
+			updateQuotaEstimation();
+
+			// 由于是增加100，肯定是100的整数倍，隐藏提示
+			mTextViewQuotaHint.setVisibility(View.GONE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			// 如果解析出错，重置为0
+			mEditTextStockQuota.removeTextChangedListener(mQuotaTextWatcher);
+			mEditTextStockQuota.setText("0");
+			mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
+			mTextViewQuotaHint.setVisibility(View.GONE);
+		}
+	}
+
+	/**
+	 * 减少配额值（每次减少100）
+	 */
+	private void decreaseQuota() {
+		try {
+			String currentText = mEditTextStockQuota.getText().toString();
+			long currentValue = TextUtils.isEmpty(currentText) ? 0 : Long.parseLong(currentText);
+			long newValue = currentValue - 100;
+
+			// 确保不会出现负数
+			if (newValue < 0) {
+				newValue = 0;
+			}
+
+			mEditTextStockQuota.removeTextChangedListener(mQuotaTextWatcher);
+			mEditTextStockQuota.setText(String.valueOf(newValue));
+			mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
+
+			// 更新配额估算
+			updateQuotaEstimation();
+
+			// 由于是减少100，如果原始值是100的整数倍，结果也是100的整数倍
+			// 检查新的值是否是100的整数倍
+			if (newValue % 100 != 0) {
+				mTextViewQuotaHint.setVisibility(View.VISIBLE);
+				mTextViewQuotaHint.setText(String.format(Locale.getDefault(),
+						"配额必须是100的整数倍 (建议: %d)", Math.round(newValue / 100.0) * 100));
+			} else {
+				mTextViewQuotaHint.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			// 如果解析出错，重置为0
+			mEditTextStockQuota.removeTextChangedListener(mQuotaTextWatcher);
+			mEditTextStockQuota.setText("0");
+			mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
+			mTextViewQuotaHint.setVisibility(View.GONE);
+		}
+	}
+
+	/**
+	 * 确保配额值是100的整数倍
+	 */
+	private long ensureQuotaMultipleOf100(long value) {
+		// 如果已经是100的整数倍，直接返回
+		if (value % 100 == 0) {
+			return value;
+		}
+
+		// 如果不是100的整数倍，调整为最接近的100的整数倍
+		return Math.round(value / 100.0) * 100;
 	}
 
 	private void setupTradeLevelPickers() {
@@ -347,16 +673,54 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	}
 
 	void updateView() {
-		mCheckBoxTrade.setChecked(mStock.hasFlag(Stock.FLAG_TRADE));
+		boolean isTradeChecked = mStock.hasFlag(Stock.FLAG_TRADE);
+		mCheckBoxTrade.setChecked(isTradeChecked);
+
+		// 根据Trade状态更新Quota的显示状态
+		updateQuotaEditState(isTradeChecked);
 
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
-		mEditTextStockWindow.setText(mStock.getWindow());
-		mEditTextStockQuota.setText(String.valueOf(mStock.getQuota()));
-		mEditTextStockTrading.setText(String.valueOf(mStock.getTrading()));
-		mEditTextStockTradingCost.setText(String.valueOf(mStock.getTradingCost()));
-		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
-		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
+
+		// 设置配额的值（确保是100的整数倍）
+		long quotaValue = mStock.getQuota();
+		quotaValue = ensureQuotaMultipleOf100(quotaValue);
+		mEditTextStockQuota.removeTextChangedListener(mQuotaTextWatcher);
+		mEditTextStockQuota.setText(String.valueOf(quotaValue));
+		mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
+
+		// 更新TextView显示的内容
+		mTextViewStockTradingValue.setText(String.valueOf(mStock.getTrading()));
+		mTextViewStockTradingCostValue.setText(String.valueOf(mStock.getTradingCost()));
+
+		mTextViewStockHoldValue.setText(String.valueOf(mStock.getHold()));
+
+		String yieldValue = String.format(Locale.getDefault(), "%.2f%%", mStock.getYield());
+		mTextViewStockYieldValue.setText(yieldValue);
+		if (mStock.getYield() > 0) {
+			mTextViewStockYieldValue.setTextColor(Color.RED);
+		} else {
+			mTextViewStockYieldValue.setTextColor(Color.BLACK);
+		}
+
+		String bonusValue = String.format(Locale.getDefault(), "%.2f", mStock.getBonus());
+		mTextViewStockBonusValue.setText(bonusValue);
+		if (mStock.getBonus() > 0) {
+			mTextViewStockBonusValue.setTextColor(Color.RED);
+		} else {
+			mTextViewStockBonusValue.setTextColor(Color.BLACK);
+		}
+
+		// 检查持仓一致性（在编辑模式下）
+		if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
+			checkHoldConsistency();
+		}
+
+		// 更新账户和分红显示
+		if (mHoldA > 0 || mHoldB > 0 || mHoldC > 0) {
+			calculateDividends();
+			updateAccountViews();
+		}
 
 		updateQuotaEstimation();
 
@@ -452,12 +816,20 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 				break;
 
 			case R.id.checkbox_trade:
-				if (mCheckBoxTrade.isChecked()) {
-					mStock.addFlag(Stock.FLAG_TRADE);
-				} else {
-					mStock.removeFlag(Stock.FLAG_TRADE);
-					mStock.setBuyProfit(0);
-					mStock.setSellProfit(0);
+				// Trade复选框状态改变会通过OnCheckedChangeListener处理
+				break;
+
+			case R.id.button_quota_minus:
+				// 点击减号按钮，减少配额100
+				if (mIsQuotaEditable) {
+					decreaseQuota();
+				}
+				break;
+
+			case R.id.button_quota_plus:
+				// 点击加号按钮，增加配额100
+				if (mIsQuotaEditable) {
+					increaseQuota();
 				}
 				break;
 
@@ -493,17 +865,60 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 				toggleTargetImageView(Period.MIN5, mTradeLevelPickerMin5.getValue(), mImageViewMin5Target);
 				break;
 
-			case R.id.edittext_stock_window:
-				showDatePicker();
-				break;
-
 			case R.id.button_ok:
+				// 如果是编辑模式，检查持仓一致性
+				if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
+					long totalAccountHold = mHoldA + mHoldB + mHoldC;
+					long mainHold = mStock.getHold();
+
+					if (totalAccountHold != mainHold) {
+						// 显示提示但不阻止保存
+						mTextViewHoldConsistencyHint.setVisibility(View.VISIBLE);
+						long diff = Math.abs(mainHold - totalAccountHold);
+						double diffPercentage = mainHold > 0 ? (double) diff / mainHold * 100 : 0;
+
+						mTextViewHoldConsistencyHint.setText(String.format(Locale.getDefault(),
+								"持仓不一致: 主持仓(%d) ≠ 分账户总和(%d) 差值: %d (%.2f%%)",
+								mainHold, totalAccountHold, diff, diffPercentage));
+
+						// 可以添加一个Toast提示用户检查
+						Toast.makeText(this, "请注意：持仓数量与分账户总和不一致", Toast.LENGTH_SHORT).show();
+					}
+				}
+
 				if (mCheckBoxTrade.isChecked()) {
 					mStock.addFlag(Stock.FLAG_TRADE);
+
+					// 保存配额值（确保是100的整数倍）
+					try {
+						String quotaText = mEditTextStockQuota.getText().toString();
+						if (!TextUtils.isEmpty(quotaText)) {
+							long quota = Long.parseLong(quotaText);
+
+							// 检查是否为100的整数倍
+							if (quota % 100 != 0) {
+								// 显示提示并返回，不保存
+								mTextViewQuotaHint.setVisibility(View.VISIBLE);
+								mTextViewQuotaHint.setText(String.format(Locale.getDefault(),
+										"配额必须是100的整数倍 (建议: %d)", Math.round(quota / 100.0) * 100));
+								Toast.makeText(this, "请修正配额值", Toast.LENGTH_SHORT).show();
+								return; // 不保存，返回
+							}
+
+							quota = ensureQuotaMultipleOf100(quota);
+							mStock.setQuota(quota);
+						} else {
+							mStock.setQuota(0);
+						}
+					} catch (Exception e) {
+						mStock.setQuota(0);
+					}
 				} else {
 					mStock.removeFlag(Stock.FLAG_TRADE);
 					mStock.setBuyProfit(0);
 					mStock.setSellProfit(0);
+					// Trade未勾选时，配额设置为0
+					mStock.setQuota(0);
 				}
 
 				String name = mEditTextStockName.getText().toString();
@@ -521,24 +936,13 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					return;
 				}
 
-				mStock.setAdaptive(Period.MONTH, mTradeLevelPickerMonth.getValue());
-				mStock.setAdaptive(Period.WEEK, mTradeLevelPickerWeek.getValue());
-				mStock.setAdaptive(Period.DAY, mTradeLevelPickerDay.getValue());
-				mStock.setAdaptive(Period.MIN60, mTradeLevelPickerMin60.getValue());
-				mStock.setAdaptive(Period.MIN30, mTradeLevelPickerMin30.getValue());
-				mStock.setAdaptive(Period.MIN15, mTradeLevelPickerMin15.getValue());
-				mStock.setAdaptive(Period.MIN5, mTradeLevelPickerMin5.getValue());
-
-				String stockWindow = mEditTextStockWindow.getText().toString();
-				mStock.setWindow(stockWindow);
-				if (!TextUtils.equals(mOrginStockWindow, stockWindow)) {
-					importTDXDataFile(mStock);
-				}
-
-				String stockQuota = mEditTextStockQuota.getText().toString();
-				if (!TextUtils.isEmpty(stockQuota)) {
-					mStock.setQuota(Long.parseLong(stockQuota));
-				}
+				setAdaptiveIfChanged(Period.MONTH, mTradeLevelPickerMonth.getValue());
+				setAdaptiveIfChanged(Period.WEEK, mTradeLevelPickerWeek.getValue());
+				setAdaptiveIfChanged(Period.DAY, mTradeLevelPickerDay.getValue());
+				setAdaptiveIfChanged(Period.MIN60, mTradeLevelPickerMin60.getValue());
+				setAdaptiveIfChanged(Period.MIN30, mTradeLevelPickerMin30.getValue());
+				setAdaptiveIfChanged(Period.MIN15, mTradeLevelPickerMin15.getValue());
+				setAdaptiveIfChanged(Period.MIN5, mTradeLevelPickerMin5.getValue());
 
 				if (TextUtils.equals(mAction, Constant.ACTION_STOCK_NEW)) {
 					if (!mStockDatabaseManager.isStockExist(mStock)) {
@@ -546,6 +950,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 						Uri uri = mStockDatabaseManager.insertStock(mStock);
 						mStockDatabaseManager.getStock(uri, mStock);
 						mStockDatabaseManager.updateStock(mStock, mStock.getContentValuesEdit());
+						Setting.setDownloadStockTimeMillis(mStock, 0);
+						Setting.setDownloadStockDataTimeMillis(mStock, 0);
+						mStockDataProvider.download(mStock);
 					} else {
 						mStockDatabaseManager.getStock(mStock);
 						updateView();
@@ -557,13 +964,10 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					mStock.setModified(Utility.getCurrentDateTimeString());
 					mStockDatabaseManager.updateStock(mStock,
 							mStock.getContentValuesEdit());
+					mStockDataProvider.analyze(mStock);
 				}
-
 				getIntent().putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 				setResult(RESULT_OK, getIntent());
-				Setting.setDownloadStockTimeMillis(mStock, 0);
-				Setting.setDownloadStockDataTimeMillis(mStock, 0);
-				mStockDataProvider.analyze(mStock);
 				finish();
 				break;
 
@@ -598,12 +1002,18 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		if (isCrosshairIconShow(imageView)) {
 			imageView.setImageResource(R.drawable.ic_crosshair_unchecked);
 			mStock.setTarget(period, StockTrend.LEVEL_NONE);
+			mStock.setAdaptive(period, StockTrend.LEVEL_NONE);
 			if (picker != null) {
 				picker.setTargetValue(StockTrend.LEVEL_NONE);
 			}
 		} else {
 			imageView.setImageResource(R.drawable.ic_crosshair_checked);
 			mStock.setTarget(period, target);
+			int adaptive = target - 1;
+			if (adaptive < StockTrend.LEVEL_NONE) {
+				adaptive = StockTrend.LEVEL_NONE;
+			}
+			mStock.setAdaptive(period, adaptive);
 			if (picker != null) {
 				picker.setTargetValue(target);
 			}
@@ -664,40 +1074,16 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	private void restorePeriodToTarget(String period, TradeLevelPicker picker, TextView netTextView, ImageView targetImageView) {
 		int target = mStock.getTarget(period);
 		if (target > StockTrend.LEVEL_NONE) {
+			mStock.setAdaptive(period, target - 1);
 			picker.setValue(target);
 			updateNetTextView(period, target, netTextView);
 			updateTargetImageView(period, target, targetImageView);
 		}
 	}
 
-	private void showDatePicker() {
-		Calendar calendar = Calendar.getInstance();
-
-		String currentDateStr = mEditTextStockWindow.getText().toString();
-		if (!TextUtils.isEmpty(currentDateStr)) {
-			try {
-				SimpleDateFormat sdf = new SimpleDateFormat(Utility.CALENDAR_DATE_FORMAT, Locale.getDefault());
-				Date currentDate = sdf.parse(currentDateStr);
-				if (currentDate != null) {
-					calendar.setTime(currentDate);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	void setAdaptiveIfChanged(String period, int value) {
+		if (value != mStock.getTarget(period) && value != mStock.getAdaptive(period)) {
+			mStock.setAdaptive(period, value);
 		}
-
-		DatePickerDialog datePickerDialog = new DatePickerDialog(
-				this,
-				(view, year, month, dayOfMonth) -> {
-					Calendar selectedDate = Calendar.getInstance();
-					selectedDate.set(year, month, dayOfMonth);
-					SimpleDateFormat sdf = new SimpleDateFormat(Utility.CALENDAR_DATE_FORMAT, Locale.getDefault());
-					mEditTextStockWindow.setText(sdf.format(selectedDate.getTime()));
-				},
-				calendar.get(Calendar.YEAR),
-				calendar.get(Calendar.MONTH),
-				calendar.get(Calendar.DAY_OF_MONTH));
-
-		datePickerDialog.show();
 	}
 }

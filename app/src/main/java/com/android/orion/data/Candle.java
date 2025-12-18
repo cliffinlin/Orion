@@ -1,5 +1,6 @@
 package com.android.orion.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.android.orion.database.DatabaseContract;
@@ -28,6 +29,18 @@ public class Candle {
 		mLow = 0;
 		mBottom = 0;
 		mClose = 0;
+	}
+
+	public ContentValues getContentValues(ContentValues contentValues) {
+		if (contentValues != null) {
+			contentValues.put(DatabaseContract.COLUMN_OPEN, getOpen());
+			contentValues.put(DatabaseContract.COLUMN_TOP, getTop());
+			contentValues.put(DatabaseContract.COLUMN_HIGH, getHigh());
+			contentValues.put(DatabaseContract.COLUMN_LOW, getLow());
+			contentValues.put(DatabaseContract.COLUMN_BOTTOM, getBottom());
+			contentValues.put(DatabaseContract.COLUMN_CLOSE, getClose());
+		}
+		return contentValues;
 	}
 
 	public void set(Candle candle) {

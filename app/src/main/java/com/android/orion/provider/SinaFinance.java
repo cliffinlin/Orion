@@ -216,7 +216,7 @@ public class SinaFinance extends StockDataProvider {
 			cursor.moveToLast();
 			stockData.set(cursor);
 
-			if (Market.isTradingHours()) {//TODO
+			if (Market.isTradingHours()) {
 				int scheduleMinutes = Market.getScheduleMinutes();
 				if (scheduleMinutes != 0) {
 					result = 1;
@@ -824,7 +824,6 @@ public class SinaFinance extends StockDataProvider {
 					stockData.getCandle().setClose(jsonObject.getDouble("close"));
 					stockData.getCandle().setHigh(jsonObject.getDouble("high"));
 					stockData.getCandle().setLow(jsonObject.getDouble("low"));
-					//TODO
 					if (i == jsonArray.size() - 1) {
 						mergeStockDataDay(stockData);
 					}

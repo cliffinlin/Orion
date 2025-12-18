@@ -366,13 +366,13 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 
 		if (stockData.getPeriod().equals(Period.MONTH) || stockData.getPeriod().equals(Period.WEEK)) {
-			StockData day = new StockData(stockData);
-			day.setPeriod(Period.DAY);
-			mStockDatabaseManager.getStockData(day);
-			if (TextUtils.equals(day.getMonth(), stockData.getMonth()) || TextUtils.equals(day.getWeek(), stockData.getWeek())) {
-				if (day.getCalendar().after(stockData.getCalendar())) {
-					stockData.setDate(day.getDate());
-					stockData.getCandle().merge(day.getCandle());
+			StockData stockDataDay = new StockData(stockData);
+			stockDataDay.setPeriod(Period.DAY);
+			mStockDatabaseManager.getStockData(stockDataDay);
+			if (TextUtils.equals(stockDataDay.getMonth(), stockData.getMonth()) || TextUtils.equals(stockDataDay.getWeek(), stockData.getWeek())) {
+				if (stockDataDay.getCalendar().after(stockData.getCalendar())) {
+					stockData.setDate(stockDataDay.getDate());
+					stockData.getCandle().merge(stockDataDay.getCandle());
 				}
 			}
 		}

@@ -1,5 +1,6 @@
 package com.android.orion.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.android.orion.database.DatabaseContract;
@@ -25,6 +26,19 @@ public class Macd {
 		mHistogram = 0;
 		mAdaptive = 0;
 		mTarget = 0;
+	}
+
+	public ContentValues getContentValues(ContentValues contentValues) {
+		if (contentValues != null) {
+			contentValues.put(DatabaseContract.COLUMN_AVERAGE5, getAverage5());
+			contentValues.put(DatabaseContract.COLUMN_AVERAGE10, getAverage10());
+			contentValues.put(DatabaseContract.COLUMN_DIF, getDIF());
+			contentValues.put(DatabaseContract.COLUMN_DEA, getDEA());
+			contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, getHistogram());
+			contentValues.put(DatabaseContract.COLUMN_ADAPTIVE, getAdaptive());
+			contentValues.put(DatabaseContract.COLUMN_TARGET, getTarget());
+		}
+		return contentValues;
 	}
 
 	public void set(Macd macd) {

@@ -49,7 +49,6 @@ public class StockDataChart {
 	public ArrayList<Integer> mDrawVertexList = new ArrayList<>();
 	public ArrayList<Entry> mExtendFirstEntryList = new ArrayList<>();
 	public ArrayList<Entry> mExtendLastEntryList = new ArrayList<>();
-	public ArrayList<Entry> mWindowEntryList = new ArrayList<>();
 	public ArrayList<LimitLine> mLimitLineList = new ArrayList<>();
 	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
@@ -176,15 +175,6 @@ public class StockDataChart {
 		}
 
 		mCombinedDataMain.setData(lineData);
-
-		if (mWindowEntryList.size() > 0) {
-			ScatterData scatterData = new ScatterData(mXValues);
-			ScatterDataSet scatterDataSet = new ScatterDataSet(mWindowEntryList, "window");
-			scatterDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
-			scatterDataSet.setColor(Color.BLUE);
-			scatterData.addDataSet(scatterDataSet);
-			mCombinedDataMain.setData(scatterData);
-		}
 	}
 
 	public void setSubChartData() {
@@ -285,7 +275,7 @@ public class StockDataChart {
 	boolean fillChanged(int level) {
 		boolean result = false;
 		StockTrend stockTrend = mStock.getStockTrend(mPeriod, level);
-		if (stockTrend != null && stockTrend.hasFlag(StockTrend.FLAG_CHANGED)) {
+		if (stockTrend != null && (stockTrend.hasFlag(StockTrend.FLAG_CHANGED))) {
 			result = true;
 		}
 		return result;
@@ -396,7 +386,7 @@ public class StockDataChart {
 		ArrayMap<Double, LimitLine> limitLineMap = new ArrayMap<>();
 		for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
 			if (Setting.getDisplayAdaptive()) {
-				if (i != mAdaptiveLevel) {
+				if (i != mAdaptiveLevel && i != mTargetLevel) {
 					continue;
 				}
 			}
@@ -528,7 +518,6 @@ public class StockDataChart {
 		mExtendLastEntryList.clear();
 		mAverage5EntryList.clear();
 		mAverage10EntryList.clear();
-		mWindowEntryList.clear();
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();

@@ -40,7 +40,6 @@ import com.android.orion.constant.Constant;
 import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
-import com.android.orion.utility.RecordFile;
 import com.android.orion.view.SyncHorizontalScrollView;
 
 import java.util.ArrayList;
@@ -121,7 +120,6 @@ public class StockDealListActivity extends ListActivity implements
 				case MESSAGE_DELETE_DEAL:
 					mStockDatabaseManager.getStockDeal(mStockDeal);
 					getStock(mStockDeal);
-					RecordFile.writeDealFile(mStock, mStockDeal, Constant.DEAL_DELETE);
 					mStockDatabaseManager.deleteStockDeal(mStockDeal);
 					mStockDatabaseManager.updateStockDeal(mStock);
 					mStockDatabaseManager.updateStock(mStock,
@@ -263,15 +261,6 @@ public class StockDealListActivity extends ListActivity implements
 	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_new:
-				if (!stockTrendsUp()) {
-					new AlertDialog.Builder(mContext)
-							.setTitle(R.string.deal_insert)
-							.setMessage(getString(R.string.no_stock_trend_up))
-							.setPositiveButton(R.string.ok, null)
-							.show();
-					return;
-				}
-
 				mIntent = new Intent(this, StockDealActivity.class);
 				mIntent.setAction(Constant.ACTION_STOCK_DEAL_NEW);
 				if (mBundle != null) {
@@ -779,20 +768,6 @@ public class StockDealListActivity extends ListActivity implements
 		mStock.setCode(code);
 		mStockDatabaseManager.getStock(mStock);
 		mStockDatabaseManager.getStockTrendMap(mStock, mStock.getStockTrendMap());
-	}
-
-	boolean stockTrendsUp() {
-		boolean result = false;
-		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period)) {
-				StockTrend adaptiveTrend = mStock.getStockTrend(period, mStock.getAdaptive(period));
-				StockTrend targetTrend = mStock.getStockTrend(period, mStock.getTarget(period));
-				if (adaptiveTrend != null && adaptiveTrend.getNextNet() > 0 || targetTrend != null && targetTrend.getNextNet() > 0) {
-					result = true;
-				}
-			}
-		}
-		return result;
 	}
 
 	private class RightViewBinder implements SimpleCursorAdapter.ViewBinder {

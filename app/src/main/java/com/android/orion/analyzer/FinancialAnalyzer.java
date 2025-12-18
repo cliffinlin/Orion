@@ -245,7 +245,6 @@ public class FinancialAnalyzer {
 		stock.setupRoe(mStockFinancialList);
 		stock.setupPe();
 		stock.setupPb();
-		stock.setupPr();
 		stock.setupRoi();
 		stock.setupIRR();
 	}
@@ -263,20 +262,9 @@ public class FinancialAnalyzer {
 		ArrayList<StockBonus> currentYearBonusList = new ArrayList<>();
 		ArrayList<StockBonus> prevYearBonusList = new ArrayList<>();
 
-		String currentYearString = "";
-		String prevYearString = "";
-		for (int i = 0; i < mStockBonusList.size(); i++) {
-			StockBonus stockBonus = mStockBonusList.get(i);
-			if (i == 0) {
-				stock.setRDate(stockBonus.getRDate());
-				currentYearString = stockBonus.getYear();
-			} else {
-				if (!TextUtils.equals(currentYearString, stockBonus.getYear())) {
-					prevYearString = stockBonus.getYear();
-					break;
-				}
-			}
-		}
+		String currentYearString = Utility.getCurrentYearString();
+		String prevYearString = Utility.getPreviousYearString();
+		stock.setRDate(mStockBonusList.get(0).getRDate());
 
 		for (StockBonus stockBonus : mStockBonusList) {
 			if (stockBonus.getYear().contains(currentYearString)) {
@@ -292,21 +280,23 @@ public class FinancialAnalyzer {
 			}
 		}
 
-		double totalDivident = 0;
+		if (currentYearBonusList.size() == 0) {
+			return;
+		}
+
 		double totalDividendInYear = 0;
 		for (int i = 0; i < currentYearBonusList.size(); i++) {
 			StockBonus stockBonus = currentYearBonusList.get(i);
-			totalDivident += stockBonus.getDividend();
 			totalDividendInYear += stockBonus.getDividend();
 		}
+//TODO
+//		if (prevYearBonusList.size() > currentYearBonusList.size()) {
+//			for (int i = 0; i < prevYearBonusList.size() - currentYearBonusList.size(); i++) {
+//				totalDividendInYear += prevYearBonusList.get(i).getDividend();
+//			}
+//		}
 
-		if (prevYearBonusList.size() > currentYearBonusList.size()) {
-			for (int i = 0; i < prevYearBonusList.size() - currentYearBonusList.size(); i++) {
-				totalDividendInYear += prevYearBonusList.get(i).getDividend();
-			}
-		}
-
-		stock.setDividend(totalDivident);
+		stock.setDividend(currentYearBonusList.get(0).getDividend());
 		stock.setDividendInYear(totalDividendInYear);
 		stock.setupBonus();
 		stock.setupYield();

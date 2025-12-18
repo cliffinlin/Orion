@@ -371,7 +371,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		}
 
 		try {
-			deleteStockData(stock.getSE(), stock.getCode(), period); //TODO
+			deleteStockData(stock.getSE(), stock.getCode(), period);
 			ContentValues[] contentValues = new ContentValues[stockDataList.size()];
 			for (int i = 0; i < stockDataList.size(); i++) {
 				StockData stockData = stockDataList.get(i);
@@ -379,7 +379,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 				stockData.setModified(Utility.getCurrentDateTimeString());
 				contentValues[i] = stockData.getContentValues();
 			}
-			bulkInsertStockData(contentValues); //TODO
+			bulkInsertStockData(contentValues);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -418,10 +418,6 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		if (stock == null || stockDataList == null) {
 			return;
 		}
-		Calendar windowCalendar = null;
-		if (Period.isMinutePeriod(period) && stock.hasFlag(Stock.FLAG_TRADE) && !TextUtils.isEmpty(stock.getWindow())) {
-			windowCalendar = Utility.getCalendar(stock.getWindow(), Utility.CALENDAR_DATE_FORMAT);
-		}
 		stockDataList.clear();
 		Cursor cursor = null;
 		try {
@@ -435,12 +431,6 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 					stockData.setIndex(index);
 					stockData.setIndexStart(index);
 					stockData.setIndexEnd(index);
-					if (windowCalendar != null) {
-						Calendar calendar = stockData.getCalendar();
-						if (calendar.before(windowCalendar)) {
-							continue;
-						}
-					}
 					stockDataList.add(stockData);
 				}
 			}
@@ -672,14 +662,14 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 			return;
 		}
 		try {
-			deleteStockFinancial(stock);//TODO
+			deleteStockFinancial(stock);
 			ContentValues[] contentValues = new ContentValues[stockFinancialList.size()];
 			for (int i = 0; i < stockFinancialList.size(); i++) {
 				StockFinancial stockFinancial = stockFinancialList.get(i);
 				stockFinancial.setModified(Utility.getCurrentDateTimeString());
 				contentValues[i] = stockFinancial.getContentValues();
 			}
-			bulkInsertStockFinancial(contentValues);//TODO
+			bulkInsertStockFinancial(contentValues);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

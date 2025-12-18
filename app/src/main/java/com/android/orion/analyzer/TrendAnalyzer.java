@@ -36,8 +36,8 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_MARKER_SIZE = 20;
 	public static final int THUMBNAIL_MARKER_STROKE_WIDTH = 5;
 	public static final int THUMBNAIL_SCATTER_SIZE = 10;
-	public static final int THUMBNAIL_ADAPTIVE_COLOR_UP = Color.MAGENTA;
-	public static final int THUMBNAIL_ADAPTIVE_COLOR_DOWN = Color.CYAN;
+	public static final int THUMBNAIL_ADAPTIVE_COLOR_UP = Color.RED;
+	public static final int THUMBNAIL_ADAPTIVE_COLOR_DOWN = Color.GREEN;
 	public static final int THUMBNAIL_TARGET_COLOR_UP = Color.RED;
 	public static final int THUMBNAIL_TARGET_COLOR_DOWN = Color.GREEN;
 
@@ -222,8 +222,14 @@ public class TrendAnalyzer {
 		double turn = 0;
 		if (current.getDirection() == StockTrend.DIRECTION_UP) {
 			turn = current.getCandle().getTop();
+			if (!finished) {
+				turn = next.getCandle().getTop();
+			}
 		} else if (current.getDirection() == StockTrend.DIRECTION_DOWN) {
 			turn = current.getCandle().getBottom();
+			if (!finished) {
+				turn = next.getCandle().getBottom();
+			}
 		}
 		stockTrend.setTurn(turn);
 
@@ -687,8 +693,8 @@ public class TrendAnalyzer {
 		float lineWidth = endX - startX;
 
 		// 柱子位置（40%和60%位置）
-		float adaptiveCenterX = startX + lineWidth * 0.4f;
-		float targetCenterX = startX + lineWidth * 0.6f;
+		float adaptiveCenterX = startX + lineWidth * 0.5f;
+		float targetCenterX = startX + lineWidth * 0.5f;
 
 		drawDoubleBars(adaptiveCenterX, centerY, getAxisColor(adaptiveLevel),
 				startX, adaptiveCenterX + lineWidth * 0.05f, adaptiveTrend, getAdaptiveBarColor(adaptiveTrend.getNextNet()), THUMBNAIL_ADAPTIVE_BAR_WIDTH);

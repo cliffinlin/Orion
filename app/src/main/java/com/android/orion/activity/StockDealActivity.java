@@ -1,5 +1,6 @@
 package com.android.orion.activity;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,11 +23,13 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.orion.R;
+import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.constant.Constant;
-import com.android.orion.utility.RecordFile;
+import com.android.orion.database.StockTrend;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
@@ -89,17 +92,14 @@ public class StockDealActivity extends DatabaseActivity implements
 					mStock.setCode(mStockDeal.getCode());
 					mStockDatabaseManager.getStock(mStock);
 					updateView();
-					RecordFile.writeDealFile(mStock, mStockDeal, Constant.DEAL_EDIT);
 					break;
 
 				case MESSAGE_SAVE_DEAL:
 					if (TextUtils.equals(mAction, Constant.ACTION_STOCK_DEAL_NEW)) {
 						mStockDeal.setCreated(Utility.getCurrentDateTimeString());
-						RecordFile.writeDealFile(mStock, mStockDeal, Constant.DEAL_INSERT);
 						mStockDatabaseManager.insertStockDeal(mStockDeal);
 					} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_DEAL_EDIT)) {
 						mStockDeal.setModified(Utility.getCurrentDateTimeString());
-						RecordFile.writeDealFile(mStock, mStockDeal, Constant.DEAL_EDIT);
 						mStockDatabaseManager.updateStockDealByID(mStockDeal);
 					}
 					mStockDatabaseManager.updateStockDeal(mStock);
@@ -120,18 +120,13 @@ public class StockDealActivity extends DatabaseActivity implements
 
 				case MESSAGE_LOAD_STOCK_BY_SE_CODE:
 					mStockDatabaseManager.getStock(mStock);
+					mStockDatabaseManager.getStockTrendMap(mStock, mStock.getStockTrendMap());
 					mStockDeal.setSE(mStock.getSE());
 					mStockDeal.setCode(mStock.getCode());
 					mStockDeal.setName(mStock.getName());
 					mStockDeal.setPrice(mStock.getPrice());
-					if (mStock.isQuotaLimitReached()) {
-						mStockDeal.setType(StockDeal.TYPE_SELL);
-						mStockDeal.setSell(mStock.getPrice());
-						mRadioDealBuy.setEnabled(false);
-					} else {
-						mStockDeal.setType(StockDeal.TYPE_BUY);
-						mStockDeal.setBuy(mStock.getPrice());
-					}
+					mStockDeal.setType(StockDeal.TYPE_BUY);
+					mStockDeal.setBuy(mStock.getPrice());
 					mStockDeal.setDate(Utility.getCurrentDateString());
 					updateView();
 					break;
@@ -209,9 +204,9 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextDealProfit.setEnabled(false);
 
 		mListStockAccount = new ArrayList<>();
-		mListStockAccount.add("");
 		mListStockAccount.add(Stock.ACCOUNT_A);
 		mListStockAccount.add(Stock.ACCOUNT_B);
+		mListStockAccount.add(Stock.ACCOUNT_C);
 
 		mArrayAdapterStockAccount = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, mListStockAccount);
@@ -363,15 +358,54 @@ public class StockDealActivity extends DatabaseActivity implements
 		return super.onCreateOptionsMenu(menu);
 	}
 
+	boolean isStockTrendUp(int type) {
+		StockTrend stockTrend = null;
+		int periods = 0;
+		for (String period : Period.PERIODS) {
+			if (Setting.getPeriod(period)) {
+				periods++;
+				if (type == StockTrend.ADAPTIVE) {
+					stockTrend = mStock.getStockTrend(period, mStock.getAdaptive(period));
+				} else if (type == StockTrend.TARGET) {
+					stockTrend = mStock.getStockTrend(period, mStock.getTarget(period));
+				}
+				if (stockTrend == null) {
+					Log.d("return false, stockTrend=" + null);
+					return false;
+				}
+				Log.d("type=" + type + " period=" + period + " mStock.getAdaptive(period)=" + mStock.getAdaptive(period) + " stockTrend.getNextNet()=" + stockTrend.getNextNet());
+				if (stockTrend.getNextNet() < 0) {
+					return false;
+				}
+			}
+		}
+		return periods > 0;
+	}
+
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 		if (group == mRadioGroupDealType) {
 			switch (checkedId) {
 				case R.id.radio_deal_buy:
-					if (mStock.isQuotaLimitReached()) {
-						Toast.makeText(this, R.string.quota_limit_reached, Toast.LENGTH_SHORT).show();
-						mRadioGroupDealType.check(R.id.radio_deal_sell);
-						return;
+					if (TextUtils.equals(Constant.ACTION_STOCK_DEAL_NEW, mAction)) {
+						if (mStock.isQuotaLimitReached()) {
+							new AlertDialog.Builder(mContext)
+									.setTitle(R.string.buy)
+									.setMessage(getString(R.string.quota_limit_reached))
+									.setPositiveButton(R.string.ok, null)
+									.show();
+							return;
+						}
+
+						if (isStockTrendUp(StockTrend.ADAPTIVE) || isStockTrendUp(StockTrend.TARGET)) {
+						} else {
+							new AlertDialog.Builder(mContext)
+									.setTitle(R.string.buy)
+									.setMessage(getString(R.string.need_stock_trend_up))
+									.setPositiveButton(R.string.ok, null)
+									.show();
+							return;
+						}
 					}
 					mStockDeal.setType(StockDeal.TYPE_BUY);
 
@@ -441,6 +475,14 @@ public class StockDealActivity extends DatabaseActivity implements
 
 				int id = mRadioGroupDealType.getCheckedRadioButtonId();
 				if (id == R.id.radio_deal_buy) {
+					if (mStock.isQuotaLimitReached()) {
+						new AlertDialog.Builder(mContext)
+								.setTitle(R.string.buy)
+								.setMessage(getString(R.string.quota_limit_reached))
+								.setPositiveButton(R.string.ok, null)
+								.show();
+						return;
+					}
 					mStockDeal.setType(StockDeal.TYPE_BUY);
 				} else if (id == R.id.radio_deal_sell) {
 					mStockDeal.setType(StockDeal.TYPE_SELL);

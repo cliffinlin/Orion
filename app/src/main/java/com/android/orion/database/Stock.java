@@ -19,6 +19,7 @@ public class Stock extends DatabaseTable {
 
 	public static final String ACCOUNT_A = "A";
 	public static final String ACCOUNT_B = "B";
+	public static final String ACCOUNT_C = "C";
 
 	public static final String CLASS_A = "A";
 	public static final String CLASS_INDEX = "I";
@@ -64,7 +65,6 @@ public class Stock extends DatabaseTable {
 	private String mCode;
 	private String mName;
 	private String mPinyin;
-	private String mWindow;
 
 	private double mPrice;
 	private double mChange;
@@ -78,7 +78,6 @@ public class Stock extends DatabaseTable {
 	private double mRoe;
 	private double mPe;
 	private double mPb;
-	private double mPr;
 	private long mQuota;
 	private long mTrading;
 	private double mTradingCost;
@@ -136,9 +135,8 @@ public class Stock extends DatabaseTable {
 		mCode = "";
 		mName = "";
 		mPinyin = "";
-		mWindow = "";
 
-		mFlag = 0;
+		mFlag = FLAG_NONE;
 		mQuota = 0;
 		mTrading = 0;
 		mTradingCost = 0;
@@ -162,7 +160,6 @@ public class Stock extends DatabaseTable {
 		mRoe = 0;
 		mPe = 0;
 		mPb = 0;
-		mPr = 0;
 		mProfit = 0;
 		mBonus = 0;
 		mBonusInYear = 0;
@@ -204,7 +201,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_PINYIN, mPinyin);
-		contentValues.put(DatabaseContract.COLUMN_WINDOW, mWindow);
 
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
 		contentValues.put(DatabaseContract.COLUMN_CHANGE, mChange);
@@ -225,7 +221,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPe);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPb);
-		contentValues.put(DatabaseContract.COLUMN_PR, mPr);
 
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
 		contentValues.put(DatabaseContract.COLUMN_TRADING, mTrading);
@@ -294,7 +289,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		contentValues.put(DatabaseContract.COLUMN_WINDOW, mWindow);
 		contentValues.put(DatabaseContract.COLUMN_ADAPTIVE, getAdaptiveString());
 		contentValues.put(DatabaseContract.COLUMN_TARGET, getTargetString());
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
@@ -315,7 +309,6 @@ public class Stock extends DatabaseTable {
 		setCode(stock.mCode);
 		setName(stock.mName);
 		setPinyin(stock.mPinyin);
-		setWindow(stock.mWindow);
 
 		setPrice(stock.mPrice);
 		setChange(stock.mChange);
@@ -338,7 +331,6 @@ public class Stock extends DatabaseTable {
 		setRoe(stock.mRoe);
 		setPe(stock.mPe);
 		setPb(stock.mPb);
-		setPr(stock.mPr);
 		setQuota(stock.mQuota);
 		setTrading(stock.mTrading);
 		setTradingCost(stock.mTradingCost);
@@ -390,7 +382,6 @@ public class Stock extends DatabaseTable {
 		setCode(cursor);
 		setName(cursor);
 		setPinyin(cursor);
-		setWindow(cursor);
 		setPrice(cursor);
 		setChange(cursor);
 		setNet(cursor);
@@ -412,7 +403,6 @@ public class Stock extends DatabaseTable {
 		setRoe(cursor);
 		setPe(cursor);
 		setPb(cursor);
-		setPr(cursor);
 		setQuota(cursor);
 		setTrading(cursor);
 		setTradingCost(cursor);
@@ -541,23 +531,6 @@ public class Stock extends DatabaseTable {
 
 		setPinyin(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PINYIN)));
-	}
-
-	public String getWindow() {
-		return mWindow;
-	}
-
-	public void setWindow(String window) {
-		mWindow = window;
-	}
-
-	void setWindow(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setWindow(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_WINDOW)));
 	}
 
 	public int getFlag() {
@@ -1140,23 +1113,6 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_PB)));
 	}
 
-	public double getPr() {
-		return mPr;
-	}
-
-	public void setPr(double pr) {
-		mPr = pr;
-	}
-
-	void setPr(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setPr(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PR)));
-	}
-
 	public double getDividend() {
 		return mDividend;
 	}
@@ -1655,15 +1611,6 @@ public class Stock extends DatabaseTable {
 		}
 
 		mPb = Utility.Round2(mPrice / mBookValuePerShare);
-	}
-
-	public void setupPr() {
-		if (mPb == 0 || mPe == 0 || mRoe == 0) {
-			mPr = 0;
-			return;
-		}
-
-		mPr = Utility.Round2(mRoe / mPb);
 	}
 
 	public void setupBonus() {

@@ -59,16 +59,9 @@ public class StockAlarmManager {
 				calendar = Calendar.getInstance();
 				calendar.add(Calendar.MILLISECOND, (int) mIntervalMillis);
 			} else if (Market.afterClosed()) {
-				if (dayOfWeek == Calendar.FRIDAY) {
-					//TODO
-					return;
-				} else {
-					//TODO
-					return;
-				}
+				return;
 			}
 		} else {
-			//TODO
 			return;
 		}
 

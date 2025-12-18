@@ -125,6 +125,17 @@ public class Utility {
 				CALENDAR_DATE_TIME_FORMAT);
 	}
 
+	public static String getCurrentYearString() {
+		Calendar calendar = Calendar.getInstance();
+		return String.valueOf(calendar.get(Calendar.YEAR));
+	}
+
+	public static String getPreviousYearString() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.YEAR, -1);
+		return String.valueOf(calendar.get(Calendar.YEAR));
+	}
+
 	public static Calendar getCalendar(String string, String format) {
 		Calendar calendar = Calendar.getInstance();
 
