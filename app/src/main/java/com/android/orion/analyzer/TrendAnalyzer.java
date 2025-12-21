@@ -757,7 +757,7 @@ public class TrendAnalyzer {
 
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
-				setupRadarPoint(mStock.getAdaptiveRadar(period), period, THUMBNAIL_ADAPTIVE_COLOR_UP, THUMBNAIL_ADAPTIVE_COLOR_DOWN);
+//				setupRadarPoint(mStock.getAdaptiveRadar(period), period, THUMBNAIL_ADAPTIVE_COLOR_UP, THUMBNAIL_ADAPTIVE_COLOR_DOWN);
 				setupRadarPoint(mStock.getTargetRadar(period), period, THUMBNAIL_TARGET_COLOR_UP, THUMBNAIL_TARGET_COLOR_DOWN);
 			}
 		}
@@ -787,9 +787,9 @@ public class TrendAnalyzer {
 				Color.BLACK, THUMBNAIL_STROKE_WIDTH
 		));
 
-		mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
-				centerX, centerY, Color.LTGRAY, THUMBNAIL_SCATTER_SIZE
-		));
+//		mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
+//				centerX, centerY, Color.LTGRAY, THUMBNAIL_SCATTER_SIZE
+//		));
 
 		mCircleConfigList.add(new CurveThumbnail.CircleConfig(centerX, centerY, Color.BLACK, THUMBNAIL_SIZE / 4.5f, THUMBNAIL_STROKE_WIDTH));
 		mCircleConfigList.add(new CurveThumbnail.CircleConfig(centerX, centerY, Color.BLACK, THUMBNAIL_SIZE / 2.5f, THUMBNAIL_STROKE_WIDTH));

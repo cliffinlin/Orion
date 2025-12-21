@@ -166,27 +166,27 @@ public class FourierAnalyzer {
         // 设置雷达数据
         if (!periodSortedSpectrum.isEmpty()) {
             PeriodAmplitude firstComponent = periodSortedSpectrum.get(0);
-            double value1 = 0;
-            double value2 = 0;
-            double value3 = 0;
+            double value_1 = 0;
+            double value_2 = 0;
+            double value_3 = 0;
             int direction = StockTrend.DIRECTION_NONE;
             int vertex = StockTrend.VERTEX_NONE;
             if (periodSortedSpectrum.size() > StockTrend.VERTEX_SIZE) {
-                value1 = reconstructedData.get(reconstructedData.size() - 1);
-                value2 = reconstructedData.get(reconstructedData.size() - 2);
-                value3 = reconstructedData.get(reconstructedData.size() - 3);
-                if (value1 > value2) {
+                value_1 = reconstructedData.get(reconstructedData.size() - 1);
+                value_2 = reconstructedData.get(reconstructedData.size() - 2);
+                value_3 = reconstructedData.get(reconstructedData.size() - 3);
+                if (value_1 > value_2) {
                     direction = StockTrend.DIRECTION_UP;
-                } else if (value1 < value2) {
+                } else if (value_1 < value_2) {
                     direction = StockTrend.DIRECTION_DOWN;
                 }
-                if (value2 > value1 && value2 > value3) {
+                if (value_2 > value_1 && value_2 > value_3) {
                     vertex = StockTrend.VERTEX_TOP;
-                } else if (value2 < value1 && value2 < value3) {
+                } else if (value_2 < value_1 && value_2 < value_3) {
                     vertex = StockTrend.VERTEX_BOTTOM;
                 }
             }
-            mRadar = new Radar(Math.abs(value3), firstComponent.period, firstComponent.frequency,
+            mRadar = new Radar(Math.abs(value_1), firstComponent.period, firstComponent.frequency,
                     firstComponent.phase, firstComponent.phaseDegrees, 0, direction, vertex);
         }
 
