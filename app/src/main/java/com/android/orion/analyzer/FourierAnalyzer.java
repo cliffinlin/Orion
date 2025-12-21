@@ -156,22 +156,20 @@ public class FourierAnalyzer {
         // 使用IFFT重建信号
         Complex[] reconstructedComplex = fft.transform(filteredSpectrum, TransformType.INVERSE);
 
+        double amplitude = 0;    // 振幅
+        double phase = 0; // 相位角（弧度）TODO
+        double value_1 = 0;
+        double value_2 = 0;
+        double value_3 = 0;
+        int direction = StockTrend.DIRECTION_NONE;
+        int vertex = StockTrend.VERTEX_NONE;
         // 转换为实数列表
         List<Double> reconstructedData = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             // 取实部作为重建信号（虚部应该接近0）
             reconstructedData.add(reconstructedComplex[i].getReal());
-        }
 
-        // 设置雷达数据
-        if (!periodSortedSpectrum.isEmpty()) {
-            PeriodAmplitude firstComponent = periodSortedSpectrum.get(0);
-            double value_1 = 0;
-            double value_2 = 0;
-            double value_3 = 0;
-            int direction = StockTrend.DIRECTION_NONE;
-            int vertex = StockTrend.VERTEX_NONE;
-            if (periodSortedSpectrum.size() > StockTrend.VERTEX_SIZE) {
+            if (reconstructedData.size() > StockTrend.VERTEX_SIZE) {
                 value_1 = reconstructedData.get(reconstructedData.size() - 1);
                 value_2 = reconstructedData.get(reconstructedData.size() - 2);
                 value_3 = reconstructedData.get(reconstructedData.size() - 3);
@@ -182,12 +180,19 @@ public class FourierAnalyzer {
                 }
                 if (value_2 > value_1 && value_2 > value_3) {
                     vertex = StockTrend.VERTEX_TOP;
+                    amplitude = value_2;
                 } else if (value_2 < value_1 && value_2 < value_3) {
                     vertex = StockTrend.VERTEX_BOTTOM;
+                    amplitude = value_2;
                 }
             }
-            mRadar = new Radar(Math.abs(value_1), firstComponent.period, firstComponent.frequency,
-                    firstComponent.phase, firstComponent.phaseDegrees, 0, direction, vertex);
+        }
+
+        // 设置雷达数据
+        if (!periodSortedSpectrum.isEmpty()) {
+            PeriodAmplitude firstComponent = periodSortedSpectrum.get(0);
+            mRadar = new Radar(Math.abs(amplitude), firstComponent.period, firstComponent.frequency,
+                    phase, firstComponent.phaseDegrees, 0, direction, vertex);
         }
 
         if (logMore) {
