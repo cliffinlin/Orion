@@ -53,7 +53,6 @@ public class StockDataChart {
 	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
-	public ArrayList<Entry> mAdaptiveEntryList = new ArrayList<>();
 	public ArrayList<Entry> mTargetEntryList = new ArrayList<>();
 	public List<Entry>[] mTrendEntryList = new List[StockTrend.LEVELS.length];
 	public List<Entry>[] mChangedEntryList = new List[StockTrend.LEVELS.length];
@@ -205,12 +204,6 @@ public class StockDataChart {
 		lineData.addDataSet(deaDataSet);
 
 		if (!Setting.getDisplayCandle()) {
-			LineDataSet adaptiveDataSet = new LineDataSet(mAdaptiveEntryList, "Adaptive");
-			adaptiveDataSet.setColor(lineColor(mAdaptiveLevel));
-			adaptiveDataSet.setDrawCircles(false);
-			adaptiveDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(adaptiveDataSet);
-
 			LineDataSet targetDataSet = new LineDataSet(mTargetEntryList, "Target");
 			setLineWidth(targetDataSet, mTargetLevel);
 			targetDataSet.setColor(lineColor(mTargetLevel));
@@ -521,7 +514,6 @@ public class StockDataChart {
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
-		mAdaptiveEntryList.clear();
 		mTargetEntryList.clear();
 		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			if (mTrendEntryList[i] != null) {

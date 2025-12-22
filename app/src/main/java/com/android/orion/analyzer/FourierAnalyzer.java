@@ -156,11 +156,14 @@ public class FourierAnalyzer {
         // 使用IFFT重建信号
         Complex[] reconstructedComplex = fft.transform(filteredSpectrum, TransformType.INVERSE);
 
+        double lastHigh = Double.NEGATIVE_INFINITY;
+        double lastLow = Double.POSITIVE_INFINITY;
+        int highIndex = -1;
+        int lowIndex = -1;
+        boolean foundHigh = false;
+        boolean foundLow = false;
         double amplitude = 0;    // 振幅
         double phase = 0; // 相位角（弧度）TODO
-        double value_1 = 0;
-        double value_2 = 0;
-        double value_3 = 0;
         int direction = StockTrend.DIRECTION_NONE;
         int vertex = StockTrend.VERTEX_NONE;
         // 转换为实数列表
@@ -169,10 +172,10 @@ public class FourierAnalyzer {
             // 取实部作为重建信号（虚部应该接近0）
             reconstructedData.add(reconstructedComplex[i].getReal());
 
-            if (reconstructedData.size() > StockTrend.VERTEX_SIZE) {
-                value_1 = reconstructedData.get(reconstructedData.size() - 1);
-                value_2 = reconstructedData.get(reconstructedData.size() - 2);
-                value_3 = reconstructedData.get(reconstructedData.size() - 3);
+            if (reconstructedData.size() >= StockTrend.VERTEX_SIZE) {
+                double value_1 = reconstructedData.get(reconstructedData.size() - 1);
+                double value_2 = reconstructedData.get(reconstructedData.size() - 2);
+                double value_3 = reconstructedData.get(reconstructedData.size() - 3);
                 if (value_1 > value_2) {
                     direction = StockTrend.DIRECTION_UP;
                 } else if (value_1 < value_2) {
@@ -180,18 +183,80 @@ public class FourierAnalyzer {
                 }
                 if (value_2 > value_1 && value_2 > value_3) {
                     vertex = StockTrend.VERTEX_TOP;
-                    amplitude = value_2;
+                    lastHigh = value_2;
+                    highIndex = reconstructedData.size() - 2;
+                    foundHigh = true;
                 } else if (value_2 < value_1 && value_2 < value_3) {
                     vertex = StockTrend.VERTEX_BOTTOM;
-                    amplitude = value_2;
+                    lastLow = value_2;
+                    lowIndex = reconstructedData.size() - 2;
+                    foundLow = true;
                 }
+            }
+        }
+
+        if (foundHigh && foundLow && lastHigh > lastLow) {
+            double midpoint = (lastHigh + lastLow) / 2.0;
+            double halfAmplitude = (lastHigh - lastLow) / 2.0;
+
+            double currentValue = reconstructedData.get(reconstructedData.size() - 1);
+
+            double normalizedValue;
+            if (halfAmplitude > 0) {
+                normalizedValue = (currentValue - midpoint) / halfAmplitude;
+                // 限制在[-1, 1]范围内，防止asin参数越界
+                normalizedValue = Math.max(-1.0, Math.min(1.0, normalizedValue));
+            } else {
+                normalizedValue = 0;
+            }
+
+            // 使用asin计算相位（asin返回[-π/2, π/2]）
+            double asinPhase = Math.asin(normalizedValue);
+
+            if (highIndex < lowIndex) {
+                // 高点 -> 低点 -> 当前
+                if (asinPhase >= 0) {
+                    // 上升趋势，且当前值在中点以上，可能是第一象限
+                    phase = asinPhase; // [0, π/2]
+                } else {
+                    // 上升趋势，且当前值在中点以下，可能是第四象限
+                    phase = 2 * Math.PI + asinPhase; // [3π/2, 2π) 因为asin为负
+                }
+            } else if (lowIndex < highIndex) {
+                // 低点 -> 高点 -> 当前
+                if (asinPhase >= 0) {
+                    // 下降趋势，且当前值在中点以上，可能是第二象限
+                    phase = Math.PI - asinPhase; // [π/2, π]
+                } else {
+                    // 下降趋势，且当前值在中点以下，可能是第三象限
+                    phase = Math.PI - asinPhase; // [π, 3π/2] 因为asin为负
+                }
+            } else {
+            }
+
+            // 确保相位在[0, 2π)范围内
+            phase = phase % (2 * Math.PI);
+            if (phase < 0) phase += 2 * Math.PI;
+
+            if (logMore) {
+                Log.d(String.format("相位计算 - 高点索引: %d(值%.4f), 低点索引: %d(值%.4f)",
+                        highIndex, lastHigh, lowIndex, lastLow));
+                Log.d(String.format("当前值: %.4f, 归一化: %.4f, asin结果: %.2f°, 最终相位: %.2f弧度(%.1f°)",
+                        currentValue, normalizedValue, Math.toDegrees(asinPhase),
+                        phase, Math.toDegrees(phase)));
+            }
+
+            // 更新振幅为实际振幅（半振幅的两倍）
+            amplitude = halfAmplitude * 2;
+            if (amplitude > 1f) {
+                amplitude = 1f;
             }
         }
 
         // 设置雷达数据
         if (!periodSortedSpectrum.isEmpty()) {
             PeriodAmplitude firstComponent = periodSortedSpectrum.get(0);
-            mRadar = new Radar(Math.abs(amplitude), firstComponent.period, firstComponent.frequency,
+            mRadar = new Radar(amplitude, firstComponent.period, firstComponent.frequency,
                     phase, firstComponent.phaseDegrees, 0, direction, vertex);
         }
 
