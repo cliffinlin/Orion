@@ -381,6 +381,10 @@ public class StockData extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_DIRECTION)));
 	}
 
+	public int getVertex() {
+		return mVertex;
+	}
+
 	public void setVertex(int vertex) {
 		mVertex = vertex;
 	}
@@ -539,13 +543,25 @@ public class StockData extends DatabaseTable {
 		if (vertex == StockTrend.VERTEX_NONE) {
 			return;
 		}
-		if (hasVertex(vertex)) {
+		if (vertexOf(vertex)) {
 			mVertex &= ~vertex;
 		}
 	}
 
-	public boolean hasVertex(int vertex) {
-		return (mVertex & vertex) == vertex;
+	public void upgradeVertex(int level) {
+		if (vertexOf(StockTrend.VERTEX_TOP)) {
+			addVertex(StockTrend.getVertexTOP(level));
+		} else if (vertexOf(StockTrend.VERTEX_BOTTOM)) {
+			addVertex(StockTrend.getVertexBottom(level));
+		}
+	}
+
+	public void downgradeVertex(int level) {
+		if (vertexOf(StockTrend.VERTEX_TOP)) {
+			removeVertex(StockTrend.getVertexTOP(level));
+		} else if (vertexOf(StockTrend.VERTEX_BOTTOM)) {
+			removeVertex(StockTrend.getVertexBottom(level));
+		}
 	}
 
 	public void setupNet() {

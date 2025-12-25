@@ -104,6 +104,10 @@ public class StockAnalyzer {
 
 		for (int i = StockTrend.LEVEL_STROKE; i < StockTrend.LEVELS.length; i++) {
 			mTrendAnalyzer.analyzeLine(i);
+//__TEST_CASE__
+//			mTrendAnalyzer.analyzeVertexExt(i);
+//			mTrendAnalyzer.vertexListToDataList(mStock.getVertexList(period, i), mStock.getStockDataList(period, i));
+//__TEST_CASE__
 		}
 	}
 

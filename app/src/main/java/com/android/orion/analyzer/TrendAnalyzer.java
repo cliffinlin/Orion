@@ -2,6 +2,7 @@ package com.android.orion.analyzer;
 
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.ArraySet;
 
 import com.android.orion.chart.CurveThumbnail;
 import com.android.orion.data.Period;
@@ -22,7 +23,9 @@ import com.android.orion.utility.Utility;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TrendAnalyzer {
 	public static final int THUMBNAIL_SIZE = 160;
@@ -89,12 +92,9 @@ public class TrendAnalyzer {
 		for (StockData stockData : mStockDataList) {
 			stockData.getCandle().setTop(stockData.getCandle().getHigh());
 			stockData.getCandle().setBottom(stockData.getCandle().getLow());
+			stockData.setDirection(StockTrend.DIRECTION_NONE);
+			stockData.setVertex(StockTrend.VERTEX_NONE);
 			dataList.add(new StockData(stockData));
-		}
-
-		int size = dataList.size();
-		if (size < StockTrend.VERTEX_SIZE) {
-			return;
 		}
 
 		vertexList.clear();
@@ -105,7 +105,7 @@ public class TrendAnalyzer {
 		int direction = StockTrend.DIRECTION_NONE;
 		int vertex;
 		try {
-			for (int i = 1; i < size - 1; i++) {
+			for (int i = 1; i < dataList.size() - 1; i++) {
 				if (prev.isEmpty()) {
 					prev.set(dataList.get(i - 1));
 				}
@@ -165,6 +165,75 @@ public class TrendAnalyzer {
 				prev.set(current);
 				current.set(next);
 				next.init();
+			}
+			extendVertexList(mStockDataList, vertexList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	void analyzeVertexExt(int level) {
+		if (mStockDataList == null || mStockDataList.size() < StockTrend.VERTEX_SIZE) {
+			return;
+		}
+
+		ArrayList<StockData> stockDataList = mStock.getStockDataList(mPeriod, level-1);
+		if (stockDataList == null || stockDataList.size() < StockTrend.VERTEX_SIZE) {
+			return;
+		}
+		ArrayList<StockData> dataList = new ArrayList<>(stockDataList);
+
+		ArrayList<StockData> vertexList = mStock.getVertexList(mPeriod, level);
+		if (vertexList == null) {
+			return;
+		}
+
+		Set<Integer> excludeSet = new HashSet<>();
+		Set<StockData> vertexSet = new HashSet<>();
+
+		vertexList.clear();
+		StockData prev = new StockData();
+		StockData current = new StockData();
+		StockData next = new StockData();
+
+		try {
+			for (int i = 1; i < dataList.size() - 1; i++) {
+				prev.set(dataList.get(i - 1));
+				current.set(dataList.get(i));
+				next.set(dataList.get(i + 1));
+
+				StockData start = StockData.getSafely(mStockDataList, current.getIndexStart());
+				StockData end = StockData.getSafely(mStockDataList, current.getIndexEnd());
+
+				if (start == null || end == null) {
+					continue;
+				}
+
+				if (current.includedBy(prev) && current.includedBy(next)) {
+					excludeSet.add(start.getIndex());
+					start.downgradeVertex(level);
+					vertexList.remove(start);
+					vertexSet.remove(start);
+
+					excludeSet.add(end.getIndex());
+					end.downgradeVertex(level);
+					vertexList.remove(end);
+					vertexSet.remove(end);
+					i++;
+					continue;
+				}
+
+				if (!excludeSet.contains(start.getIndex()) && !vertexSet.contains(start)) {
+					vertexSet.add(start);
+					start.upgradeVertex(level);
+					vertexList.add(start);
+				}
+
+				if (!excludeSet.contains(end.getIndex()) && !vertexSet.contains(end)) {
+					vertexSet.add(end);
+					end.upgradeVertex(level);
+					vertexList.add(end);
+				}
 			}
 			extendVertexList(mStockDataList, vertexList);
 		} catch (Exception e) {
