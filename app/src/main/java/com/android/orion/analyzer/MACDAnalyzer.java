@@ -108,8 +108,45 @@ public class MACDAnalyzer {
         mDEAList.clear();
         mDIFList.clear();
         mHistogramList.clear();
+
+        // 1. 获取原始收盘价
         for (int i = 0; i < stockDataList.size(); i++) {
             mPriceList.add(stockDataList.get(i).getCandle().getClose());
+        }
+
+        // 2. 进行归一化处理 (Min-Max Normalization)
+        normalizePriceList();
+    }
+
+    /**
+     * 将 mPriceList 中的数据归一化到 [0, 10] 区间
+     */
+    private static void normalizePriceList() {
+        if (mPriceList.isEmpty()) return;
+
+        double min = Double.MAX_VALUE;
+        double max = -Double.MAX_VALUE;
+
+        // 寻找最大值和最小值
+        for (Double price : mPriceList) {
+            if (price < min) min = price;
+            if (price > max) max = price;
+        }
+
+        double range = max - min;
+
+        // 如果 range 为 0，说明所有价格都一样，归一化为 0.5 或者保持不变
+        if (range <= 0) {
+            for (int i = 0; i < mPriceList.size(); i++) {
+                mPriceList.set(i, 0.0);
+            }
+            return;
+        }
+
+        // 执行归一化计算: (x - min) / (max - min)
+        for (int i = 0; i < mPriceList.size(); i++) {
+            double normalizedValue = 10.0 * (mPriceList.get(i) - min) / range;
+            mPriceList.set(i, normalizedValue);
         }
     }
 
@@ -140,20 +177,14 @@ public class MACDAnalyzer {
     }
 
     public static void calculateMACD(String period, ArrayList<StockData> stockDataList) {
+        // init 中已经包含了获取价格和归一化的逻辑
         init(period, stockDataList);
 
         if (mPriceList.size() < StockTrend.VERTEX_SIZE) {
             return;
         }
 
-        mEMAAverage5List.clear();
-        mEMAAverage10List.clear();
-        mEMAFastList.clear();
-        mEMASlowList.clear();
-        mDEAList.clear();
-        mDIFList.clear();
-        mHistogramList.clear();
-
+        // 此时 EMA 计算所使用的 mPriceList 已经是 0-1 之间的数值
         EMA(mAverage5, mPriceList, mEMAAverage5List);
         EMA(mAverage10, mPriceList, mEMAAverage10List);
         EMA(mFast, mPriceList, mEMAFastList);

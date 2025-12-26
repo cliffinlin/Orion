@@ -883,7 +883,7 @@ public class TrendAnalyzer {
 
 		switch (period) {
 			case Period.DAY:
-				addRadialLine(x, y, -lineRadius, 0, color, strokeWidth);
+//				addRadialLine(x, y, -lineRadius, 0, color, strokeWidth);
 				break;
 			case Period.MIN60:
 				addRadialLine(x, y, 0, lineRadius, color, strokeWidth);
