@@ -408,9 +408,10 @@ public class TrendAnalyzer {
 				switch (directionTo) {
 					case StockTrend.DIRECTION_UP:
 						if (direction == StockTrend.DIRECTION_DOWN) {
+							StockData vertexData = chooseVertex(prev_start, prev_end, StockTrend.VERTEX_BOTTOM);
 							type = StockTrend.TYPE_DOWN_UP;
 							addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
-							if (upgradeVertex(prev_end, level, vertexList)) {
+							if (upgradeVertex(vertexData, level, vertexList)) {
 								addStockDataList(vertexList, dataList);
 							}
 						} else if (direction == StockTrend.DIRECTION_NONE) {
@@ -432,9 +433,10 @@ public class TrendAnalyzer {
 						break;
 					case StockTrend.DIRECTION_DOWN:
 						if (direction == StockTrend.DIRECTION_UP) {
+							StockData vertexData = chooseVertex(prev_start, prev_end, StockTrend.VERTEX_TOP);
 							type = StockTrend.TYPE_UP_DOWN;
 							addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
-							if (upgradeVertex(prev_end, level, vertexList)) {
+							if (upgradeVertex(vertexData, level, vertexList)) {
 								addStockDataList(vertexList, dataList);
 							}
 						} else if (direction == StockTrend.DIRECTION_NONE) {

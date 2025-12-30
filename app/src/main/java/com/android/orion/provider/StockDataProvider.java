@@ -53,7 +53,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	public static final int RESULT_SUCCESS = 1;
 	public static final int RESULT_NONE = 0;
 	public static final int RESULT_FAILED = -1;
-	public static final int SEND_MESSAGE_DELAY_DOWNLOAD = 100;
+	public static final int SEND_MESSAGE_DELAY_DOWNLOAD = 500;
 
 	protected static volatile IStockDataProvider mInstance;
 	ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<>();
