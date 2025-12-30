@@ -11,6 +11,7 @@ public class Macd {
 	private double mDIF;
 	private double mDEA;
 	private double mHistogram;
+	private double mAdaptive;
 	private double mTarget;
 
 	public Macd() {
@@ -23,6 +24,7 @@ public class Macd {
 		mDIF = 0;
 		mDEA = 0;
 		mHistogram = 0;
+		mAdaptive = 0;
 		mTarget = 0;
 	}
 
@@ -33,6 +35,7 @@ public class Macd {
 			contentValues.put(DatabaseContract.COLUMN_DIF, getDIF());
 			contentValues.put(DatabaseContract.COLUMN_DEA, getDEA());
 			contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, getHistogram());
+			contentValues.put(DatabaseContract.COLUMN_ADAPTIVE, getAdaptive());
 			contentValues.put(DatabaseContract.COLUMN_TARGET, getTarget());
 		}
 		return contentValues;
@@ -47,6 +50,7 @@ public class Macd {
 		setDIF(macd.mDIF);
 		setDEA(macd.mDEA);
 		setHistogram(macd.mHistogram);
+		setAdaptive(macd.mAdaptive);
 		setTarget(macd.mTarget);
 	}
 
@@ -56,15 +60,17 @@ public class Macd {
 		setDIF(cursor);
 		setDEA(cursor);
 		setHistogram(cursor);
+		setAdaptive(cursor);
 		setTarget(cursor);
 	}
 
-	public void set(double average5, double average10, double dif, double dea, double histogram, double target) {
+	public void set(double average5, double average10, double dif, double dea, double histogram, double adaptive, double target) {
 		setAverage5(average5);
 		setAverage10(average10);
 		setDIF(dif);
 		setDEA(dea);
 		setHistogram(histogram);
+		setAdaptive(adaptive);
 		setTarget(target);
 	}
 
@@ -151,6 +157,23 @@ public class Macd {
 
 		setHistogram(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_HISTOGRAM)));
+	}
+
+	public double getAdaptive() {
+		return mAdaptive;
+	}
+
+	public void setAdaptive(double adaptive) {
+		mAdaptive = adaptive;
+	}
+
+	void setAdaptive(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setAdaptive(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ADAPTIVE)));
 	}
 
 	public double getTarget() {
