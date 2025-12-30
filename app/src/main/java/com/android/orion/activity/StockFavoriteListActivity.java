@@ -693,16 +693,10 @@ public class StockFavoriteListActivity extends ListActivity implements
                 tradingPortion.setLayoutParams(tradingParams);
                 remainingPortion.setLayoutParams(remainingParams);
 
-                if (ratio > 3.0f) {
+                if (ratio > 1.0f) {
                     tradingPortion.setBackgroundColor(Color.BLACK);
-                } else if (ratio > 2.0f) {
-                    tradingPortion.setBackgroundColor(Color.CYAN);
-                } else if (ratio > 1.0f) {
-                    tradingPortion.setBackgroundColor(Color.MAGENTA);
-                } else if (ratio > 0.8f) {
+                } else if (ratio == 1.0f) {
                     tradingPortion.setBackgroundColor(Color.RED);
-                } else if (ratio > 0.5f) {
-                    tradingPortion.setBackgroundColor(Color.GREEN);
                 } else {
                     tradingPortion.setBackgroundColor(Color.GREEN);
                 }

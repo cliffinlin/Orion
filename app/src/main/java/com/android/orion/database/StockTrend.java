@@ -89,7 +89,6 @@ public class StockTrend extends DatabaseTable {
 			TYPE_DOWN_NONE, TYPE_DOWN_NONE_UP, TYPE_DOWN_NONE_DOWN};
 
 	public static final int VERTEX_SIZE = 3;
-	public static final int ADAPTIVE_SIZE = 8;
 
 	private String mSE;
 	private String mCode;
@@ -124,73 +123,6 @@ public class StockTrend extends DatabaseTable {
 
 	public StockTrend(Cursor cursor) {
 		set(cursor);
-	}
-
-	public static int getColor(int level) {
-		if (level < 0 || level >= StockTrend.COLORS.length) {
-			return StockTrend.COLORS[0];
-		}
-		return StockTrend.COLORS[level];
-	}
-
-	public static int getVertexTOP(int level) {
-		int vertexTop = StockTrend.VERTEX_NONE;
-		switch (level) {
-			case StockTrend.LEVEL_DRAW:
-				vertexTop = StockTrend.VERTEX_TOP;
-				break;
-			case StockTrend.LEVEL_STROKE:
-				vertexTop = StockTrend.VERTEX_TOP_STROKE;
-				break;
-			case StockTrend.LEVEL_SEGMENT:
-				vertexTop = StockTrend.VERTEX_TOP_SEGMENT;
-				break;
-			case StockTrend.LEVEL_LINE:
-				vertexTop = StockTrend.VERTEX_TOP_LINE;
-				break;
-			case StockTrend.LEVEL_OUT_LINE:
-				vertexTop = StockTrend.VERTEX_TOP_OUTLINE;
-				break;
-			case StockTrend.LEVEL_SUPER_LINE:
-				vertexTop = StockTrend.VERTEX_TOP_SUPERLINE;
-				break;
-			case StockTrend.LEVEL_TREND_LINE:
-				vertexTop = StockTrend.VERTEX_TOP_TREND_LINE;
-				break;
-			default:
-				break;
-		}
-		return vertexTop;
-	}
-
-	public static int getVertexBottom(int level) {
-		int vertexBottom = StockTrend.VERTEX_NONE;
-		switch (level) {
-			case StockTrend.LEVEL_DRAW:
-				vertexBottom = StockTrend.VERTEX_BOTTOM;
-				break;
-			case StockTrend.LEVEL_STROKE:
-				vertexBottom = StockTrend.VERTEX_BOTTOM_STROKE;
-				break;
-			case StockTrend.LEVEL_SEGMENT:
-				vertexBottom = StockTrend.VERTEX_BOTTOM_SEGMENT;
-				break;
-			case StockTrend.LEVEL_LINE:
-				vertexBottom = StockTrend.VERTEX_BOTTOM_LINE;
-				break;
-			case StockTrend.LEVEL_OUT_LINE:
-				vertexBottom = StockTrend.VERTEX_BOTTOM_OUTLINE;
-				break;
-			case StockTrend.LEVEL_SUPER_LINE:
-				vertexBottom = StockTrend.VERTEX_BOTTOM_SUPERLINE;
-				break;
-			case StockTrend.LEVEL_TREND_LINE:
-				vertexBottom = StockTrend.VERTEX_BOTTOM_TREND_LINE;
-				break;
-			default:
-				break;
-		}
-		return vertexBottom;
 	}
 
 	public boolean isEmpty() {
@@ -616,6 +548,73 @@ public class StockTrend extends DatabaseTable {
 
 	public String toNotifyString() {
 		return mPeriod + " " + toChartString();
+	}
+
+	public static int getColor(int level) {
+		if (level < 0 || level >= StockTrend.COLORS.length) {
+			return StockTrend.COLORS[0];
+		}
+		return StockTrend.COLORS[level];
+	}
+
+	public static int getVertexTOP(int level) {
+		int vertexTop = StockTrend.VERTEX_NONE;
+		switch (level) {
+			case StockTrend.LEVEL_DRAW:
+				vertexTop = StockTrend.VERTEX_TOP;
+				break;
+			case StockTrend.LEVEL_STROKE:
+				vertexTop = StockTrend.VERTEX_TOP_STROKE;
+				break;
+			case StockTrend.LEVEL_SEGMENT:
+				vertexTop = StockTrend.VERTEX_TOP_SEGMENT;
+				break;
+			case StockTrend.LEVEL_LINE:
+				vertexTop = StockTrend.VERTEX_TOP_LINE;
+				break;
+			case StockTrend.LEVEL_OUT_LINE:
+				vertexTop = StockTrend.VERTEX_TOP_OUTLINE;
+				break;
+			case StockTrend.LEVEL_SUPER_LINE:
+				vertexTop = StockTrend.VERTEX_TOP_SUPERLINE;
+				break;
+			case StockTrend.LEVEL_TREND_LINE:
+				vertexTop = StockTrend.VERTEX_TOP_TREND_LINE;
+				break;
+			default:
+				break;
+		}
+		return vertexTop;
+	}
+
+	public static int getVertexBottom(int level) {
+		int vertexBottom = StockTrend.VERTEX_NONE;
+		switch (level) {
+			case StockTrend.LEVEL_DRAW:
+				vertexBottom = StockTrend.VERTEX_BOTTOM;
+				break;
+			case StockTrend.LEVEL_STROKE:
+				vertexBottom = StockTrend.VERTEX_BOTTOM_STROKE;
+				break;
+			case StockTrend.LEVEL_SEGMENT:
+				vertexBottom = StockTrend.VERTEX_BOTTOM_SEGMENT;
+				break;
+			case StockTrend.LEVEL_LINE:
+				vertexBottom = StockTrend.VERTEX_BOTTOM_LINE;
+				break;
+			case StockTrend.LEVEL_OUT_LINE:
+				vertexBottom = StockTrend.VERTEX_BOTTOM_OUTLINE;
+				break;
+			case StockTrend.LEVEL_SUPER_LINE:
+				vertexBottom = StockTrend.VERTEX_BOTTOM_SUPERLINE;
+				break;
+			case StockTrend.LEVEL_TREND_LINE:
+				vertexBottom = StockTrend.VERTEX_BOTTOM_TREND_LINE;
+				break;
+			default:
+				break;
+		}
+		return vertexBottom;
 	}
 
 	public static String directionToString(int direction) {
