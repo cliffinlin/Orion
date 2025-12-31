@@ -2,7 +2,6 @@ package com.android.orion.analyzer;
 
 import android.graphics.Color;
 import android.text.TextUtils;
-import android.util.ArraySet;
 
 import com.android.orion.chart.CurveThumbnail;
 import com.android.orion.data.Period;
@@ -39,10 +38,10 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_MARKER_SIZE = 20;
 	public static final int THUMBNAIL_MARKER_STROKE_WIDTH = 5;
 	public static final int THUMBNAIL_SCATTER_SIZE = 10;
-	public static final int THUMBNAIL_ADAPTIVE_COLOR_UP = Color.MAGENTA;
-	public static final int THUMBNAIL_ADAPTIVE_COLOR_DOWN = Color.CYAN;
-	public static final int THUMBNAIL_TARGET_COLOR_UP = Color.RED;
-	public static final int THUMBNAIL_TARGET_COLOR_DOWN = Color.GREEN;
+	public static final int THUMBNAIL_TREND_COLOR_UP = Color.RED;
+	public static final int THUMBNAIL_TREND_COLOR_DOWN = Color.GREEN;
+	public static final int THUMBNAIL_RADA_COLOR_ADAPTIVE = Color.GRAY;
+	public static final int THUMBNAIL_RADA_COLOR_TARGET = Color.BLACK;
 
 	int mPeriods;
 	Logger Log = Logger.getLogger();
@@ -803,17 +802,17 @@ public class TrendAnalyzer {
 
 	private int getAdaptiveBarColor(double value) {
 		if (value > 0) {
-			return THUMBNAIL_ADAPTIVE_COLOR_UP;
+			return THUMBNAIL_TREND_COLOR_UP;
 		} else {
-			return THUMBNAIL_ADAPTIVE_COLOR_DOWN;
+			return THUMBNAIL_TREND_COLOR_DOWN;
 		}
 	}
 
 	private int getTargetBarColor(double value) {
 		if (value > 0) {
-			return THUMBNAIL_TARGET_COLOR_UP;
+			return THUMBNAIL_TREND_COLOR_UP;
 		} else {
-			return THUMBNAIL_TARGET_COLOR_DOWN;
+			return THUMBNAIL_TREND_COLOR_DOWN;
 		}
 	}
 
@@ -826,8 +825,8 @@ public class TrendAnalyzer {
 
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
-				setupRadarPoint(mStock.getAdaptiveRadar(period), period, THUMBNAIL_ADAPTIVE_COLOR_UP, THUMBNAIL_ADAPTIVE_COLOR_DOWN);
-				setupRadarPoint(mStock.getTargetRadar(period), period, THUMBNAIL_TARGET_COLOR_UP, THUMBNAIL_TARGET_COLOR_DOWN);
+				setupRadarPoint(mStock.getAdaptiveRadar(period), period, THUMBNAIL_RADA_COLOR_ADAPTIVE, THUMBNAIL_RADA_COLOR_ADAPTIVE);
+				setupRadarPoint(mStock.getTargetRadar(period), period, THUMBNAIL_RADA_COLOR_TARGET, THUMBNAIL_RADA_COLOR_TARGET);
 			}
 		}
 

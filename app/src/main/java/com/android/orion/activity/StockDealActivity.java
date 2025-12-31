@@ -358,30 +358,6 @@ public class StockDealActivity extends DatabaseActivity implements
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	boolean isStockTrendUp(int type) {
-		StockTrend stockTrend = null;
-		int periods = 0;
-		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period)) {
-				periods++;
-				if (type == StockTrend.ADAPTIVE) {
-					stockTrend = mStock.getStockTrend(period, mStock.getAdaptive(period));
-				} else if (type == StockTrend.TARGET) {
-					stockTrend = mStock.getStockTrend(period, mStock.getTarget(period));
-				}
-				if (stockTrend == null) {
-					Log.d("return false, stockTrend=" + null);
-					return false;
-				}
-				Log.d("type=" + type + " period=" + period + " mStock.getAdaptive(period)=" + mStock.getAdaptive(period) + " stockTrend.getNextNet()=" + stockTrend.getNextNet());
-				if (stockTrend.getNextNet() < 0) {
-					return false;
-				}
-			}
-		}
-		return periods > 0;
-	}
-
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 		if (group == mRadioGroupDealType) {
@@ -392,16 +368,6 @@ public class StockDealActivity extends DatabaseActivity implements
 							new AlertDialog.Builder(mContext)
 									.setTitle(R.string.buy)
 									.setMessage(getString(R.string.quota_limit_reached))
-									.setPositiveButton(R.string.ok, null)
-									.show();
-							return;
-						}
-
-						if (isStockTrendUp(StockTrend.ADAPTIVE) || isStockTrendUp(StockTrend.TARGET)) {
-						} else {
-							new AlertDialog.Builder(mContext)
-									.setTitle(R.string.buy)
-									.setMessage(getString(R.string.need_stock_trend_up))
 									.setPositiveButton(R.string.ok, null)
 									.show();
 							return;
