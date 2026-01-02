@@ -259,45 +259,24 @@ public class FinancialAnalyzer {
 			return;
 		}
 
-		ArrayList<StockBonus> currentYearBonusList = new ArrayList<>();
-		ArrayList<StockBonus> prevYearBonusList = new ArrayList<>();
-
+		double totalDividendCurrentYear = 0;
+		double totalDividendPrevYear = 0;
 		String currentYearString = Utility.getCurrentYearString();
 		String prevYearString = Utility.getPreviousYearString();
-		stock.setRDate(mStockBonusList.get(0).getRDate());
 
 		for (StockBonus stockBonus : mStockBonusList) {
 			if (stockBonus.getYear().contains(currentYearString)) {
-				if (stockBonus.getDividend() > 0) {
-					currentYearBonusList.add(stockBonus);
-				}
+				totalDividendCurrentYear += stockBonus.getDividend();
 			} else if (stockBonus.getYear().contains(prevYearString)) {
-				if (stockBonus.getDividend() > 0) {
-					prevYearBonusList.add(stockBonus);
-				}
+				totalDividendPrevYear += stockBonus.getDividend();
 			} else {
 				break;
 			}
 		}
 
-		if (currentYearBonusList.size() == 0) {
-			return;
-		}
-
-		double totalDividendInYear = 0;
-		for (int i = 0; i < currentYearBonusList.size(); i++) {
-			StockBonus stockBonus = currentYearBonusList.get(i);
-			totalDividendInYear += stockBonus.getDividend();
-		}
-//TODO
-//		if (prevYearBonusList.size() > currentYearBonusList.size()) {
-//			for (int i = 0; i < prevYearBonusList.size() - currentYearBonusList.size(); i++) {
-//				totalDividendInYear += prevYearBonusList.get(i).getDividend();
-//			}
-//		}
-
-		stock.setDividend(currentYearBonusList.get(0).getDividend());
-		stock.setDividendInYear(totalDividendInYear);
+		stock.setDividend(mStockBonusList.get(0).getDividend());
+		stock.setRDate(mStockBonusList.get(0).getRDate());
+		stock.setDividendInYear(totalDividendCurrentYear != 0 ? totalDividendCurrentYear : totalDividendPrevYear);
 		stock.setupBonus();
 		stock.setupYield();
 		stock.setupDividendRatio();
