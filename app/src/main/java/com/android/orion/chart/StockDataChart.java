@@ -291,36 +291,9 @@ public class StockDataChart {
 
 	public boolean displayTrend(int level) {
 		boolean result = false;
-		switch (level) {
-			case StockTrend.LEVEL_DRAW:
-				result = Setting.getDisplayDraw();
-				break;
-			case StockTrend.LEVEL_STROKE:
-				result = Setting.getDisplayStroke();
-				break;
-			case StockTrend.LEVEL_SEGMENT:
-				result = Setting.getDisplaySegment();
-				break;
-			case StockTrend.LEVEL_LINE:
-				result = Setting.getDisplayLine();
-				break;
-			case StockTrend.LEVEL_OUT_LINE:
-				result = Setting.getDisplayOutLine();
-				break;
-			case StockTrend.LEVEL_SUPER_LINE:
-				result = Setting.getDisplaySuperLine();
-				break;
-			case StockTrend.LEVEL_TREND_LINE:
-				result = Setting.getDisplayTrendLine();
-				break;
-			default:
-				break;
-		}
-
 		if (Setting.getDisplayAdaptive()) {
 			result = (level == mAdaptiveLevel || level == mTargetLevel);
 		}
-
 		return result;
 	}
 

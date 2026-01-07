@@ -823,12 +823,16 @@ public class TrendAnalyzer {
 
 		setupBaseLines();
 
+		double signal = 0;
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
 				setupRadarPoint(mStock.getAdaptiveRadar(period), period, THUMBNAIL_RADA_COLOR_ADAPTIVE, THUMBNAIL_RADA_COLOR_ADAPTIVE);
+				signal += mStock.getAdaptiveRadar(period).signal;
 				setupRadarPoint(mStock.getTargetRadar(period), period, THUMBNAIL_RADA_COLOR_TARGET, THUMBNAIL_RADA_COLOR_TARGET);
+				signal += mStock.getTargetRadar(period).signal;
 			}
 		}
+		mStock.setSignal(Utility.Round2(signal));
 
 		CurveThumbnail thumbnail = new CurveThumbnail(
 				THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, Color.TRANSPARENT,
@@ -874,7 +878,6 @@ public class TrendAnalyzer {
 		double angle = radar.phase;
 		float x = centerX + (float) (radius * Math.cos(angle));
 		float y = centerY + (float) (radius * Math.sin(angle));
-
 		int color = (radar.direction == StockTrend.DIRECTION_UP) ? upColor : downColor;
 
 		mScatterConfigList.add(new CurveThumbnail.ScatterConfig(

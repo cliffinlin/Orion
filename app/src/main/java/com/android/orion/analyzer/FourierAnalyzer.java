@@ -256,8 +256,12 @@ public class FourierAnalyzer {
         // 设置雷达数据
         if (!periodSortedSpectrum.isEmpty()) {
             PeriodAmplitude firstComponent = periodSortedSpectrum.get(0);
+            double phaseDegrees = Math.toDegrees(phase);
+            if (phaseDegrees < 0) phaseDegrees += 360;
+            if (phaseDegrees >= 360) phaseDegrees -= 360;
+
             mRadar = new Radar(amplitude, firstComponent.period, firstComponent.frequency,
-                    phase, firstComponent.phaseDegrees, 0, direction, vertex);
+                    phase, phaseDegrees, 0, direction, vertex);
         }
 
         if (logMore) {

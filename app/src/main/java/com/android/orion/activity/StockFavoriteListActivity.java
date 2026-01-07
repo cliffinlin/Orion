@@ -123,6 +123,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SELL_PROFIT, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, R.id.trend);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_RADAR_THUMBNAIL, R.id.radar);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_SIGNAL, R.id.signal);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_MONTH_THUMBNAIL, R.id.period_month);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_WEEK_THUMBNAIL, R.id.period_week);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_DAY_THUMBNAIL, R.id.period_day);
@@ -144,7 +145,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         }
 
         int[] headerViewIds = {
-                R.id.stock_name_code, R.id.price, R.id.net, R.id.profite, R.id.trend, R.id.radar,
+                R.id.stock_name_code, R.id.price, R.id.net, R.id.profite, R.id.trend, R.id.radar, R.id.signal,
                 R.id.period_month, R.id.period_week,
                 R.id.period_day, R.id.period_min60, R.id.period_min30, R.id.period_min15, R.id.period_min5,
                 R.id.flag, R.id.modified
@@ -347,6 +348,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_SELL_PROFIT,
                 DatabaseContract.COLUMN_TREND_THUMBNAIL,
                 DatabaseContract.COLUMN_RADAR_THUMBNAIL,
+                DatabaseContract.COLUMN_SIGNAL,
                 DatabaseContract.COLUMN_MONTH_THUMBNAIL,
                 DatabaseContract.COLUMN_WEEK_THUMBNAIL,
                 DatabaseContract.COLUMN_DAY_THUMBNAIL,
@@ -367,6 +369,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                 R.id.sell_profit,
                 R.id.trend,
                 R.id.radar,
+                R.id.signal,
                 R.id.month,
                 R.id.week,
                 R.id.day,
@@ -768,10 +771,10 @@ public class StockFavoriteListActivity extends ListActivity implements
                 }
 
                 if (DatabaseContract.COLUMN_PRICE.equals(columnName) ||
-                        DatabaseContract.COLUMN_NET.equals(columnName)) {
+                        DatabaseContract.COLUMN_NET.equals(columnName) ||
+                        DatabaseContract.COLUMN_SIGNAL.equals(columnName)) {
                     double value = cursor.getDouble(columnIndex);
                     textView.setText(String.valueOf(value));
-
                 } else if (DatabaseContract.COLUMN_BUY_PROFIT.equals(columnName)) {
                     if (Utility.hasFlag(cursor.getInt(mColumnIndexFlag), Stock.FLAG_TRADE)) {
                         double profit = cursor.getDouble(columnIndex);
@@ -781,7 +784,6 @@ public class StockFavoriteListActivity extends ListActivity implements
                         textView.setText("");
                     }
                     return true;
-
                 } else if (DatabaseContract.COLUMN_SELL_PROFIT.equals(columnName)) {
                     if (Utility.hasFlag(cursor.getInt(mColumnIndexFlag), Stock.FLAG_TRADE)) {
                         double profit = cursor.getDouble(columnIndex);
@@ -791,14 +793,11 @@ public class StockFavoriteListActivity extends ListActivity implements
                         textView.setText("");
                     }
                     return true;
-
                 } else if (DatabaseContract.COLUMN_MODIFIED.equals(columnName)) {
                     textView.setText(cursor.getString(columnIndex));
-
                 } else {
                     return false; // Let the adapter handle other columns
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
                 textView.setText("");

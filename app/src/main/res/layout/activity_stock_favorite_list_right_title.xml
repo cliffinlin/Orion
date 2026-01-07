@@ -50,6 +50,15 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/signal"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/signal"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/period_month"
         android:layout_width="@dimen/favorite_list_item_layout_width"
         android:layout_height="@dimen/favorite_list_item_header_layout_height"

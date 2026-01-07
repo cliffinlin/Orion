@@ -78,6 +78,14 @@
         android:layout_weight="1"
         android:scaleType="centerInside" />
 
+    <TextView
+        android:id="@+id/signal"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_layout_height"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
     <ImageView
         android:id="@+id/month"
         android:layout_width="@dimen/favorite_list_item_layout_width"

@@ -181,7 +181,6 @@
     <string name="service">Service</string>
     <string name="setting_debug">Debug</string>
     <string name="setting_debug_log">Log</string>
-    <string name="setting_debug_wifi">Wifi</string>
     <string name="setting_period_day">Day</string>
     <string name="setting_period_min15">Min15</string>
     <string name="setting_period_min30">Min30</string>
@@ -192,6 +191,7 @@
     <string name="setting_period_week">Week</string>
     <string name="setting">Setting</string>
     <string name="share">Share</string>
+    <string name="signal">Signal</string>
     <string name="slope">Slope</string>
     <string name="std">STD</string>
     <string name="stock_account">Stock account</string>

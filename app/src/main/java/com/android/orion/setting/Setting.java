@@ -52,31 +52,8 @@ public class Setting {
 	public static final String SETTING_DISPLAY_AVERAGE = "SETTING_DISPLAY_AVERAGE";
 	public static final boolean SETTING_DISPLAY_AVERAGE_DEFAULT = false;
 
-	public static final String SETTING_DISPLAY_DRAW = "SETTING_DISPLAY_DRAW";
-	public static final boolean SETTING_DISPLAY_DRAW_DEFAULT = true;
-
-	public static final String SETTING_DISPLAY_STROKE = "SETTING_DISPLAY_STROKE";
-	public static final boolean SETTING_DISPLAY_STROKE_DEFAULT = true;
-
-	public static final String SETTING_DISPLAY_SEGMENT = "SETTING_DISPLAY_SEGMENT";
-	public static final boolean SETTING_DISPLAY_SEGMENT_DEFAULT = true;
-
-	public static final String SETTING_DISPLAY_LINE = "SETTING_DISPLAY_LINE";
-	public static final boolean SETTING_DISPLAY_LINE_DEFAULT = true;
-
-	public static final String SETTING_DISPLAY_OUT_LINE = "SETTING_DISPLAY_OUT_LINE";
-	public static final boolean SETTING_DISPLAY_OUT_LINE_DEFAULT = true;
-
-	public static final String SETTING_DISPLAY_SUPER_LINE = "SETTING_DISPLAY_SUPER_LINE";
-	public static final boolean SETTING_DISPLAY_SUPER_LINE_DEFAULT = true;
-
-	public static final String SETTING_DISPLAY_TREND_LINE = "SETTING_DISPLAY_TREND_LINE";
-	public static final boolean SETTING_DISPLAY_TREND_LINE_DEFAULT = true;
-
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
 	public static final boolean SETTING_DEBUG_LOG_DEFAULT = true;
-	public static final String SETTING_DEBUG_WIFI = "SETTING_DEBUG_WIFI";
-	public static final boolean SETTING_DEBUG_WIFI_DEFAULT = true;
 
 	public static final String SETTING_DOWNLOAD_STOCK_TIME_MILLIS_ = "SETTING_DOWNLOAD_STOCK_TIME_MILLIS_";
 	public static final String SETTING_DOWNLOAD_STOCK_DATA_TIME_MILLIS_ = "SETTING_DOWNLOAD_STOCK_DATA_TIME_MILLIS_";
@@ -144,76 +121,12 @@ public class Setting {
 		Preferences.putBoolean(SETTING_DISPLAY_AVERAGE, value);
 	}
 
-	public static boolean getDisplayDraw() {
-		return Preferences.getBoolean(SETTING_DISPLAY_DRAW, SETTING_DISPLAY_DRAW_DEFAULT);
-	}
-
-	public static void setDisplayDraw(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_DRAW, value);
-	}
-
-	public static boolean getDisplayStroke() {
-		return Preferences.getBoolean(SETTING_DISPLAY_STROKE, SETTING_DISPLAY_STROKE_DEFAULT);
-	}
-
-	public static void setDisplayStroke(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_STROKE, value);
-	}
-
-	public static boolean getDisplaySegment() {
-		return Preferences.getBoolean(SETTING_DISPLAY_SEGMENT, SETTING_DISPLAY_SEGMENT_DEFAULT);
-	}
-
-	public static void setDisplaySegment(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_SEGMENT, value);
-	}
-
-	public static boolean getDisplayLine() {
-		return Preferences.getBoolean(SETTING_DISPLAY_LINE, SETTING_DISPLAY_LINE_DEFAULT);
-	}
-
-	public static void setDisplayLine(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_LINE, value);
-	}
-
-	public static boolean getDisplayOutLine() {
-		return Preferences.getBoolean(SETTING_DISPLAY_OUT_LINE, SETTING_DISPLAY_OUT_LINE_DEFAULT);
-	}
-
-	public static void setDisplayOutLine(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_OUT_LINE, value);
-	}
-
-	public static boolean getDisplaySuperLine() {
-		return Preferences.getBoolean(SETTING_DISPLAY_SUPER_LINE, SETTING_DISPLAY_SUPER_LINE_DEFAULT);
-	}
-
-	public static void setDisplaySuperLine(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_SUPER_LINE, value);
-	}
-
-	public static boolean getDisplayTrendLine() {
-		return Preferences.getBoolean(SETTING_DISPLAY_TREND_LINE, SETTING_DISPLAY_TREND_LINE_DEFAULT);
-	}
-
-	public static void setDisplayTrendLine(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_TREND_LINE, value);
-	}
-
 	public static boolean getDebugLog() {
 		return Preferences.getBoolean(SETTING_DEBUG_LOG, SETTING_DEBUG_LOG_DEFAULT);
 	}
 
 	public static void setDebugLog(boolean value) {
 		Preferences.putBoolean(SETTING_DEBUG_LOG, value);
-	}
-
-	public static boolean getDebugWifi() {
-		return Preferences.getBoolean(SETTING_DEBUG_WIFI, SETTING_DEBUG_WIFI_DEFAULT);
-	}
-
-	public static void setDebugWifi(boolean value) {
-		Preferences.putBoolean(SETTING_DEBUG_WIFI, value);
 	}
 
 	public static long getDownloadStockTimeMillis(Stock stock) {

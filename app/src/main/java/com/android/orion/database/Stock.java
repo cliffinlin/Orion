@@ -112,6 +112,7 @@ public class Stock extends DatabaseTable {
 	private double mSellProfit;
 	private byte[] mTrendThumbnail;
 	private byte[] mRadarThumbnail;
+	private double mSignal;
 
 	public Stock() {
 		init();
@@ -188,6 +189,7 @@ public class Stock extends DatabaseTable {
 		mStatus = "";
 		mBuyProfit = 0;
 		mSellProfit = 0;
+		mSignal = 0;
 	}
 
 	@Override
@@ -257,6 +259,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SELL_PROFIT, mSellProfit);
 		contentValues.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, mTrendThumbnail);
 		contentValues.put(DatabaseContract.COLUMN_RADAR_THUMBNAIL, mRadarThumbnail);
+		contentValues.put(DatabaseContract.COLUMN_SIGNAL, mSignal);
 		return contentValues;
 	}
 
@@ -365,6 +368,7 @@ public class Stock extends DatabaseTable {
 		setSellProfit(stock.mSellProfit);
 		setTrendThumbnail(stock.mTrendThumbnail);
 		setRadarThumbnail(stock.mRadarThumbnail);
+		setSignal(stock.mSignal);
 	}
 
 	@Override
@@ -438,6 +442,7 @@ public class Stock extends DatabaseTable {
 		setSellProfit(cursor);
 		setTrendThumbnail(cursor);
 		setRadarThumbnail(cursor);
+		setSignal(cursor);
 	}
 
 	public String getClasses() {
@@ -1321,6 +1326,23 @@ public class Stock extends DatabaseTable {
 
 	public void setPeriodThumbnail(String period, byte[] thumbnail) {
 		getPeriod(period).setThumbnail(thumbnail);
+	}
+
+	public double getSignal() {
+		return mSignal;
+	}
+
+	public void setSignal(double signal) {
+		mSignal = signal;
+	}
+
+	void setSignal(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setSignal(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_SIGNAL)));
 	}
 
 	public void addFlag(int flag) {

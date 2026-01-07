@@ -34,35 +34,11 @@
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_AVERAGE"
             android:title="@string/average" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_DRAW"
-            android:title="@string/draw" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_STROKE"
-            android:title="@string/stroke" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_SEGMENT"
-            android:title="@string/segment" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_LINE"
-            android:title="@string/line" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_OUT_LINE"
-            android:title="@string/outline" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_SUPER_LINE"
-            android:title="@string/super_line" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_TREND_LINE"
-            android:title="@string/trend_line" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/setting_debug">
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DEBUG_LOG"
             android:title="@string/setting_debug_log" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DEBUG_WIFI"
-            android:title="@string/setting_debug_wifi" />
     </PreferenceCategory>
 
 </PreferenceScreen>

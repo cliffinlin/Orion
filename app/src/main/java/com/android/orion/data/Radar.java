@@ -14,6 +14,7 @@ public class Radar {
     public int frequencyIndex;  // 频率索引
     public int direction;
     public int vertex;
+    public double signal;
 
     public Radar(double amplitude, double period, double frequency,
                  double phase, double phaseDegrees, int frequencyIndex, int direction, int vertex) {
@@ -25,9 +26,6 @@ public class Radar {
         this.frequencyIndex = frequencyIndex;
         this.direction = direction;
         this.vertex = vertex;
-    }
-
-    public String toNotifyString() {
-        return "Radar " + "vertex=" + StockTrend.vertexToString(vertex);
+        this.signal = Math.cos(phase);
     }
 }
