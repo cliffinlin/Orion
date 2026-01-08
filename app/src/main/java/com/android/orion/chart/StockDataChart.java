@@ -44,8 +44,6 @@ public class StockDataChart {
 	public StringBuffer mDescription = new StringBuffer();
 	public ArrayList<String> mXValues = new ArrayList<>();
 	public ArrayList<CandleEntry> mCandleEntryList = new ArrayList<>();
-	public ArrayList<Entry> mAverage5EntryList = new ArrayList<>();
-	public ArrayList<Entry> mAverage10EntryList = new ArrayList<>();
 	public ArrayList<Integer> mDrawVertexList = new ArrayList<>();
 	public ArrayList<Entry> mExtendFirstEntryList = new ArrayList<>();
 	public ArrayList<Entry> mExtendLastEntryList = new ArrayList<>();
@@ -120,22 +118,6 @@ public class StockDataChart {
 		}
 
 		LineData lineData = new LineData(mXValues);
-
-		if (Setting.getDisplayAverage()) {
-			LineDataSet lineDataSet5 = new LineDataSet(mAverage5EntryList,
-					"MA5");
-			lineDataSet5.setColor(Config.COLOR_MA5);
-			lineDataSet5.setDrawCircles(false);
-			lineDataSet5.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(lineDataSet5);
-
-			LineDataSet lineDataSet10 = new LineDataSet(mAverage10EntryList,
-					"MA10");
-			lineDataSet10.setColor(Config.COLOR_MA10);
-			lineDataSet10.setDrawCircles(false);
-			lineDataSet10.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(lineDataSet10);
-		}
 
 		addLineDataSet(mTrendEntryList, StockTrend.LABEL_DRAW, StockTrend.LEVEL_DRAW, lineData);
 		if (displayTrend(StockTrend.LEVEL_DRAW)) {
@@ -489,8 +471,6 @@ public class StockDataChart {
 		mDrawVertexList.clear();
 		mExtendFirstEntryList.clear();
 		mExtendLastEntryList.clear();
-		mAverage5EntryList.clear();
-		mAverage10EntryList.clear();
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();

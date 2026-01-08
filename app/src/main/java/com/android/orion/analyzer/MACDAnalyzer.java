@@ -11,16 +11,11 @@ import java.util.List;
 
 public class MACDAnalyzer {
 
-    private static String mPeriod;
-    private static int mAverage5 = 0;
-    private static int mAverage10 = 0;
     private static int mFast = 0;
     private static int mSlow = 0;
     private static int mSignal = 0;
 
     private static final ArrayList<Double> mPriceList = new ArrayList<>();
-    private static final ArrayList<Double> mEMAAverage5List = new ArrayList<>();
-    private static final ArrayList<Double> mEMAAverage10List = new ArrayList<>();
     private static final ArrayList<Double> mEMAFastList = new ArrayList<>();
     private static final ArrayList<Double> mEMASlowList = new ArrayList<>();
     private static final ArrayList<Double> mDEAList = new ArrayList<>();
@@ -29,20 +24,9 @@ public class MACDAnalyzer {
 
     static Logger Log = Logger.getLogger();
 
-    private static final int AVERAGE5 = 5;
-    private static final int AVERAGE10 = 10;
-
     private static final int FAST = 10; //12;
     private static final int SLOW = 20; //26;
     private static final int SIGNAL = 8; //9;
-
-    public static ArrayList<Double> getEMAAverage5List() {
-        return mEMAAverage5List;
-    }
-
-    public static ArrayList<Double> getEMAAverage10List() {
-        return mEMAAverage10List;
-    }
 
     public static ArrayList<Double> getDEAList() {
         return mDEAList;
@@ -60,49 +44,36 @@ public class MACDAnalyzer {
         if (stockDataList == null || stockDataList.isEmpty()) {
             return;
         }
-        mPeriod = period;
         switch (period) {
             case Period.MONTH:
             case Period.WEEK:
             case Period.DAY:
-                mAverage5 = AVERAGE5;
-                mAverage10 = AVERAGE10;
                 mFast = FAST;
                 mSlow = SLOW;
                 mSignal = SIGNAL;
                 break;
             case Period.MIN60:
-                mAverage5 = Constant.MIN60_PER_TRADE_DAY * AVERAGE5;
-                mAverage10 = Constant.MIN60_PER_TRADE_DAY * AVERAGE10;
                 mFast = Constant.MIN60_PER_TRADE_DAY * FAST;
                 mSlow = Constant.MIN60_PER_TRADE_DAY * SLOW;
                 mSignal = Constant.MIN60_PER_TRADE_DAY * SIGNAL;
                 break;
             case Period.MIN30:
-                mAverage5 = Constant.MIN30_PER_TRADE_DAY * AVERAGE5;
-                mAverage10 = Constant.MIN30_PER_TRADE_DAY * AVERAGE10;
                 mFast = Constant.MIN30_PER_TRADE_DAY * FAST;
                 mSlow = Constant.MIN30_PER_TRADE_DAY * SLOW;
                 mSignal = Constant.MIN30_PER_TRADE_DAY * SIGNAL;
                 break;
             case Period.MIN15:
-                mAverage5 = Constant.MIN15_PER_TRADE_DAY * AVERAGE5;
-                mAverage10 = Constant.MIN15_PER_TRADE_DAY * AVERAGE10;
                 mFast = Constant.MIN15_PER_TRADE_DAY * FAST;
                 mSlow = Constant.MIN15_PER_TRADE_DAY * SLOW;
                 mSignal = Constant.MIN15_PER_TRADE_DAY * SIGNAL;
                 break;
             case Period.MIN5:
-                mAverage5 = Constant.MIN5_PER_TRADE_DAY * AVERAGE5;
-                mAverage10 = Constant.MIN5_PER_TRADE_DAY * AVERAGE10;
                 mFast = Constant.MIN5_PER_TRADE_DAY * FAST;
                 mSlow = Constant.MIN5_PER_TRADE_DAY * SLOW;
                 mSignal = Constant.MIN5_PER_TRADE_DAY * SIGNAL;
                 break;
         }
         mPriceList.clear();
-        mEMAAverage5List.clear();
-        mEMAAverage10List.clear();
         mEMAFastList.clear();
         mEMASlowList.clear();
         mDEAList.clear();
@@ -185,8 +156,6 @@ public class MACDAnalyzer {
         }
 
         // 此时 EMA 计算所使用的 mPriceList 已经是 0-1 之间的数值
-        EMA(mAverage5, mPriceList, mEMAAverage5List);
-        EMA(mAverage10, mPriceList, mEMAAverage10List);
         EMA(mFast, mPriceList, mEMAFastList);
         EMA(mSlow, mPriceList, mEMASlowList);
 

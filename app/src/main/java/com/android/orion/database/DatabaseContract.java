@@ -111,8 +111,6 @@ public class DatabaseContract {
 	public static final String COLUMN_CLOSE = "close";
 	public static final String COLUMN_DIRECTION = "direction";
 	public static final String COLUMN_VERTEX = "vertex";
-	public static final String COLUMN_AVERAGE5 = "average5";
-	public static final String COLUMN_AVERAGE10 = "average10";
 	public static final String COLUMN_DIF = "dif";
 	public static final String COLUMN_DEA = "dea";
 	public static final String COLUMN_HISTOGRAM = "histogram";
@@ -425,7 +423,7 @@ public class DatabaseContract {
 				COLUMN_PERIOD, COLUMN_DATE, COLUMN_TIME, COLUMN_TEXT,
 				COLUMN_OPEN, COLUMN_TOP, COLUMN_HIGH, COLUMN_LOW, COLUMN_BOTTOM, COLUMN_CLOSE, COLUMN_CHANGE, COLUMN_NET,
 				COLUMN_DIRECTION, COLUMN_VERTEX,
-				COLUMN_AVERAGE5, COLUMN_AVERAGE10, COLUMN_DIF, COLUMN_DEA, COLUMN_HISTOGRAM, COLUMN_ADAPTIVE, COLUMN_TARGET,
+				COLUMN_DIF, COLUMN_DEA, COLUMN_HISTOGRAM, COLUMN_ADAPTIVE, COLUMN_TARGET,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -448,8 +446,6 @@ public class DatabaseContract {
 				+ COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DIRECTION + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_VERTEX + INTEGER_TYPE + COMMA_SEP
-				+ COLUMN_AVERAGE5 + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_AVERAGE10 + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DIF + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DEA + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_HISTOGRAM + DOUBLE_TYPE + COMMA_SEP

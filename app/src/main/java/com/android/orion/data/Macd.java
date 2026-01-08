@@ -6,8 +6,6 @@ import android.database.Cursor;
 import com.android.orion.database.DatabaseContract;
 
 public class Macd {
-	private double mAverage5;
-	private double mAverage10;
 	private double mDIF;
 	private double mDEA;
 	private double mHistogram;
@@ -19,8 +17,6 @@ public class Macd {
 	}
 
 	public void init() {
-		mAverage5 = 0;
-		mAverage10 = 0;
 		mDIF = 0;
 		mDEA = 0;
 		mHistogram = 0;
@@ -30,8 +26,6 @@ public class Macd {
 
 	public ContentValues getContentValues(ContentValues contentValues) {
 		if (contentValues != null) {
-			contentValues.put(DatabaseContract.COLUMN_AVERAGE5, getAverage5());
-			contentValues.put(DatabaseContract.COLUMN_AVERAGE10, getAverage10());
 			contentValues.put(DatabaseContract.COLUMN_DIF, getDIF());
 			contentValues.put(DatabaseContract.COLUMN_DEA, getDEA());
 			contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, getHistogram());
@@ -45,8 +39,6 @@ public class Macd {
 		if (macd == null) {
 			return;
 		}
-		setAverage5(macd.mAverage5);
-		setAverage10(macd.mAverage10);
 		setDIF(macd.mDIF);
 		setDEA(macd.mDEA);
 		setHistogram(macd.mHistogram);
@@ -55,8 +47,6 @@ public class Macd {
 	}
 
 	public void set(Cursor cursor) {
-		setAverage5(cursor);
-		setAverage10(cursor);
 		setDIF(cursor);
 		setDEA(cursor);
 		setHistogram(cursor);
@@ -64,48 +54,12 @@ public class Macd {
 		setTarget(cursor);
 	}
 
-	public void set(double average5, double average10, double dif, double dea, double histogram, double adaptive, double target) {
-		setAverage5(average5);
-		setAverage10(average10);
+	public void set(double dif, double dea, double histogram, double adaptive, double target) {
 		setDIF(dif);
 		setDEA(dea);
 		setHistogram(histogram);
 		setAdaptive(adaptive);
 		setTarget(target);
-	}
-
-	public double getAverage5() {
-		return mAverage5;
-	}
-
-	public void setAverage5(double average) {
-		mAverage5 = average;
-	}
-
-	void setAverage5(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setAverage5(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_AVERAGE5)));
-	}
-
-	public double getAverage10() {
-		return mAverage10;
-	}
-
-	public void setAverage10(double average) {
-		mAverage10 = average;
-	}
-
-	void setAverage10(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setAverage10(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_AVERAGE10)));
 	}
 
 	public double getDIF() {

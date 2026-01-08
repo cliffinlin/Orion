@@ -15,11 +15,11 @@ public class Config {
 	public static final String MESSAGE_CHANNEL_ID = "message_channel";
 	public static final String MESSAGE_CHANNEL_NAME = "Message Channel";
 
+	public static final int COLOR_DARK_GREEN = Color.rgb(50, 128, 50);
+	public static final int COLOR_DARK_RED = Color.rgb(255, 50, 50);
 	public static final int COLOR_CANDLE = Color.RED;
-	public static final int COLOR_DECREASING = Color.rgb(50, 128, 50);
-	public static final int COLOR_INCREASING = Color.rgb(255, 50, 50);
-	public static final int COLOR_MA5 = Color.WHITE;
-	public static final int COLOR_MA10 = Color.CYAN;
+	public static final int COLOR_DECREASING = COLOR_DARK_GREEN;
+	public static final int COLOR_INCREASING = COLOR_DARK_RED;
 	public static final int COLOR_HISTOGRAM = Color.RED;
 	public static final int COLOR_DIF = Color.YELLOW;
 	public static final int COLOR_DEA = Color.WHITE;

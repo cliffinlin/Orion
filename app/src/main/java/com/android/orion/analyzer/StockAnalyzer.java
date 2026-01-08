@@ -118,14 +118,12 @@ public class StockAnalyzer {
 
 		try {
 			MACDAnalyzer.calculateMACD(period, mStockDataList);
-			ArrayList<Double> average5List = MACDAnalyzer.getEMAAverage5List();
-			ArrayList<Double> average10List = MACDAnalyzer.getEMAAverage10List();
 			ArrayList<Double> difList = MACDAnalyzer.getDIFList();
 			ArrayList<Double> deaList = MACDAnalyzer.getDEAList();
 			ArrayList<Double> histogramList = MACDAnalyzer.getHistogramList();
 
 			int size = mStockDataList.size();
-			if (average5List.size() != size || average10List.size() != size || difList.size() != size || deaList.size() != size || histogramList.size() != size) {
+			if (difList.size() != size || deaList.size() != size || histogramList.size() != size) {
 				return;
 			}
 
@@ -149,8 +147,6 @@ public class StockAnalyzer {
 				Macd macd = stockData.getMacd();
 				if (macd != null) {
 					macd.set(
-							average5List.get(i),
-							average10List.get(i),
 							difList.get(i),
 							deaList.get(i),
 							histogramList.get(i),

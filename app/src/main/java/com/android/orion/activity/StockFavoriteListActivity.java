@@ -22,6 +22,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
+import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
@@ -55,6 +56,9 @@ public class StockFavoriteListActivity extends ListActivity implements
     private int mColumnIndexCode = -1;
     private int mColumnIndexName = -1;
     private int mColumnIndexFlag = -1;
+    private int mColumnIndexPrice = -1;
+    private int mColumnIndexNet = -1;
+    private int mColumnIndexSignal = -1;
 
     private final Map<Integer, TextView> mHeaderTextViews = new HashMap<>();
     private final Map<String, Integer> mColumnToViewIdMap = new HashMap<>();
@@ -518,6 +522,9 @@ public class StockFavoriteListActivity extends ListActivity implements
                 mColumnIndexCode = cursor.getColumnIndex(DatabaseContract.COLUMN_CODE);
                 mColumnIndexName = cursor.getColumnIndex(DatabaseContract.COLUMN_NAME);
                 mColumnIndexFlag = cursor.getColumnIndex(DatabaseContract.COLUMN_FLAG);
+                mColumnIndexPrice = cursor.getColumnIndex(DatabaseContract.COLUMN_PRICE);
+                mColumnIndexNet = cursor.getColumnIndex(DatabaseContract.COLUMN_NET);
+                mColumnIndexSignal = cursor.getColumnIndex(DatabaseContract.COLUMN_SIGNAL);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -577,6 +584,19 @@ public class StockFavoriteListActivity extends ListActivity implements
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         startActivity(new Intent(this, StockListActivity.class));
         return true;
+    }
+
+    private void setTextColorByValue(TextView textView, double value) {
+        if (textView == null) {
+            return;
+        }
+        int color = Color.GRAY;
+        if (value > 0) {
+            color = Config.COLOR_DARK_RED;
+        } else if (value < 0) {
+            color = Config.COLOR_DARK_GREEN;
+        }
+        textView.setTextColor(color);
     }
 
     private class LeftViewBinder implements SimpleCursorAdapter.ViewBinder {
@@ -697,7 +717,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                 remainingPortion.setLayoutParams(remainingParams);
 
                 if (ratio > 1.0f) {
-                    tradingPortion.setBackgroundColor(Color.BLACK);
+                    tradingPortion.setBackgroundColor(Color.MAGENTA);
                 } else if (ratio == 1.0f) {
                     tradingPortion.setBackgroundColor(Color.RED);
                 } else {
@@ -770,11 +790,16 @@ public class StockFavoriteListActivity extends ListActivity implements
                     return true;
                 }
 
-                if (DatabaseContract.COLUMN_PRICE.equals(columnName) ||
-                        DatabaseContract.COLUMN_NET.equals(columnName) ||
+                if (DatabaseContract.COLUMN_PRICE.equals(columnName)) {
+                    double value = cursor.getDouble(columnIndex);
+                    textView.setText(String.valueOf(value));
+                    double net = cursor.getDouble(mColumnIndexNet);
+                    setTextColorByValue(textView, net);
+                } else if (DatabaseContract.COLUMN_NET.equals(columnName) ||
                         DatabaseContract.COLUMN_SIGNAL.equals(columnName)) {
                     double value = cursor.getDouble(columnIndex);
                     textView.setText(String.valueOf(value));
+                    setTextColorByValue(textView, value);
                 } else if (DatabaseContract.COLUMN_BUY_PROFIT.equals(columnName)) {
                     if (Utility.hasFlag(cursor.getInt(mColumnIndexFlag), Stock.FLAG_TRADE)) {
                         double profit = cursor.getDouble(columnIndex);
@@ -802,7 +827,6 @@ public class StockFavoriteListActivity extends ListActivity implements
                 e.printStackTrace();
                 textView.setText("");
             }
-
             return true;
         }
     }

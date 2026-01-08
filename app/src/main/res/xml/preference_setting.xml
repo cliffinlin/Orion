@@ -31,9 +31,6 @@
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_CANDLE"
             android:title="@string/candle" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_AVERAGE"
-            android:title="@string/average" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/setting_debug">
         <com.android.orion.preference.CustomSwitchPreference

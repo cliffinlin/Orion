@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.text.TextUtils;
 
 import com.android.orion.chart.CurveThumbnail;
+import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.data.Radar;
 import com.android.orion.database.Stock;
@@ -38,8 +39,8 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_MARKER_SIZE = 20;
 	public static final int THUMBNAIL_MARKER_STROKE_WIDTH = 5;
 	public static final int THUMBNAIL_SCATTER_SIZE = 10;
-	public static final int THUMBNAIL_TREND_COLOR_UP = Color.RED;
-	public static final int THUMBNAIL_TREND_COLOR_DOWN = Color.GREEN;
+	public static final int THUMBNAIL_TREND_COLOR_UP = Config.COLOR_DARK_RED;
+	public static final int THUMBNAIL_TREND_COLOR_DOWN = Config.COLOR_DARK_GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_ADAPTIVE = Color.GRAY;
 	public static final int THUMBNAIL_RADA_COLOR_TARGET = Color.BLACK;
 
