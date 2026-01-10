@@ -187,11 +187,13 @@ public class StockDataChart {
 		lineData.addDataSet(deaDataSet);
 
 		if (!Setting.getDisplayCandle()) {
-			LineDataSet adaptiveDataSet = new LineDataSet(mAdaptiveEntryList, "Adaptive");
-			adaptiveDataSet.setColor(lineColor(mAdaptiveLevel));
-			adaptiveDataSet.setDrawCircles(false);
-			adaptiveDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(adaptiveDataSet);
+			if (displayTrend(mAdaptiveLevel)) {
+				LineDataSet adaptiveDataSet = new LineDataSet(mAdaptiveEntryList, "Adaptive");
+				adaptiveDataSet.setColor(lineColor(mAdaptiveLevel));
+				adaptiveDataSet.setDrawCircles(false);
+				adaptiveDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+				lineData.addDataSet(adaptiveDataSet);
+			}
 
 			LineDataSet targetDataSet = new LineDataSet(mTargetEntryList, "Target");
 			setLineWidth(targetDataSet, mTargetLevel);
@@ -273,8 +275,10 @@ public class StockDataChart {
 
 	public boolean displayTrend(int level) {
 		boolean result = false;
-		if (Setting.getDisplayAdaptive()) {
-			result = (level == mAdaptiveLevel || level == mTargetLevel);
+		if (level == mTargetLevel) {
+			result = true;
+		} else if (level == mAdaptiveLevel) {
+			result = Setting.getDisplayAdaptive();
 		}
 		return result;
 	}
@@ -340,10 +344,8 @@ public class StockDataChart {
 
 		ArrayMap<Double, LimitLine> limitLineMap = new ArrayMap<>();
 		for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
-			if (Setting.getDisplayAdaptive()) {
-				if (i != mAdaptiveLevel && i != mTargetLevel) {
-					continue;
-				}
+			if (!displayTrend(i)) {
+				continue;
 			}
 
 			StockTrend stockTrend = mStock.getStockTrend(mPeriod, i);

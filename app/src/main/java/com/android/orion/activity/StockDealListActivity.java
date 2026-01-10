@@ -32,6 +32,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
+import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
@@ -781,63 +782,48 @@ public class StockDealListActivity extends ListActivity implements
 			if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_PRICE)) {
 				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_NET)) {
 				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_BUY)) {
 				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_SELL)) {
 				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_VOLUME)) {
 				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_VALUE)) {
 				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_BONUS)) {
 				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_YIELD)) {
 				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_FEE)) {
 				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_PROFIT)) {
 				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_ACCOUNT)) {
 				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_DATE)) {
 				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_TYPE)) {
 				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_CREATED)) {
 				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
 				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
 			}
 
 			return false;
@@ -856,9 +842,9 @@ public class StockDealListActivity extends ListActivity implements
 			TextView textView = (TextView) view;
 			int textColor;
 			if (TextUtils.equals(type, StockDeal.TYPE_BUY)) {
-				textColor = net > 0 ? Color.RED : Color.GREEN;
+				textColor = net > 0 ? Color.RED : Config.COLOR_DARK_GREEN;
 			} else if (TextUtils.equals(type, StockDeal.TYPE_SELL)) {
-				textColor = net > 0 ? Color.GREEN : Color.RED;
+				textColor = net > 0 ? Config.COLOR_DARK_GREEN : Color.RED;
 			} else {
 				textColor = Color.BLACK;
 			}

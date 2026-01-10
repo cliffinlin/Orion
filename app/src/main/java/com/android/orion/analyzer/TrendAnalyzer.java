@@ -670,15 +670,13 @@ public class TrendAnalyzer {
 				continue;
 			}
 
-			if (Setting.getDisplayAdaptive()) {
-				if (level > StockTrend.LEVEL_DRAW) {
-					int index = mXValues[level].get(mXValues[level].size() - 1).intValue();
-					for (int i = 0; i < mXValues[level - 1].size(); i++) {
-						if (mXValues[level - 1].get(i).intValue() == index) {
-							mXValues[level - 1] = new ArrayList<>(mXValues[level - 1].subList(i, mXValues[level - 1].size()));
-							mYValues[level - 1] = new ArrayList<>(mYValues[level - 1].subList(i, mYValues[level - 1].size()));
-							break;
-						}
+			if (level > StockTrend.LEVEL_DRAW) {
+				int index = mXValues[level].get(mXValues[level].size() - 1).intValue();
+				for (int i = 0; i < mXValues[level - 1].size(); i++) {
+					if (mXValues[level - 1].get(i).intValue() == index) {
+						mXValues[level - 1] = new ArrayList<>(mXValues[level - 1].subList(i, mXValues[level - 1].size()));
+						mYValues[level - 1] = new ArrayList<>(mYValues[level - 1].subList(i, mYValues[level - 1].size()));
+						break;
 					}
 				}
 			}
@@ -690,7 +688,7 @@ public class TrendAnalyzer {
 		}
 
 		CurveThumbnail.CrossMarkerConfig markerConfig =
-				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), TextUtils.equals(mStock.getTrend(period), Symbol.ADD) ? Color.RED : Color.GREEN, THUMBNAIL_MARKER_STROKE_WIDTH, THUMBNAIL_MARKER_SIZE);
+				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), TextUtils.equals(mStock.getTrend(period), Symbol.ADD) ? Color.RED : Config.COLOR_DARK_GREEN, THUMBNAIL_MARKER_STROKE_WIDTH, THUMBNAIL_MARKER_SIZE);
 		mStock.setPeriodThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(THUMBNAIL_SIZE, Color.TRANSPARENT, mLineConfigList, markerConfig)));
 	}
 

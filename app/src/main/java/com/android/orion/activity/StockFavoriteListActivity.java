@@ -177,7 +177,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         Map<Integer, String> periodViewMap = createPeriodViewMap();
         String period = periodViewMap.get(viewId);
         if (period != null) {
-            setVisibility(textView, Setting.getPeriod(period));
+            setVisibility(textView, Setting.getPeriod(period) && Setting.getDisplayThumbnail());
         }
     }
 
@@ -741,7 +741,7 @@ public class StockFavoriteListActivity extends ListActivity implements
             // Set visibility based on settings for period thumbnails
             if (DatabaseContract.isPeriodThumbnailColumn(columnName)) {
                 String period = Period.fromColumnName(columnName);
-                view.setVisibility(Setting.getPeriod(period) ? View.VISIBLE : View.GONE);
+                view.setVisibility(Setting.getPeriod(period) && Setting.getDisplayThumbnail() ? View.VISIBLE : View.GONE);
             } else {
                 view.setVisibility(View.VISIBLE);
             }

@@ -374,7 +374,6 @@ public class StockFinancialListActivity extends ListActivity implements
 		mTextViewNet = findViewById(R.id.net);
 		if (mTextViewNet != null) {
 			mTextViewNet.setOnClickListener(this);
-			setVisibility(mTextViewNet, Setting.getDisplayNet());
 		}
 
 		mTextViewRoi = findViewById(R.id.roi);
@@ -865,7 +864,6 @@ public class StockFinancialListActivity extends ListActivity implements
 
 			if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_NET)) {
-				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
 			}

@@ -179,7 +179,6 @@ public class MainActivity extends Activity {
 			Setting.setPeriod(Period.MIN5, Setting.SETTING_PERIOD_MIN5_DEFAULT);
 
 			Setting.setDisplayAdaptive(Setting.SETTING_DISPLAY_ADAPTIVE_DEFAULT);
-			Setting.setDisplayNet(Setting.SETTING_DISPLAY_NET_DEFAULT);
 
 			Setting.setDebugLog(Setting.SETTING_DEBUG_LOG_DEFAULT);
 		}

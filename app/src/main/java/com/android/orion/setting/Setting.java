@@ -40,11 +40,11 @@ public class Setting {
 	public static final String SETTING_DISPLAY_ADAPTIVE = "SETTING_DISPLAY_ADAPTIVE";
 	public static final boolean SETTING_DISPLAY_ADAPTIVE_DEFAULT = true;
 
-	public static final String SETTING_DISPLAY_NET = "SETTING_DISPLAY_NET";
-	public static final boolean SETTING_DISPLAY_NET_DEFAULT = true;
-
 	public static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
 	public static final boolean SETTING_DISPLAY_CANDLE_DEFAULT = false;
+
+	public static final String SETTING_DISPLAY_THUMBNAIL = "SETTING_DISPLAY_THUMBNAIL";
+	public static final boolean SETTING_DISPLAY_THUMBNAIL_DEFAULT = true;
 
 	public static final String SETTING_DISPLAY_MAIN_INCOME = "SETTING_DISPLAY_MAIN_INCOME";
 	public static final boolean SETTING_DISPLAY_MAIN_INCOME_DEFAULT = false;
@@ -86,20 +86,20 @@ public class Setting {
 		Preferences.putBoolean(SETTING_DISPLAY_ADAPTIVE, value);
 	}
 
-	public static boolean getDisplayNet() {
-		return Preferences.getBoolean(SETTING_DISPLAY_NET, SETTING_DISPLAY_NET_DEFAULT);
-	}
-
-	public static void setDisplayNet(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_NET, value);
-	}
-
 	public static boolean getDisplayCandle() {
 		return Preferences.getBoolean(SETTING_DISPLAY_CANDLE, SETTING_DISPLAY_CANDLE_DEFAULT);
 	}
 
 	public static void setDisplayCandle(boolean value) {
 		Preferences.putBoolean(SETTING_DISPLAY_CANDLE, value);
+	}
+
+	public static boolean getDisplayThumbnail() {
+		return Preferences.getBoolean(SETTING_DISPLAY_THUMBNAIL, SETTING_DISPLAY_THUMBNAIL_DEFAULT);
+	}
+
+	public static void setDisplayThumbnail(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_THUMBNAIL, value);
 	}
 
 	public static boolean getDisplayMainIncome() {
