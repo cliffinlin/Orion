@@ -44,7 +44,7 @@ public class Setting {
 	public static final boolean SETTING_DISPLAY_CANDLE_DEFAULT = false;
 
 	public static final String SETTING_DISPLAY_THUMBNAIL = "SETTING_DISPLAY_THUMBNAIL";
-	public static final boolean SETTING_DISPLAY_THUMBNAIL_DEFAULT = true;
+	public static final boolean SETTING_DISPLAY_THUMBNAIL_DEFAULT = false;
 
 	public static final String SETTING_DISPLAY_MAIN_INCOME = "SETTING_DISPLAY_MAIN_INCOME";
 	public static final boolean SETTING_DISPLAY_MAIN_INCOME_DEFAULT = false;

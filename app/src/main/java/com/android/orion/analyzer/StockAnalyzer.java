@@ -2,12 +2,14 @@ package com.android.orion.analyzer;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 
 import com.android.orion.application.MainApplication;
 import com.android.orion.data.Macd;
 import com.android.orion.data.Period;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockRadar;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.constant.Constant;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 
 public class StockAnalyzer {
 	Stock mStock;
+	ArrayMap<String, StockRadar> mStockRadarMap;
 	ArrayList<StockData> mStockDataList;
 	ArrayList<Double> mPulseList = new ArrayList<>();
 
@@ -47,6 +50,7 @@ public class StockAnalyzer {
 		StopWatch.start();
 
 		try {
+			loadStockRadarMap(period);
 			loadStockDataList(period);
 			if (Period.indexOf(period) <= Period.indexOf(Period.MONTH)) {
 				mFinancialAnalyzer.setNetProfileInYear(mStock, mStockDataList);
@@ -144,16 +148,21 @@ public class StockAnalyzer {
 
 			for (int i = 0; i < size; i++) {
 				StockData stockData = mStockDataList.get(i);
-				Macd macd = stockData.getMacd();
-				if (macd != null) {
-					macd.set(
-							difList.get(i),
-							deaList.get(i),
-							histogramList.get(i),
-							adaptiveList.get(i),
-							targetList.get(i)
-					);
+				if (stockData == null) {
+					continue;
 				}
+				Macd macd = stockData.getMacd();
+				if (macd == null) {
+					continue;
+				}
+				double signal = 0;
+				if (mStockRadarMap != null) {
+					StockRadar stockRadar = mStockRadarMap.get(stockData.getDateTime());
+					if (stockRadar != null) {
+						signal = stockRadar.getSignal();
+					}
+				}
+				macd.set(difList.get(i), deaList.get(i), histogramList.get(i), adaptiveList.get(i), targetList.get(i), signal);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -254,6 +263,11 @@ public class StockAnalyzer {
 			result  = Constant.PULSE_LOW;
 		}
 		return result;
+	}
+
+	void loadStockRadarMap(String period) {
+		mStockRadarMap = mStock.getStockRadarMap(period);
+		mStockDatabaseManager.loadStockRadarMap(mStock, period, mStockRadarMap);
 	}
 
 	void loadStockDataList(String period) {

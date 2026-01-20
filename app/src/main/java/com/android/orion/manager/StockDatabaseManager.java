@@ -10,8 +10,6 @@ import android.util.ArrayMap;
 import android.util.Log;
 
 import com.android.orion.config.Config;
-import com.android.orion.data.Candle;
-import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockBonus;
@@ -19,6 +17,7 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockPerceptron;
+import com.android.orion.database.StockRadar;
 import com.android.orion.database.StockShare;
 import com.android.orion.database.StockTrend;
 import com.android.orion.database.TDXData;
@@ -828,6 +827,135 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		Cursor cursor = null;
 		try {
 			cursor = queryStockPerceptron(stockPerceptron);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+		return result;
+	}
+
+	public Uri insertStockRadar(StockRadar stockRadar) {
+		if (stockRadar == null) {
+			return null;
+		}
+		return insert(DatabaseContract.StockRadar.CONTENT_URI, stockRadar.getContentValues());
+	}
+
+	public int bulkInsertStockRadar(ContentValues[] contentValuesArray) {
+		return bulkInsert(DatabaseContract.StockRadar.CONTENT_URI, contentValuesArray);
+	}
+
+	public int deleteStockRadar(Stock stock) {
+		if (stock == null) {
+			return 0;
+		}
+		return delete(DatabaseContract.StockRadar.CONTENT_URI, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null);
+	}
+
+	public int deleteStockRadar(String se, String code, String period) {
+		return delete(DatabaseContract.StockRadar.CONTENT_URI, DatabaseContract.SELECTION_STOCK_PERIOD(se, code, period), null);
+	}
+
+	public int deleteStockRadar(long id) {
+		return delete(DatabaseContract.StockRadar.CONTENT_URI, DatabaseContract.SELECTION_ID(id), null);
+	}
+
+	public int updateStockRadar(long id, ContentValues contentValues) {
+		return update(DatabaseContract.StockRadar.CONTENT_URI, contentValues, DatabaseContract.SELECTION_ID(id), null);
+	}
+
+	public int updateStockRadar(StockRadar stockRadar, ContentValues contentValues) {
+		if (stockRadar == null) {
+			return 0;
+		}
+		return update(DatabaseContract.StockRadar.CONTENT_URI, contentValues, DatabaseContract.SELECTION_STOCK_PERIOD_DATE_TIME(stockRadar.getSE(), stockRadar.getCode(), stockRadar.getPeriod(), stockRadar.getDate(), stockRadar.getTime()), null);
+	}
+
+	public void updateStockRadar(Stock stock, String period, ArrayList<StockRadar> stockRadarList) {
+		if (stock == null || stockRadarList == null || stockRadarList.size() == 0) {
+			return;
+		}
+
+		try {
+			deleteStockRadar(stock.getSE(), stock.getCode(), period);
+			ContentValues[] contentValues = new ContentValues[stockRadarList.size()];
+			for (int i = 0; i < stockRadarList.size(); i++) {
+				StockRadar stockRadar = stockRadarList.get(i);
+				stockRadar.setCreated(Utility.getCurrentDateTimeString());
+				stockRadar.setModified(Utility.getCurrentDateTimeString());
+				contentValues[i] = stockRadar.getContentValues();
+			}
+			bulkInsertStockRadar(contentValues);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Cursor queryStockRadar(String selection, String[] selectionArgs, String sortOrder) {
+		return query(DatabaseContract.StockRadar.CONTENT_URI, DatabaseContract.StockRadar.PROJECTION_ALL, selection, selectionArgs, sortOrder);
+	}
+
+	public Cursor queryStockRadar(StockRadar stockRadar) {
+		if (stockRadar == null) {
+			return null;
+		}
+		return query(DatabaseContract.StockRadar.CONTENT_URI, DatabaseContract.StockRadar.PROJECTION_ALL, DatabaseContract.SELECTION_STOCK_PERIOD_DATE_TIME(stockRadar.getSE(), stockRadar.getCode(), stockRadar.getPeriod(), stockRadar.getDate(), stockRadar.getTime()), null, DatabaseContract.ORDER_DATE_TIME_ASC);
+	}
+
+	public void getStockRadar(StockRadar stockRadar) {
+		if (stockRadar == null) {
+			return;
+		}
+		Cursor cursor = null;
+		try {
+			cursor = query(DatabaseContract.StockRadar.CONTENT_URI, DatabaseContract.StockRadar.PROJECTION_ALL, DatabaseContract.SELECTION_STOCK_PERIOD(stockRadar.getSE(), stockRadar.getCode(), stockRadar.getPeriod()), null, DatabaseContract.ORDER_DATE_TIME_DESC);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockRadar.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void loadStockRadarMap(Stock stock, String period, ArrayMap<String, StockRadar> stockRadarMap) {
+		if (stock == null || stockRadarMap == null) {
+			return;
+		}
+		stockRadarMap.clear();
+		Cursor cursor = null;
+		try {
+			cursor = queryStockRadar(DatabaseContract.SELECTION_STOCK_PERIOD(stock.getSE(), stock.getCode(), period), null, DatabaseContract.ORDER_DATE_TIME_ASC);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				int index = 0;
+				while (cursor.moveToNext()) {
+					StockRadar stockRadar = new StockRadar(period);
+					stockRadar.set(cursor);
+					stockRadarMap.put(stockRadar.getDateTime(), stockRadar);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public boolean isStockRadarExist(StockRadar stockRadar) {
+		boolean result = false;
+		if (stockRadar == null) {
+			return result;
+		}
+		Cursor cursor = null;
+		try {
+			cursor = queryStockRadar(stockRadar);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				result = true;

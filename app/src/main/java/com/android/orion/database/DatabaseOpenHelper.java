@@ -20,13 +20,14 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			db.beginTransaction();
 			db.execSQL(DatabaseContract.Stock.CREATE_TABLE);
 			db.execSQL(DatabaseContract.StockData.CREATE_TABLE);
-			db.execSQL(DatabaseContract.TDXData.CREATE_TABLE);
+			db.execSQL(DatabaseContract.StockRadar.CREATE_TABLE);
 			db.execSQL(DatabaseContract.StockTrend.CREATE_TABLE);
 			db.execSQL(DatabaseContract.StockPerceptron.CREATE_TABLE);
 			db.execSQL(DatabaseContract.StockDeal.CREATE_TABLE);
 			db.execSQL(DatabaseContract.StockFinancial.CREATE_TABLE);
 			db.execSQL(DatabaseContract.StockBonus.CREATE_TABLE);
 			db.execSQL(DatabaseContract.StockShare.CREATE_TABLE);
+			db.execSQL(DatabaseContract.TDXData.CREATE_TABLE);
 			db.setTransactionSuccessful();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -44,13 +45,14 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			db.beginTransaction();
 			db.execSQL(DatabaseContract.Stock.DELETE_TABLE);
 			db.execSQL(DatabaseContract.StockData.DELETE_TABLE);
-			db.execSQL(DatabaseContract.TDXData.DELETE_TABLE);
+			db.execSQL(DatabaseContract.StockRadar.DELETE_TABLE);
 			db.execSQL(DatabaseContract.StockTrend.DELETE_TABLE);
 			db.execSQL(DatabaseContract.StockPerceptron.DELETE_TABLE);
 			db.execSQL(DatabaseContract.StockDeal.DELETE_TABLE);
 			db.execSQL(DatabaseContract.StockFinancial.DELETE_TABLE);
 			db.execSQL(DatabaseContract.StockBonus.DELETE_TABLE);
 			db.execSQL(DatabaseContract.StockShare.DELETE_TABLE);
+			db.execSQL(DatabaseContract.TDXData.DELETE_TABLE);
 			db.setTransactionSuccessful();
 			onCreate(db);
 		} catch (Exception e) {

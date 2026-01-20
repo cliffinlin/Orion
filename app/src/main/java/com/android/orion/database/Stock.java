@@ -1392,6 +1392,10 @@ public class Stock extends DatabaseTable {
 		return mPeriodMap.get(period);
 	}
 
+	public ArrayMap<String, StockRadar> getStockRadarMap(String period) {
+		return getPeriod(period).getStockRadarMap();
+	}
+
 	public ArrayList<StockData> getVertexList(String period, int level) {
 		return getPeriod(period).getVertexList(level);
 	}

@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import com.android.orion.R;
 import com.android.orion.chart.ChartSyncHelper;
 import com.android.orion.chart.StockDataChart;
+import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
@@ -489,6 +490,9 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 					Entry targetEntry = new Entry((float) mStockData.getMacd().getTarget(), index);
 					stockDataChart.mTargetEntryList.add(targetEntry);
+
+					Entry signalEntry = new Entry((float) mStockData.getMacd().getSignal() / Config.MACD_NORMALIZED_VALUE, index);
+					stockDataChart.mSignalEntryList.add(signalEntry);
 				}
 			}
 

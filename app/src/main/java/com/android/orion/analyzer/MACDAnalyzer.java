@@ -1,5 +1,6 @@
 package com.android.orion.analyzer;
 
+import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
@@ -13,7 +14,7 @@ public class MACDAnalyzer {
 
     private static int mFast = 0;
     private static int mSlow = 0;
-    private static int mSignal = 0;
+    private static int mNormal = 0;
 
     private static final ArrayList<Double> mPriceList = new ArrayList<>();
     private static final ArrayList<Double> mEMAFastList = new ArrayList<>();
@@ -26,7 +27,7 @@ public class MACDAnalyzer {
 
     private static final int FAST = 10; //12;
     private static final int SLOW = 20; //26;
-    private static final int SIGNAL = 8; //9;
+    private static final int NORMAL = 8; //9;
 
     public static ArrayList<Double> getDEAList() {
         return mDEAList;
@@ -50,27 +51,27 @@ public class MACDAnalyzer {
             case Period.DAY:
                 mFast = FAST;
                 mSlow = SLOW;
-                mSignal = SIGNAL;
+                mNormal = NORMAL;
                 break;
             case Period.MIN60:
                 mFast = Constant.MIN60_PER_TRADE_DAY * FAST;
                 mSlow = Constant.MIN60_PER_TRADE_DAY * SLOW;
-                mSignal = Constant.MIN60_PER_TRADE_DAY * SIGNAL;
+                mNormal = Constant.MIN60_PER_TRADE_DAY * NORMAL;
                 break;
             case Period.MIN30:
                 mFast = Constant.MIN30_PER_TRADE_DAY * FAST;
                 mSlow = Constant.MIN30_PER_TRADE_DAY * SLOW;
-                mSignal = Constant.MIN30_PER_TRADE_DAY * SIGNAL;
+                mNormal = Constant.MIN30_PER_TRADE_DAY * NORMAL;
                 break;
             case Period.MIN15:
                 mFast = Constant.MIN15_PER_TRADE_DAY * FAST;
                 mSlow = Constant.MIN15_PER_TRADE_DAY * SLOW;
-                mSignal = Constant.MIN15_PER_TRADE_DAY * SIGNAL;
+                mNormal = Constant.MIN15_PER_TRADE_DAY * NORMAL;
                 break;
             case Period.MIN5:
                 mFast = Constant.MIN5_PER_TRADE_DAY * FAST;
                 mSlow = Constant.MIN5_PER_TRADE_DAY * SLOW;
-                mSignal = Constant.MIN5_PER_TRADE_DAY * SIGNAL;
+                mNormal = Constant.MIN5_PER_TRADE_DAY * NORMAL;
                 break;
         }
         mPriceList.clear();
@@ -116,7 +117,7 @@ public class MACDAnalyzer {
 
         // 执行归一化计算: (x - min) / (max - min)
         for (int i = 0; i < mPriceList.size(); i++) {
-            double normalizedValue = 10.0 * (mPriceList.get(i) - min) / range;
+            double normalizedValue = Config.MACD_NORMALIZED_VALUE * (mPriceList.get(i) - min) / range;
             mPriceList.set(i, normalizedValue);
         }
     }
@@ -164,7 +165,7 @@ public class MACDAnalyzer {
             mDIFList.add(mEMAFastList.get(i) - mEMASlowList.get(i));
             i++;
         }
-        EMA(mSignal, mDIFList, mDEAList);
+        EMA(mNormal, mDIFList, mDEAList);
 
         i = 0;
         while (i < mPriceList.size()) {

@@ -39,6 +39,8 @@ public class Config {
 	public static final int HISTORY_LENGTH_MIN15 = HISTORY_LENGTH_DAY * 16;
 	public static final int HISTORY_LENGTH_MIN5 = HISTORY_LENGTH_DAY * 48;
 
+	public static final int MACD_NORMALIZED_VALUE = 10;
+
 	public static String stockDataProvider = SinaFinance.PROVIDER_NAME;
 
 	public static long alarmInterval = Constant.MINUTE_IN_MILLIS;

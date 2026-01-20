@@ -63,7 +63,7 @@ public class StockFavoriteListActivity extends ListActivity implements
     private final Map<Integer, TextView> mHeaderTextViews = new HashMap<>();
     private final Map<String, Integer> mColumnToViewIdMap = new HashMap<>();
 
-    private String mSortOrderColumn = DatabaseContract.COLUMN_NET;
+    private String mSortOrderColumn = DatabaseContract.COLUMN_SIGNAL;
     private String mSortOrderDirection = DatabaseContract.ORDER_DESC;
     private String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
     private String mSortOrder = mSortOrderDefault;

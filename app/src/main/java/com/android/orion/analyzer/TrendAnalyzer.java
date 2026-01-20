@@ -10,6 +10,7 @@ import com.android.orion.data.Radar;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockPerceptron;
+import com.android.orion.database.StockRadar;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.manager.StockNotificationManager;
@@ -831,7 +832,30 @@ public class TrendAnalyzer {
 				signal += mStock.getTargetRadar(period).signal;
 			}
 		}
-		mStock.setSignal(Utility.Round2(signal));
+		signal = Utility.Round2(signal);
+		mStock.setSignal(signal);
+		for (String period : Period.PERIODS) {
+			if (Setting.getPeriod(period)) {
+				mStockDataList = mStock.getStockDataList(period, StockTrend.LEVEL_NONE);
+				if (mStockDataList == null || mStockDataList.isEmpty()) {
+					continue;
+				}
+				StockData stockData = mStockDataList.get(mStockDataList.size() - 1);
+				StockRadar stockRadar = new StockRadar();
+				stockRadar.setSE(stockData.getSE());
+				stockRadar.setCode(stockData.getCode());
+				stockRadar.setName(stockData.getName());
+				stockRadar.setPeriod(period);
+				stockRadar.setDate(stockData.getDate());
+				stockRadar.setTime(stockData.getTime());
+				stockRadar.setSignal(signal);
+				if (!mStockDatabaseManager.isStockRadarExist(stockRadar)) {
+					mStockDatabaseManager.insertStockRadar(stockRadar);
+				} else {
+					mStockDatabaseManager.updateStockRadar(stockRadar, stockRadar.getContentValues());
+				}
+			}
+		}
 
 		CurveThumbnail thumbnail = new CurveThumbnail(
 				THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, Color.TRANSPARENT,

@@ -11,6 +11,7 @@ public class Macd {
 	private double mHistogram;
 	private double mAdaptive;
 	private double mTarget;
+	private double mSignal;
 
 	public Macd() {
 		init();
@@ -22,6 +23,7 @@ public class Macd {
 		mHistogram = 0;
 		mAdaptive = 0;
 		mTarget = 0;
+		mSignal = 0;
 	}
 
 	public ContentValues getContentValues(ContentValues contentValues) {
@@ -31,6 +33,7 @@ public class Macd {
 			contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, getHistogram());
 			contentValues.put(DatabaseContract.COLUMN_ADAPTIVE, getAdaptive());
 			contentValues.put(DatabaseContract.COLUMN_TARGET, getTarget());
+			contentValues.put(DatabaseContract.COLUMN_SIGNAL, getSignal());
 		}
 		return contentValues;
 	}
@@ -44,6 +47,7 @@ public class Macd {
 		setHistogram(macd.mHistogram);
 		setAdaptive(macd.mAdaptive);
 		setTarget(macd.mTarget);
+		setSignal(macd.mSignal);
 	}
 
 	public void set(Cursor cursor) {
@@ -52,14 +56,16 @@ public class Macd {
 		setHistogram(cursor);
 		setAdaptive(cursor);
 		setTarget(cursor);
+		setSignal(cursor);
 	}
 
-	public void set(double dif, double dea, double histogram, double adaptive, double target) {
+	public void set(double dif, double dea, double histogram, double adaptive, double target, double signal) {
 		setDIF(dif);
 		setDEA(dea);
 		setHistogram(histogram);
 		setAdaptive(adaptive);
 		setTarget(target);
+		setSignal(signal);
 	}
 
 	public double getDIF() {
@@ -145,5 +151,22 @@ public class Macd {
 
 		setTarget(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_TARGET)));
+	}
+
+	public double getSignal() {
+		return mSignal;
+	}
+
+	public void setSignal(double signal) {
+		mSignal = signal;
+	}
+
+	void setSignal(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setSignal(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_SIGNAL)));
 	}
 }

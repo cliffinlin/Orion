@@ -2,9 +2,11 @@ package com.android.orion.data;
 
 import android.database.Cursor;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockRadar;
 import com.android.orion.database.StockTrend;
 
 import java.util.ArrayList;
@@ -52,6 +54,7 @@ public class Period {
 	public Radar mAdaptiveRadar;
 	public Radar mTargetRadar;
 
+	public ArrayMap<String, StockRadar> mStockRadarMap = new ArrayMap<>();
 	public ArrayList<ArrayList<StockData>> mVertexLists = new ArrayList<>();
 	public ArrayList<ArrayList<StockData>> mStockDataLists = new ArrayList<>();
 	public ArrayList<ArrayList<StockTrend>> mStockTrendLists = new ArrayList<>();
@@ -104,6 +107,10 @@ public class Period {
 			}
 		}
 		return index;
+	}
+
+	public ArrayMap<String, StockRadar> getStockRadarMap() {
+		return mStockRadarMap;
 	}
 
 	public ArrayList<StockData> getStockDataList(int level) {

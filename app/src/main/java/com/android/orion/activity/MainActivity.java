@@ -177,9 +177,8 @@ public class MainActivity extends Activity {
 			Setting.setPeriod(Period.MIN30, Setting.SETTING_PERIOD_MIN30_DEFAULT);
 			Setting.setPeriod(Period.MIN15, Setting.SETTING_PERIOD_MIN15_DEFAULT);
 			Setting.setPeriod(Period.MIN5, Setting.SETTING_PERIOD_MIN5_DEFAULT);
-
 			Setting.setDisplayAdaptive(Setting.SETTING_DISPLAY_ADAPTIVE_DEFAULT);
-
+			Setting.setDisplayThumbnail(Setting.SETTING_DISPLAY_THUMBNAIL_DEFAULT);
 			Setting.setDebugLog(Setting.SETTING_DEBUG_LOG_DEFAULT);
 		}
 	}
