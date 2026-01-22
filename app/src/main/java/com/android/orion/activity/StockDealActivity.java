@@ -2,7 +2,6 @@ package com.android.orion.activity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,13 +22,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.orion.R;
-import com.android.orion.data.Period;
-import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.constant.Constant;
-import com.android.orion.database.StockTrend;
-import com.android.orion.setting.Setting;
 import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
@@ -44,12 +39,9 @@ import java.util.Locale;
 public class StockDealActivity extends DatabaseActivity implements
 		OnClickListener, RadioGroup.OnCheckedChangeListener {
 
-	static final int MESSAGE_LOAD_DEAL = 100;
-	static final int MESSAGE_SAVE_DEAL = 200;
-	static final int MESSAGE_LOAD_STOCK_BY_ID = 300;
-	static final int MESSAGE_LOAD_STOCK_BY_SE_CODE = 400;
-
-	static final int REQUEST_CODE_STOCK_ID = 0;
+	static final int MESSAGE_NEW_DEAL = 100;
+	static final int MESSAGE_LOAD_DEAL = 200;
+	static final int MESSAGE_SAVE_DEAL = 300;
 
 	List<String> mListStockAccount;
 	ArrayAdapter<String> mArrayAdapterStockAccount;
@@ -107,18 +99,7 @@ public class StockDealActivity extends DatabaseActivity implements
 							mStock.getContentValues());
 					break;
 
-				case MESSAGE_LOAD_STOCK_BY_ID:
-					mStockDatabaseManager.getStockById(mStock);
-					mStockDeal.setSE(mStock.getSE());
-					mStockDeal.setCode(mStock.getCode());
-					mStockDeal.setName(mStock.getName());
-					mStockDeal.setPrice(mStock.getPrice());
-					mStockDeal.setBuy(mStock.getPrice());
-					mStockDeal.setDate(Utility.getCurrentDateString());
-					updateView();
-					break;
-
-				case MESSAGE_LOAD_STOCK_BY_SE_CODE:
+				case MESSAGE_NEW_DEAL:
 					mStockDatabaseManager.getStock(mStock);
 					mStockDatabaseManager.getStockTrendMap(mStock, mStock.getStockTrendMap());
 					mStockDeal.setSE(mStock.getSE());
@@ -157,7 +138,7 @@ public class StockDealActivity extends DatabaseActivity implements
 			if (mBundle != null) {
 				mStock.setSE(mBundle.getString(Constant.EXTRA_STOCK_SE));
 				mStock.setCode(mBundle.getString(Constant.EXTRA_STOCK_CODE));
-				mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_SE_CODE);
+				mHandler.sendEmptyMessage(MESSAGE_NEW_DEAL);
 			}
 		} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_DEAL_EDIT)) {
 			mStockDeal.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_DEAL_ID, 0));
@@ -378,6 +359,8 @@ public class StockDealActivity extends DatabaseActivity implements
 					mEditTextBuyPrice.setEnabled(true);
 					if (mStockDeal.getBuy() != 0) {
 						mEditTextBuyPrice.setText(String.valueOf(mStockDeal.getBuy()));
+					} else {
+						mEditTextBuyPrice.setText(String.valueOf(mStock.getPrice()));
 					}
 
 					mEditTextSellPrice.setEnabled(false);
@@ -394,13 +377,15 @@ public class StockDealActivity extends DatabaseActivity implements
 				case R.id.radio_deal_sell:
 					mStockDeal.setType(StockDeal.TYPE_SELL);
 
+					mEditTextBuyPrice.setEnabled(false);
+					mEditTextBuyPrice.setText("");
+
 					mEditTextSellPrice.setEnabled(true);
 					if (mStockDeal.getSell() != 0) {
 						mEditTextSellPrice.setText(String.valueOf(mStockDeal.getSell()));
+					} else {
+						mEditTextSellPrice.setText(String.valueOf(mStock.getPrice()));
 					}
-
-					mEditTextBuyPrice.setEnabled(false);
-					mEditTextBuyPrice.setText("");
 
 					if (!TextUtils.isEmpty(mSellDate)) {
 						mEditTextDealDate.setText(mSellDate);
@@ -422,11 +407,6 @@ public class StockDealActivity extends DatabaseActivity implements
 		switch (view.getId()) {
 			case R.id.edittext_stock_name:
 			case R.id.edittext_stock_code:
-				if (TextUtils.equals(Constant.ACTION_STOCK_DEAL_NEW, mAction)) {
-					Intent intent = new Intent(this, StockFavoriteListActivity.class);
-					intent.setAction(Constant.ACTION_STOCK_ID);
-					startActivityForResult(intent, REQUEST_CODE_STOCK_ID);
-				}
 				break;
 			case R.id.edittext_deal_date:
 				showDatePicker();
@@ -492,26 +472,6 @@ public class StockDealActivity extends DatabaseActivity implements
 				break;
 			default:
 				break;
-		}
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-
-		if (resultCode == RESULT_OK) {
-			switch (requestCode) {
-				case REQUEST_CODE_STOCK_ID:
-					if (mStock != null) {
-						mStock.setId(data.getLongExtra(Constant.EXTRA_STOCK_ID,
-								DatabaseContract.INVALID_ID));
-						mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_ID);
-					}
-					break;
-
-				default:
-					break;
-			}
 		}
 	}
 
