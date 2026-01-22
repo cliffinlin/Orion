@@ -26,6 +26,6 @@ public class Radar {
         this.frequencyIndex = frequencyIndex;
         this.direction = direction;
         this.vertex = vertex;
-        this.signal = Math.cos(phase);
+        this.signal = Math.sin(phase);
     }
 }
