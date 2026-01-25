@@ -823,13 +823,20 @@ public class TrendAnalyzer {
 
 		setupBaseLines();
 
+		Radar radar;
 		double signal = 0;
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
-				setupRadarPoint(mStock.getAdaptiveRadar(period), period, THUMBNAIL_RADA_COLOR_ADAPTIVE, THUMBNAIL_RADA_COLOR_ADAPTIVE);
-				signal += mStock.getAdaptiveRadar(period).signal;
-				setupRadarPoint(mStock.getTargetRadar(period), period, THUMBNAIL_RADA_COLOR_TARGET, THUMBNAIL_RADA_COLOR_TARGET);
-				signal += mStock.getTargetRadar(period).signal;
+				radar = mStock.getAdaptiveRadar(period);
+				if (radar != null) {
+					setupRadarPoint(radar, period, THUMBNAIL_RADA_COLOR_ADAPTIVE, THUMBNAIL_RADA_COLOR_ADAPTIVE);
+					signal += radar.signal;
+				}
+				radar = mStock.getTargetRadar(period);
+				if (radar != null) {
+					setupRadarPoint(radar, period, THUMBNAIL_RADA_COLOR_TARGET, THUMBNAIL_RADA_COLOR_TARGET);
+					signal += radar.signal;
+				}
 			}
 		}
 		signal = Utility.Round2(signal);

@@ -113,6 +113,7 @@ public class Stock extends DatabaseTable {
 	private byte[] mTrendThumbnail;
 	private byte[] mRadarThumbnail;
 	private double mSignal;
+	private double mTee;
 
 	public Stock() {
 		init();
@@ -190,6 +191,7 @@ public class Stock extends DatabaseTable {
 		mBuyProfit = 0;
 		mSellProfit = 0;
 		mSignal = 0;
+		mTee = 0;
 	}
 
 	@Override
@@ -260,6 +262,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, mTrendThumbnail);
 		contentValues.put(DatabaseContract.COLUMN_RADAR_THUMBNAIL, mRadarThumbnail);
 		contentValues.put(DatabaseContract.COLUMN_SIGNAL, mSignal);
+		contentValues.put(DatabaseContract.COLUMN_TEE, mTee);
 		return contentValues;
 	}
 
@@ -295,6 +298,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_ADAPTIVE, getAdaptiveString());
 		contentValues.put(DatabaseContract.COLUMN_TARGET, getTargetString());
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
+		contentValues.put(DatabaseContract.COLUMN_TEE, mTee);
 		return contentValues;
 	}
 
@@ -369,6 +373,7 @@ public class Stock extends DatabaseTable {
 		setTrendThumbnail(stock.mTrendThumbnail);
 		setRadarThumbnail(stock.mRadarThumbnail);
 		setSignal(stock.mSignal);
+		setTee(stock.mTee);
 	}
 
 	@Override
@@ -443,6 +448,7 @@ public class Stock extends DatabaseTable {
 		setTrendThumbnail(cursor);
 		setRadarThumbnail(cursor);
 		setSignal(cursor);
+		setTee(cursor);
 	}
 
 	public String getClasses() {
@@ -1345,6 +1351,22 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_SIGNAL)));
 	}
 
+	public double getTee() {
+		return mTee;
+	}
+
+	public void setTee(double tee) {
+		mTee = tee;
+	}
+
+	void setTee(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setTee(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TEE)));
+	}
 	public void addFlag(int flag) {
 		mFlag |= flag;
 	}
