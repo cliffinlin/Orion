@@ -47,10 +47,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	CheckBox mCheckBoxTrade;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
-	EditText mEditTextStockQuota; // 改为EditText
-	TextView mTextViewStockQuotaEstValue;
-	TextView mTextViewStockTradingValue;
-	TextView mTextViewStockTradingCostValue;
+	EditText mEditTextStockQuota;
 	TextView mTextViewStockHoldLabel;
 	TextView mTextViewStockHoldValue;
 	TextView mTextViewStockYieldLabel;
@@ -141,9 +138,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockQuota = findViewById(R.id.edittext_stock_quota); // 改为EditText
-		mTextViewStockQuotaEstValue = findViewById(R.id.textview_stock_quota_est_value);
-		mTextViewStockTradingValue = findViewById(R.id.textview_stock_trading_value);
-		mTextViewStockTradingCostValue = findViewById(R.id.textview_stock_trading_cost_value);
 		mTextViewStockHoldLabel = findViewById(R.id.textview_stock_hold_label);
 		mTextViewStockHoldValue = findViewById(R.id.textview_stock_hold_value);
 		mTextViewStockYieldLabel = findViewById(R.id.textview_stock_yield_label);
@@ -215,9 +209,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockQuota.setOnClickListener(this);
-		mTextViewStockQuotaEstValue.setOnClickListener(this);
-		mTextViewStockTradingValue.setOnClickListener(this);
-		mTextViewStockTradingCostValue.setOnClickListener(this);
 		mImageViewRestoreTarget.setOnClickListener(this);
 		mImageViewMonthTarget.setOnClickListener(this);
 		mImageViewWeekTarget.setOnClickListener(this);
@@ -245,9 +236,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				// 文本变化时更新预估金额
-				updateQuotaEstimation();
-
 				// 检查输入是否为100的整数倍
 				validateQuotaInput(s);
 			}
@@ -500,22 +488,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		updateDividendViews();
 	}
 
-	private void updateQuotaEstimation() {
-		try {
-			String quotaText = mEditTextStockQuota.getText().toString();
-			if (!TextUtils.isEmpty(quotaText)) {
-				long quota = Long.parseLong(quotaText);
-				double price = mStock.getPrice();
-				double estimatedValue = quota * price;
-				mTextViewStockQuotaEstValue.setText(String.format(Locale.getDefault(), "%.2f", estimatedValue));
-			} else {
-				mTextViewStockQuotaEstValue.setText("");
-			}
-		} catch (Exception e) {
-			mTextViewStockQuotaEstValue.setText("");
-		}
-	}
-
 	/**
 	 * 增加配额值（每次增加100）
 	 */
@@ -533,9 +505,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 			mEditTextStockQuota.removeTextChangedListener(mQuotaTextWatcher);
 			mEditTextStockQuota.setText(String.valueOf(newValue));
 			mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
-
-			// 更新配额估算
-			updateQuotaEstimation();
 
 			// 由于是增加100，肯定是100的整数倍，隐藏提示
 			mTextViewQuotaHint.setVisibility(View.GONE);
@@ -566,9 +535,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 			mEditTextStockQuota.removeTextChangedListener(mQuotaTextWatcher);
 			mEditTextStockQuota.setText(String.valueOf(newValue));
 			mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
-
-			// 更新配额估算
-			updateQuotaEstimation();
 
 			// 由于是减少100，如果原始值是100的整数倍，结果也是100的整数倍
 			// 检查新的值是否是100的整数倍
@@ -689,10 +655,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockQuota.setText(String.valueOf(quotaValue));
 		mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
 
-		// 更新TextView显示的内容
-		mTextViewStockTradingValue.setText(String.valueOf(mStock.getTrading()));
-		mTextViewStockTradingCostValue.setText(String.valueOf(mStock.getTradingCost()));
-
 		mTextViewStockHoldValue.setText(String.valueOf(mStock.getHold()));
 
 		String yieldValue = String.format(Locale.getDefault(), "%.2f%%", mStock.getYield());
@@ -721,8 +683,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 			calculateDividends();
 			updateAccountViews();
 		}
-
-		updateQuotaEstimation();
 
 		mTradeLevelPickerMonth.setTargetValue(mStock.getTarget(Period.MONTH));
 		mTradeLevelPickerWeek.setTargetValue(mStock.getTarget(Period.WEEK));

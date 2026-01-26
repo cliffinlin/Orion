@@ -122,7 +122,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_PRICE, R.id.price);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_NET, R.id.net);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_BUY_PROFIT, R.id.profite);
-        mColumnToViewIdMap.put(DatabaseContract.COLUMN_TRADING, R.id.profite);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_HOLD, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_QUOTA, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SELL_PROFIT, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, R.id.trend);
@@ -347,7 +347,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_PRICE,
                 DatabaseContract.COLUMN_NET,
                 DatabaseContract.COLUMN_BUY_PROFIT,
-                DatabaseContract.COLUMN_TRADING,
+                DatabaseContract.COLUMN_HOLD,
                 DatabaseContract.COLUMN_QUOTA,
                 DatabaseContract.COLUMN_SELL_PROFIT,
                 DatabaseContract.COLUMN_TREND_THUMBNAIL,
@@ -679,22 +679,22 @@ public class StockFavoriteListActivity extends ListActivity implements
                 return true;
             }
 
-            View tradingPortion = container.findViewById(R.id.trading_portion);
+            View holdPortion = container.findViewById(R.id.hold_portion);
             View remainingPortion = container.findViewById(R.id.remaining_portion);
 
-            if (tradingPortion == null || remainingPortion == null) {
+            if (holdPortion == null || remainingPortion == null) {
                 return false;
             }
 
             try {
-                double trading = 0;
+                double hold = 0;
                 double quota = 0;
 
-                int tradingColumnIndex = cursor.getColumnIndex(DatabaseContract.COLUMN_TRADING);
+                int holdColumnIndex = cursor.getColumnIndex(DatabaseContract.COLUMN_HOLD);
                 int quotaColumnIndex = cursor.getColumnIndex(DatabaseContract.COLUMN_QUOTA);
 
-                if (tradingColumnIndex != -1 && !cursor.isNull(tradingColumnIndex)) {
-                    trading = cursor.getDouble(tradingColumnIndex);
+                if (holdColumnIndex != -1 && !cursor.isNull(holdColumnIndex)) {
+                    hold = cursor.getDouble(holdColumnIndex);
                 }
 
                 if (quotaColumnIndex != -1 && !cursor.isNull(quotaColumnIndex)) {
@@ -703,34 +703,38 @@ public class StockFavoriteListActivity extends ListActivity implements
 
                 float ratio = 0f;
                 if (quota > 0) {
-                    ratio = (float) (trading / quota);
+                    ratio = (float) (hold / quota);
                 }
 
-                LinearLayout.LayoutParams tradingParams = (LinearLayout.LayoutParams) tradingPortion.getLayoutParams();
+                LinearLayout.LayoutParams holdParams = (LinearLayout.LayoutParams) holdPortion.getLayoutParams();
                 LinearLayout.LayoutParams remainingParams = (LinearLayout.LayoutParams) remainingPortion.getLayoutParams();
 
                 float displayRatio = Math.min(1f, ratio);
-                tradingParams.weight = displayRatio;
+                holdParams.weight = displayRatio;
                 remainingParams.weight = 1 - displayRatio;
 
-                tradingPortion.setLayoutParams(tradingParams);
+                holdPortion.setLayoutParams(holdParams);
                 remainingPortion.setLayoutParams(remainingParams);
 
                 if (ratio > 1.0f) {
-                    tradingPortion.setBackgroundColor(Color.MAGENTA);
+                    holdPortion.setBackgroundColor(Color.MAGENTA);
                 } else if (ratio == 1.0f) {
-                    tradingPortion.setBackgroundColor(Color.RED);
+                    holdPortion.setBackgroundColor(Color.RED);
+                } else if (ratio == 0.5f) {
+                    holdPortion.setBackgroundColor(Color.BLACK);
+                } else if (ratio < 0.5f) {
+                    holdPortion.setBackgroundColor(Color.GRAY);
                 } else {
-                    tradingPortion.setBackgroundColor(Color.GREEN);
+                    holdPortion.setBackgroundColor(Color.GREEN);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
 
-                LinearLayout.LayoutParams tradingParams = (LinearLayout.LayoutParams) tradingPortion.getLayoutParams();
+                LinearLayout.LayoutParams holdParams = (LinearLayout.LayoutParams) holdPortion.getLayoutParams();
                 LinearLayout.LayoutParams remainingParams = (LinearLayout.LayoutParams) remainingPortion.getLayoutParams();
-                tradingParams.weight = 0f;
+                holdParams.weight = 0f;
                 remainingParams.weight = 1f;
-                tradingPortion.setLayoutParams(tradingParams);
+                holdPortion.setLayoutParams(holdParams);
                 remainingPortion.setLayoutParams(remainingParams);
             }
 

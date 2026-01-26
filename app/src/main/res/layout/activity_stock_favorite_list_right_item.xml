@@ -42,7 +42,7 @@
             android:background="@android:color/darker_gray">
 
             <View
-                android:id="@+id/trading_portion"
+                android:id="@+id/hold_portion"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:background="@color/colorPrimary" />

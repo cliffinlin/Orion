@@ -491,8 +491,6 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 
 	public int updateStockDeal(Stock stock) {
 		int result = 0;
-		long trading = 0;
-		double tradingCost = 0;
 		long hold = 0;
 		double cost = 0;
 		if (stock == null) {
@@ -516,10 +514,6 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 					stockDeal.setupYield(stock.getDividend());
 
 					if (stockDeal.getVolume() > 0 && TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_BUY)) {
-						if (!TextUtils.isEmpty(stockDeal.getDate())) {
-							trading += stockDeal.getVolume();
-							tradingCost += stockDeal.getValue();
-						}
 						hold += stockDeal.getVolume();
 						cost += stockDeal.getValue();
 					}
@@ -528,8 +522,6 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 				}
 			}
 
-			stock.setTrading(trading);
-			stock.setTradingCost(Utility.Round2(tradingCost));
 			stock.setHold(hold);
 			if (hold > 0) {
 				stock.setCost(Utility.Round2(cost));

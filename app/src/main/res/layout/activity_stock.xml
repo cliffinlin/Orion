@@ -729,34 +729,6 @@
                 android:paddingBottom="3dp">
 
                 <TextView
-                    android:id="@+id/textview_stock_trading_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="1dp"
-                    android:text="@string/trading"
-                    android:textColor="@android:color/black"
-                    android:textSize="11sp" />
-
-                <TextView
-                    android:id="@+id/textview_stock_trading_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="@android:color/black"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp">
-
-                <TextView
                     android:id="@+id/textView_stock_quota_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -846,62 +818,6 @@
             android:weightSum="2"
             android:paddingTop="4dp"
             android:paddingBottom="4dp">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp">
-
-                <TextView
-                    android:id="@+id/textview_stock_trading_cost_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="1dp"
-                    android:text="@string/cost"
-                    android:textColor="@android:color/black"
-                    android:textSize="11sp" />
-
-                <TextView
-                    android:id="@+id/textview_stock_trading_cost_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="@android:color/black"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp">
-
-                <TextView
-                    android:id="@+id/textView_stock_quota_est_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="1dp"
-                    android:text="@string/quota_est"
-                    android:textColor="@android:color/black"
-                    android:textSize="11sp" />
-
-                <TextView
-                    android:id="@+id/textview_stock_quota_est_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="@android:color/black"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
         </LinearLayout>
 
         <View
