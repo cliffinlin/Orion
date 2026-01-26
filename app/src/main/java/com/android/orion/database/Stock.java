@@ -1686,8 +1686,10 @@ public class Stock extends DatabaseTable {
 
 	public boolean isQuotaLimitReached() {
 		boolean result = false;
-		if (getQuota() > 0 && getHold() >= getQuota()) {
-			result = true;
+		if (getQuota() > 0) {
+			if (getHold() >= getQuota() || getHold() <= getQuota() / 2f) {
+				result = true;
+			}
 		}
 		return result;
 	}

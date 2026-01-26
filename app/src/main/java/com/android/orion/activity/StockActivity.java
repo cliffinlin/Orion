@@ -48,6 +48,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextStockQuota;
+	EditText mEditTextStockTee;
 	TextView mTextViewStockHoldLabel;
 	TextView mTextViewStockHoldValue;
 	TextView mTextViewStockYieldLabel;
@@ -137,7 +138,8 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mCheckBoxTrade = findViewById(R.id.checkbox_trade);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
-		mEditTextStockQuota = findViewById(R.id.edittext_stock_quota); // 改为EditText
+		mEditTextStockQuota = findViewById(R.id.edittext_stock_quota);
+		mEditTextStockTee = findViewById(R.id.edittext_stock_tee);
 		mTextViewStockHoldLabel = findViewById(R.id.textview_stock_hold_label);
 		mTextViewStockHoldValue = findViewById(R.id.textview_stock_hold_value);
 		mTextViewStockYieldLabel = findViewById(R.id.textview_stock_yield_label);
@@ -209,6 +211,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockQuota.setOnClickListener(this);
+		mEditTextStockTee.setOnClickListener(this);
 		mImageViewRestoreTarget.setOnClickListener(this);
 		mImageViewMonthTarget.setOnClickListener(this);
 		mImageViewWeekTarget.setOnClickListener(this);
@@ -655,6 +658,8 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockQuota.setText(String.valueOf(quotaValue));
 		mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
 
+		mEditTextStockTee.setText(String.format(Locale.getDefault(), "%.2f", mStock.getTee()));
+
 		mTextViewStockHoldValue.setText(String.valueOf(mStock.getHold()));
 
 		String yieldValue = String.format(Locale.getDefault(), "%.2f%%", mStock.getYield());
@@ -879,6 +884,18 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					mStock.setSellProfit(0);
 					// Trade未勾选时，配额设置为0
 					mStock.setQuota(0);
+				}
+
+				try {
+					String teeText = mEditTextStockTee.getText().toString();
+					if (!TextUtils.isEmpty(teeText)) {
+						double tee = Double.parseDouble(teeText);
+						mStock.setTee(tee);
+					} else {
+						mStock.setTee(0.0);
+					}
+				} catch (Exception e) {
+					mStock.setTee(0.0);
 				}
 
 				String name = mEditTextStockName.getText().toString();
