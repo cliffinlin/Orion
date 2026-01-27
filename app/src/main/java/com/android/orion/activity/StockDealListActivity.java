@@ -598,9 +598,6 @@ public class StockDealListActivity extends ListActivity implements
 	protected void onResume() {
 		super.onResume();
 		restartLoader();
-		if (mStock.isQuotaLimitReached()) {
-			Toast.makeText(this, R.string.quota_limit_reached, Toast.LENGTH_SHORT).show();
-		}
 	}
 
 	@Override

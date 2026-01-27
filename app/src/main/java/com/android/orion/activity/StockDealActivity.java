@@ -344,16 +344,6 @@ public class StockDealActivity extends DatabaseActivity implements
 		if (group == mRadioGroupDealType) {
 			switch (checkedId) {
 				case R.id.radio_deal_buy:
-					if (TextUtils.equals(Constant.ACTION_STOCK_DEAL_NEW, mAction)) {
-						if (mStock.isQuotaLimitReached()) {
-							new AlertDialog.Builder(mContext)
-									.setTitle(R.string.buy)
-									.setMessage(getString(R.string.quota_limit_reached))
-									.setPositiveButton(R.string.ok, null)
-									.show();
-							return;
-						}
-					}
 					mStockDeal.setType(StockDeal.TYPE_BUY);
 
 					mEditTextBuyPrice.setEnabled(true);
@@ -421,14 +411,6 @@ public class StockDealActivity extends DatabaseActivity implements
 
 				int id = mRadioGroupDealType.getCheckedRadioButtonId();
 				if (id == R.id.radio_deal_buy) {
-					if (mStock.isQuotaLimitReached()) {
-						new AlertDialog.Builder(mContext)
-								.setTitle(R.string.buy)
-								.setMessage(getString(R.string.quota_limit_reached))
-								.setPositiveButton(R.string.ok, null)
-								.show();
-						return;
-					}
 					mStockDeal.setType(StockDeal.TYPE_BUY);
 				} else if (id == R.id.radio_deal_sell) {
 					mStockDeal.setType(StockDeal.TYPE_SELL);

@@ -1684,16 +1684,6 @@ public class Stock extends DatabaseTable {
 		return result;
 	}
 
-	public boolean isQuotaLimitReached() {
-		boolean result = false;
-		if (getQuota() > 0) {
-			if (getHold() >= getQuota() || getHold() <= getQuota() / 2f) {
-				result = true;
-			}
-		}
-		return result;
-	}
-
 	public String getPinyinCodeString(String separator) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getPinyin()).append(separator);
