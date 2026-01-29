@@ -44,14 +44,7 @@ public class StockFavoriteListActivity extends ListActivity implements
     private static final int HEADER_TEXT_DEFAULT_COLOR = Color.BLACK;
     private static final int HEADER_TEXT_HIGHLIGHT_COLOR = Color.RED;
 
-    private enum LoaderState {
-        IDLE,
-        INITIALIZED,
-        CREATED,
-        FINISHED
-    }
-
-    private LoaderState mLoaderState = LoaderState.IDLE;
+    private boolean mIsLoaderInitialized = false;
 
     private int mColumnIndexCode = -1;
     private int mColumnIndexName = -1;
@@ -80,28 +73,37 @@ public class StockFavoriteListActivity extends ListActivity implements
         initColumnMapping();
         initHeaderViews();
         setupListView();
+        initLoader();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        initLoader();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        destroyLoader();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
-        if (mLoaderState != LoaderState.IDLE) {
-            mLoaderManager.destroyLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+        try {
+            if (mLoaderManager != null && mIsLoaderInitialized) {
+                mLoaderManager.destroyLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        mLoaderState = LoaderState.IDLE;
+
+        if (mLeftAdapter != null) {
+            mLeftAdapter.swapCursor(null);
+        }
+        if (mRightAdapter != null) {
+            mRightAdapter.swapCursor(null);
+        }
+
+        super.onDestroy();
     }
 
     @Override
@@ -114,7 +116,7 @@ public class StockFavoriteListActivity extends ListActivity implements
     @Override
     public void handleOnResume() {
         super.handleOnResume();
-        restartLoader();
+        safeRestartLoader();
     }
 
     private void initColumnMapping() {
@@ -258,7 +260,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
         mSortOrder = mSortOrderColumn + mSortOrderDirection;
         Preferences.putString(Setting.SETTING_SORT_ORDER_FAVORITE_LIST, mSortOrder);
-        restartLoader();
+        safeRestartLoader();
     }
 
     private void toggleSortOrderDirection() {
@@ -421,7 +423,7 @@ public class StockFavoriteListActivity extends ListActivity implements
     }
 
     private void initLoader() {
-        if (mLoaderState != LoaderState.IDLE) {
+        if (mIsLoaderInitialized) {
             return;
         }
 
@@ -435,46 +437,45 @@ public class StockFavoriteListActivity extends ListActivity implements
 
         try {
             mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
-            mLoaderState = LoaderState.INITIALIZED;
+            mIsLoaderInitialized = true;
         } catch (Exception e) {
             e.printStackTrace();
-            mLoaderState = LoaderState.IDLE;
         }
     }
 
-    private void destroyLoader() {
-        if (mLoaderState == LoaderState.IDLE) {
+    void restartLoader() {
+        safeRestartLoader();
+    }
+
+    private void safeRestartLoader() {
+        if (!mIsLoaderInitialized) {
+            initLoader();
             return;
         }
 
         try {
-            mLoaderManager.destroyLoader(LOADER_ID_STOCK_FAVORITE_LIST);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mLoaderState = LoaderState.IDLE;
-        safeSwapCursor(null);
-    }
-
-    void restartLoader() {
-        if (mLoaderState == LoaderState.IDLE) {
-            initLoader();
-//            return;
-        }
-
-        try {
+            Loader<Cursor> loader = mLoaderManager.getLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+            if (loader != null && loader.isStarted()) {
+                loader.stopLoading();
+            }
             mLoaderManager.restartLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
-            mLoaderState = LoaderState.CREATED;
         } catch (Exception e) {
             e.printStackTrace();
-            mLoaderState = LoaderState.IDLE;
+            try {
+                if (mLoaderManager != null) {
+                    mLoaderManager.destroyLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            mIsLoaderInitialized = false;
+            initLoader();
         }
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
         if (id == LOADER_ID_STOCK_FAVORITE_LIST) {
-            mLoaderState = LoaderState.CREATED;
             String selection = DatabaseContract.SELECTION_FLAG(Stock.FLAG_FAVORITE);
             return new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
                     DatabaseContract.Stock.PROJECTION_ALL, selection, null, mSortOrder);
@@ -488,9 +489,7 @@ public class StockFavoriteListActivity extends ListActivity implements
             return;
         }
 
-        mLoaderState = LoaderState.FINISHED;
         cacheColumnIndices(cursor);
-
         safeSwapCursor(cursor);
 
         setListViewHeightBasedOnChildren(mLeftListView);
@@ -499,7 +498,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mLoaderState = LoaderState.INITIALIZED;
         safeSwapCursor(null);
     }
 

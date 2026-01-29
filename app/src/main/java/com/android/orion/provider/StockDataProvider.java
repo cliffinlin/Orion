@@ -597,10 +597,12 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 	void saveTDXDatabase(Stock stock, String period, ArrayMap<String, StockData> stockDataMap) {
 		if (stock == null || stockDataMap == null || stockDataMap.isEmpty()) {
+			Log.d("saveTDXDatabase return");
 			return;
 		}
 
 		if (!Period.isMinutePeriod(period)) {
+			Log.d("saveTDXDatabase return, period=" + period);
 			return;
 		}
 
@@ -612,11 +614,13 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			if (stockDataList.size() < Config.HISTORY_LENGTH_MIN5) {
 				String uriString = Setting.getTdxDataFileUri(stock);
 				if (TextUtils.isEmpty(uriString)) {
+					Log.d("saveTDXDatabase return, uriString=" + uriString);
 					return;
 				}
 				Uri uri = Uri.parse(uriString);
 				loadTDXDataFile(uri, contentList);
 				if (contentList.isEmpty()) {
+					Log.d("saveTDXDatabase return, contentList=" + contentList);
 					return;
 				}
 				for (String content : contentList) {
@@ -677,6 +681,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 	void exportTDXDataFile(Stock stock, String period, ArrayList<String> contentList) {
 		if (stock == null || contentList == null || contentList.size() < Config.HISTORY_LENGTH_MIN5) {
+			Log.d("exportTDXDataFile return, contentList.size()=" + contentList.size());
 			return;
 		}
 		OutputStream outputStream = null;
@@ -684,6 +689,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		try {
 			String uriString = Setting.getTdxDataFileUri(stock);
 			if (TextUtils.isEmpty(uriString)) {
+				Log.d("exportTDXDataFile return, uriString=" + uriString);
 				return;
 			}
 			Uri uri = Uri.parse(uriString);
