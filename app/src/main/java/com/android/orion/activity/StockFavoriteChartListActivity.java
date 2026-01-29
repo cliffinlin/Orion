@@ -490,6 +490,9 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 					Entry targetEntry = new Entry((float) mStockData.getMacd().getTarget(), index);
 					stockDataChart.mTargetEntryList.add(targetEntry);
+
+					Entry signalEntry = new Entry((float) mStockData.getMacd().getSignal() / Config.MACD_NORMALIZED_VALUE, index);
+					stockDataChart.mSignalEntryList.add(signalEntry);
 				}
 			}
 
