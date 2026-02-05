@@ -8,6 +8,8 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,8 +45,14 @@ public class StockFavoriteListActivity extends ListActivity implements
     private static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
     private static final int HEADER_TEXT_DEFAULT_COLOR = Color.BLACK;
     private static final int HEADER_TEXT_HIGHLIGHT_COLOR = Color.RED;
+    private static final long CLICK_INTERVAL = 500; // 500毫秒点击间隔
+    private static final long LOADER_DELAY = 100;   // Loader重启延迟时间
 
     private boolean mIsLoaderInitialized = false;
+    private volatile boolean mIsLoaderLoading = false;
+    private final Object mLoaderLock = new Object();
+    private long mLastClickTime = 0;
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
 
     private int mColumnIndexCode = -1;
     private int mColumnIndexName = -1;
@@ -88,20 +96,43 @@ public class StockFavoriteListActivity extends ListActivity implements
 
     @Override
     protected void onDestroy() {
+        // 清理Handler中的所有回调
+        mHandler.removeCallbacksAndMessages(null);
+
+        synchronized (mLoaderLock) {
+            mIsLoaderLoading = false;
+        }
+
         try {
             if (mLoaderManager != null && mIsLoaderInitialized) {
                 mLoaderManager.destroyLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+                mLoaderManager = null;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         if (mLeftAdapter != null) {
-            mLeftAdapter.swapCursor(null);
+            try {
+                mLeftAdapter.swapCursor(null);
+                mLeftAdapter = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
         if (mRightAdapter != null) {
-            mRightAdapter.swapCursor(null);
+            try {
+                mRightAdapter.swapCursor(null);
+                mRightAdapter = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
+        // 清除引用
+        mHeaderTextViews.clear();
+        mColumnToViewIdMap.clear();
 
         super.onDestroy();
     }
@@ -116,7 +147,8 @@ public class StockFavoriteListActivity extends ListActivity implements
     @Override
     public void handleOnResume() {
         super.handleOnResume();
-        safeRestartLoader();
+        // 延迟执行Loader重启，避免在生命周期切换时立即执行
+        mHandler.postDelayed(() -> safeRestartLoader(), 200);
     }
 
     private void initColumnMapping() {
@@ -250,6 +282,13 @@ public class StockFavoriteListActivity extends ListActivity implements
 
     @Override
     public void onClick(@NonNull View view) {
+        // 防重复点击
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - mLastClickTime < CLICK_INTERVAL) {
+            return;
+        }
+        mLastClickTime = currentTime;
+
         resetHeaderTextColor();
         setHeaderTextColor(view.getId(), HEADER_TEXT_HIGHLIGHT_COLOR);
 
@@ -260,7 +299,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 
         mSortOrder = mSortOrderColumn + mSortOrderDirection;
         Preferences.putString(Setting.SETTING_SORT_ORDER_FAVORITE_LIST, mSortOrder);
-        safeRestartLoader();
+
+        // 延迟执行Loader重启
+        mHandler.postDelayed(() -> safeRestartLoader(), LOADER_DELAY);
     }
 
     private void toggleSortOrderDirection() {
@@ -438,6 +479,9 @@ public class StockFavoriteListActivity extends ListActivity implements
         try {
             mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
             mIsLoaderInitialized = true;
+            synchronized (mLoaderLock) {
+                mIsLoaderLoading = true;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -453,24 +497,43 @@ public class StockFavoriteListActivity extends ListActivity implements
             return;
         }
 
-        try {
-            Loader<Cursor> loader = mLoaderManager.getLoader(LOADER_ID_STOCK_FAVORITE_LIST);
-            if (loader != null && loader.isStarted()) {
-                loader.stopLoading();
+        synchronized (mLoaderLock) {
+            if (mIsLoaderLoading) {
+                // 如果正在加载，延迟重启
+                mHandler.postDelayed(() -> safeRestartLoader(), LOADER_DELAY);
+                return;
             }
-            mLoaderManager.restartLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
-        } catch (Exception e) {
-            e.printStackTrace();
+
             try {
                 if (mLoaderManager != null) {
-                    mLoaderManager.destroyLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+                    Loader<Cursor> loader = mLoaderManager.getLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+                    if (loader != null) {
+                        mIsLoaderLoading = true;
+                        // 使用restartLoader而不是forceLoad，确保数据重新加载
+                        mLoaderManager.restartLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+                    } else {
+                        mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+                        mIsLoaderLoading = true;
+                    }
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+                mIsLoaderLoading = false;
+                recoverLoader();
             }
-            mIsLoaderInitialized = false;
-            initLoader();
         }
+    }
+
+    private void recoverLoader() {
+        try {
+            if (mLoaderManager != null) {
+                mLoaderManager.destroyLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        mIsLoaderInitialized = false;
+        initLoader();
     }
 
     @Override
@@ -489,6 +552,10 @@ public class StockFavoriteListActivity extends ListActivity implements
             return;
         }
 
+        synchronized (mLoaderLock) {
+            mIsLoaderLoading = false;
+        }
+
         cacheColumnIndices(cursor);
         safeSwapCursor(cursor);
 
@@ -498,16 +565,25 @@ public class StockFavoriteListActivity extends ListActivity implements
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        synchronized (mLoaderLock) {
+            mIsLoaderLoading = false;
+        }
         safeSwapCursor(null);
     }
 
     private void safeSwapCursor(Cursor newCursor) {
         try {
             if (mLeftAdapter != null) {
-                mLeftAdapter.swapCursor(newCursor);
+                Cursor oldCursor = mLeftAdapter.swapCursor(newCursor);
+                if (oldCursor != null && !oldCursor.isClosed()) {
+                    oldCursor.close();
+                }
             }
             if (mRightAdapter != null) {
-                mRightAdapter.swapCursor(newCursor);
+                Cursor oldCursor = mRightAdapter.swapCursor(newCursor);
+                if (oldCursor != null && !oldCursor.isClosed()) {
+                    oldCursor.close();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -532,6 +608,13 @@ public class StockFavoriteListActivity extends ListActivity implements
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (id <= DatabaseContract.INVALID_ID) return;
+
+        // 防重复点击
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - mLastClickTime < CLICK_INTERVAL) {
+            return;
+        }
+        mLastClickTime = currentTime;
 
         if (TextUtils.equals(mAction, Constant.ACTION_STOCK_ID)) {
             handleStockSelectionResult(id);
