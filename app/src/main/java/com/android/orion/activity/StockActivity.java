@@ -697,13 +697,13 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mTradeLevelPickerMin15.setTargetValue(mStock.getTarget(Period.MIN15));
 		mTradeLevelPickerMin5.setTargetValue(mStock.getTarget(Period.MIN5));
 
-		mTradeLevelPickerMonth.setValue(mStock.getAdaptive(Period.MONTH));
-		mTradeLevelPickerWeek.setValue(mStock.getAdaptive(Period.WEEK));
-		mTradeLevelPickerDay.setValue(mStock.getAdaptive(Period.DAY));
-		mTradeLevelPickerMin60.setValue(mStock.getAdaptive(Period.MIN60));
-		mTradeLevelPickerMin30.setValue(mStock.getAdaptive(Period.MIN30));
-		mTradeLevelPickerMin15.setValue(mStock.getAdaptive(Period.MIN15));
-		mTradeLevelPickerMin5.setValue(mStock.getAdaptive(Period.MIN5));
+		mTradeLevelPickerMonth.setValue(mStock.getTarget(Period.MONTH));
+		mTradeLevelPickerWeek.setValue(mStock.getTarget(Period.WEEK));
+		mTradeLevelPickerDay.setValue(mStock.getTarget(Period.DAY));
+		mTradeLevelPickerMin60.setValue(mStock.getTarget(Period.MIN60));
+		mTradeLevelPickerMin30.setValue(mStock.getTarget(Period.MIN30));
+		mTradeLevelPickerMin15.setValue(mStock.getTarget(Period.MIN15));
+		mTradeLevelPickerMin5.setValue(mStock.getTarget(Period.MIN5));
 
 		mTradeLevelPickerMonth.invalidate();
 		mTradeLevelPickerWeek.invalidate();
@@ -713,21 +713,21 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mTradeLevelPickerMin15.invalidate();
 		mTradeLevelPickerMin5.invalidate();
 
-		updateNetTextView(Period.MONTH, mStock.getAdaptive(Period.MONTH), mTextviewMonthNet);
-		updateNetTextView(Period.WEEK, mStock.getAdaptive(Period.WEEK), mTextviewWeekNet);
-		updateNetTextView(Period.DAY, mStock.getAdaptive(Period.DAY), mTextviewDayNet);
-		updateNetTextView(Period.MIN60, mStock.getAdaptive(Period.MIN60), mTextviewMin60Net);
-		updateNetTextView(Period.MIN30, mStock.getAdaptive(Period.MIN30), mTextviewMin30Net);
-		updateNetTextView(Period.MIN15, mStock.getAdaptive(Period.MIN15), mTextviewMin15Net);
-		updateNetTextView(Period.MIN5, mStock.getAdaptive(Period.MIN5), mTextviewMin5Net);
+		updateNetTextView(Period.MONTH, mStock.getTarget(Period.MONTH), mTextviewMonthNet);
+		updateNetTextView(Period.WEEK, mStock.getTarget(Period.WEEK), mTextviewWeekNet);
+		updateNetTextView(Period.DAY, mStock.getTarget(Period.DAY), mTextviewDayNet);
+		updateNetTextView(Period.MIN60, mStock.getTarget(Period.MIN60), mTextviewMin60Net);
+		updateNetTextView(Period.MIN30, mStock.getTarget(Period.MIN30), mTextviewMin30Net);
+		updateNetTextView(Period.MIN15, mStock.getTarget(Period.MIN15), mTextviewMin15Net);
+		updateNetTextView(Period.MIN5, mStock.getTarget(Period.MIN5), mTextviewMin5Net);
 
-		updateTargetImageView(Period.MONTH, mImageViewMonthTarget);
-		updateTargetImageView(Period.WEEK, mImageViewWeekTarget);
-		updateTargetImageView(Period.DAY, mImageViewDayTarget);
-		updateTargetImageView(Period.MIN60, mImageViewMin60Target);
-		updateTargetImageView(Period.MIN30, mImageViewMin30Target);
-		updateTargetImageView(Period.MIN15, mImageViewMin15Target);
-		updateTargetImageView(Period.MIN5, mImageViewMin5Target);
+		updateTargetImageView(Period.MONTH, mStock.getTarget(Period.MONTH), mImageViewMonthTarget);
+		updateTargetImageView(Period.WEEK, mStock.getTarget(Period.WEEK), mImageViewWeekTarget);
+		updateTargetImageView(Period.DAY, mStock.getTarget(Period.DAY), mImageViewDayTarget);
+		updateTargetImageView(Period.MIN60, mStock.getTarget(Period.MIN60), mImageViewMin60Target);
+		updateTargetImageView(Period.MIN30, mStock.getTarget(Period.MIN30), mImageViewMin30Target);
+		updateTargetImageView(Period.MIN15, mStock.getTarget(Period.MIN15), mImageViewMin15Target);
+		updateTargetImageView(Period.MIN5, mStock.getTarget(Period.MIN5), mImageViewMin5Target);
 
 		updateLevelPickerVisibility();
 		if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
@@ -1025,16 +1025,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
-		}
-	}
-
-	private void updateTargetImageView(String period, ImageView imageView) {
-		int adaptive = mStock.getAdaptive(period);
-		int target = mStock.getTarget(period);
-		if (target > StockTrend.LEVEL_NONE && target == adaptive) {
-			imageView.setImageResource(R.drawable.ic_crosshair_checked);
-		} else {
-			imageView.setImageResource(R.drawable.ic_crosshair_unchecked);
 		}
 	}
 
