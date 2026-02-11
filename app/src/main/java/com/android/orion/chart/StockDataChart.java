@@ -53,7 +53,6 @@ public class StockDataChart {
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
 	public ArrayList<Entry> mAdaptiveEntryList = new ArrayList<>();
 	public ArrayList<Entry> mTargetEntryList = new ArrayList<>();
-	public ArrayList<Entry> mSignalEntryList = new ArrayList<>();
 	public List<Entry>[] mTrendEntryList = new List[StockTrend.LEVELS.length];
 	public List<Entry>[] mChangedEntryList = new List[StockTrend.LEVELS.length];
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
@@ -187,23 +186,7 @@ public class StockDataChart {
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
 
-		if (Setting.getDisplayCandle()) {
-			if (Setting.getDisplaySignal()) {
-				LineDataSet signalDataSet = new LineDataSet(mSignalEntryList, "Signal");
-				signalDataSet.setLineWidth(LINE_WIDTH_NORMAL);
-				signalDataSet.setColor(Color.BLUE);
-				if (mSignalEntryList.size() > 0) {
-//					if (mSignalEntryList.get(mSignalEntryList.size() - 1).getVal() > 0) {
-//						signalDataSet.setColor(Color.RED);
-//					} else if (mSignalEntryList.get(mSignalEntryList.size() - 1).getVal() < 0) {
-//						signalDataSet.setColor(Color.GREEN);
-//					}
-					signalDataSet.setDrawCircles(false);
-					signalDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-					lineData.addDataSet(signalDataSet);
-				}
-			}
-		} else {
+		if (!Setting.getDisplayCandle()) {
 			if (displayTrend(mAdaptiveLevel)) {
 				LineDataSet adaptiveDataSet = new LineDataSet(mAdaptiveEntryList, "Adaptive");
 				adaptiveDataSet.setColor(lineColor(mAdaptiveLevel));
@@ -495,7 +478,6 @@ public class StockDataChart {
 		mHistogramEntryList.clear();
 		mAdaptiveEntryList.clear();
 		mTargetEntryList.clear();
-		mSignalEntryList.clear();
 		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			if (mTrendEntryList[i] != null) {
 				mTrendEntryList[i].clear();

@@ -712,25 +712,10 @@ public class TrendAnalyzer {
 				float endX = startX + lineWidth;
 				float centerY = THUMBNAIL_HEIGHT / 2f;
 				float centerX = (startX + endX) / 2f;
-
-				int adaptiveLevel = mStock.getAdaptive(period);
 				int targetLevel = mStock.getTarget(period);
-				StockTrend adaptiveTrend = mStock.getStockTrend(period, adaptiveLevel);
 				StockTrend targetTrend = mStock.getStockTrend(period, targetLevel);
-
-				if (targetLevel > StockTrend.LEVEL_NONE) {
-					if (targetLevel == adaptiveLevel) {
-						drawSingleBar(startX, endX, centerX, centerY, getAxisColor(targetLevel), targetTrend,
-								getTargetBarColor(targetTrend.getNextNet()), THUMBNAIL_TARGET_BAR_WIDTH);
-					} else {
-						drawDoubleBars(startX, endX, centerY, adaptiveTrend, adaptiveLevel,
-								targetTrend, targetLevel);
-					}
-				} else {
-					drawSingleBar(startX, endX, centerX, centerY, getAxisColor(adaptiveLevel), adaptiveTrend,
-							getAdaptiveBarColor(adaptiveTrend.getNextNet()), THUMBNAIL_ADAPTIVE_BAR_WIDTH);
-				}
-
+				drawSingleBar(startX, endX, centerX, centerY, getAxisColor(targetLevel), targetTrend,
+						getTargetBarColor(targetTrend.getNextNet()), THUMBNAIL_TARGET_BAR_WIDTH);
 				i++;
 			}
 		}
@@ -827,11 +812,6 @@ public class TrendAnalyzer {
 		double signal = 0;
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
-				radar = mStock.getAdaptiveRadar(period);
-				if (radar != null) {
-					setupRadarPoint(radar, period, THUMBNAIL_RADA_COLOR_ADAPTIVE, THUMBNAIL_RADA_COLOR_ADAPTIVE);
-					signal += radar.signal;
-				}
 				radar = mStock.getTargetRadar(period);
 				if (radar != null) {
 					setupRadarPoint(radar, period, THUMBNAIL_RADA_COLOR_TARGET, THUMBNAIL_RADA_COLOR_TARGET);

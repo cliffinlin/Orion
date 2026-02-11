@@ -155,14 +155,7 @@ public class StockAnalyzer {
 				if (macd == null) {
 					continue;
 				}
-				double signal = 0;
-				if (mStockRadarMap != null) {
-					StockRadar stockRadar = mStockRadarMap.get(stockData.getDateTime());
-					if (stockRadar != null) {
-						signal = stockRadar.getSignal();
-					}
-				}
-				macd.set(difList.get(i), deaList.get(i), histogramList.get(i), adaptiveList.get(i), targetList.get(i), signal);
+				macd.set(difList.get(i), deaList.get(i), histogramList.get(i), adaptiveList.get(i), targetList.get(i));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

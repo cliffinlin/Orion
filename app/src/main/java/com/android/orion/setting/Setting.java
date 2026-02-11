@@ -43,9 +43,6 @@ public class Setting {
 	public static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
 	public static final boolean SETTING_DISPLAY_CANDLE_DEFAULT = false;
 
-	public static final String SETTING_DISPLAY_SIGNAL = "SETTING_DISPLAY_SIGNAL";
-	public static final boolean SETTING_DISPLAY_SIGNAL_DEFAULT = false;
-
 	public static final String SETTING_DISPLAY_THUMBNAIL = "SETTING_DISPLAY_THUMBNAIL";
 	public static final boolean SETTING_DISPLAY_THUMBNAIL_DEFAULT = false;
 
@@ -95,14 +92,6 @@ public class Setting {
 
 	public static void setDisplayCandle(boolean value) {
 		Preferences.putBoolean(SETTING_DISPLAY_CANDLE, value);
-	}
-
-	public static boolean getDisplaySignal() {
-		return Preferences.getBoolean(SETTING_DISPLAY_SIGNAL, SETTING_DISPLAY_SIGNAL_DEFAULT);
-	}
-
-	public static void setDisplaySignal(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_SIGNAL, value);
 	}
 
 	public static boolean getDisplayThumbnail() {

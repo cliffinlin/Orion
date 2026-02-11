@@ -32,9 +32,6 @@
             android:key="SETTING_DISPLAY_CANDLE"
             android:title="@string/candle" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_SIGNAL"
-            android:title="@string/signal" />
-        <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_THUMBNAIL"
             android:title="@string/thumbnail" />
     </PreferenceCategory>
