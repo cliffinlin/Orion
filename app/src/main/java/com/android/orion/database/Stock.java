@@ -2,6 +2,7 @@ package com.android.orion.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
@@ -42,6 +43,15 @@ public class Stock extends DatabaseTable {
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_FAVORITE = 1 << 0;
 	public static final int FLAG_TRADE = 1 << 1;
+
+	public static final int ORDER_TYPE_NONE = 0;
+	public static final int ORDER_TYPE_SMALL = 1;
+	public static final int ORDER_TYPE_MEDIUM = 2;
+	public static final int ORDER_TYPE_LARGE = 3;
+	public static final int ORDER_TYPE_EXTRA_LARGE = 4;
+
+	public static final int[] ORDER_TYPE_COLORS = {
+			Color.GRAY, Color.GREEN, Color.GRAY, Color.YELLOW, Color.MAGENTA};
 
 	public static final double ROI_COEFFICIENT = 10;
 
@@ -112,7 +122,7 @@ public class Stock extends DatabaseTable {
 	private byte[] mRadarThumbnail;
 	private double mSignal;
 	private double mTee;
-	private int mCapital;
+	private int mOrderType;
 
 	public Stock() {
 		init();
@@ -189,7 +199,7 @@ public class Stock extends DatabaseTable {
 		mSellProfit = 0;
 		mSignal = 0;
 		mTee = 0;
-		mCapital = 0;
+		mOrderType = 0;
 	}
 
 	@Override
@@ -258,7 +268,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_RADAR_THUMBNAIL, mRadarThumbnail);
 		contentValues.put(DatabaseContract.COLUMN_SIGNAL, mSignal);
 		contentValues.put(DatabaseContract.COLUMN_TEE, mTee);
-		contentValues.put(DatabaseContract.COLUMN_CAPITAL, mCapital);
+		contentValues.put(DatabaseContract.COLUMN_ORDER_TYPE, mOrderType);
 		return contentValues;
 	}
 
@@ -294,7 +304,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_TARGET, getTargetString());
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
 		contentValues.put(DatabaseContract.COLUMN_TEE, mTee);
-		contentValues.put(DatabaseContract.COLUMN_CAPITAL, mCapital);
+		contentValues.put(DatabaseContract.COLUMN_ORDER_TYPE, mOrderType);
 		return contentValues;
 	}
 
@@ -367,7 +377,7 @@ public class Stock extends DatabaseTable {
 		setRadarThumbnail(stock.mRadarThumbnail);
 		setSignal(stock.mSignal);
 		setTee(stock.mTee);
-		setCapital(stock.mCapital);
+		setOrderType(stock.mOrderType);
 	}
 
 	@Override
@@ -440,7 +450,7 @@ public class Stock extends DatabaseTable {
 		setRadarThumbnail(cursor);
 		setSignal(cursor);
 		setTee(cursor);
-		setCapital(cursor);
+		setOrderType(cursor);
 	}
 
 	public String getClasses() {
@@ -1326,21 +1336,21 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TEE)));
 	}
 
-	public int getCapital() {
-		return mCapital;
+	public int getOrderType() {
+		return mOrderType;
 	}
 
-	public void setCapital(int capital) {
-		mCapital = capital;
+	public void setOrderType(int orders) {
+		mOrderType = orders;
 	}
 
-	public void setCapital(Cursor cursor) {
+	public void setOrderType(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setCapital(cursor.getInt(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_CAPITAL)));
+		setOrderType(cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ORDER_TYPE)));
 	}
 
 	public void addFlag(int flag) {
