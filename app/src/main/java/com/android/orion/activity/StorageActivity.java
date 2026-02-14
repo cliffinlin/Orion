@@ -438,9 +438,15 @@ public class StorageActivity extends DatabaseActivity {
 			try {
 				xmlSerializer.startTag(null, XML_TAG_STOCK_TRADE);
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_TARGET, stock.getTarget());
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_QUOTA, String.valueOf(stock.getQuota()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_TEE, String.valueOf(stock.getTee()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_ORDER_TYPE, String.valueOf(stock.getOrderType()));
+				if (stock.getQuota() > 0) {
+					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_QUOTA, String.valueOf(stock.getQuota()));
+				}
+				if (stock.getTee() > 0) {
+					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_TEE, String.valueOf(stock.getTee()));
+				}
+				if (stock.getOrderType() != Stock.ORDER_TYPE_NONE) {
+					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_ORDER_TYPE, String.valueOf(stock.getOrderType()));
+				}
 				count++;
 				xmlSerializer.endTag(null, XML_TAG_STOCK_TRADE);
 			} catch (Exception e) {
