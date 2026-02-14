@@ -51,7 +51,12 @@ public class Stock extends DatabaseTable {
 	public static final int ORDER_TYPE_EXTRA_LARGE = 4;
 
 	public static final int[] ORDER_TYPE_COLORS = {
-			Color.GRAY, Color.GREEN, Color.GRAY, Color.YELLOW, Color.MAGENTA};
+			Color.GRAY,  // ORDER_TYPE_NONE
+			Color.GREEN, // ORDER_TYPE_SMALL
+			Color.GRAY,  // ORDER_TYPE_MEDIUM
+			Color.YELLOW, // ORDER_TYPE_LARGE
+			Color.MAGENTA // ORDER_TYPE_EXTRA_LARGE
+	};
 
 	public static final double ROI_COEFFICIENT = 10;
 
@@ -199,7 +204,7 @@ public class Stock extends DatabaseTable {
 		mSellProfit = 0;
 		mSignal = 0;
 		mTee = 0;
-		mOrderType = 0;
+		mOrderType = ORDER_TYPE_NONE;
 	}
 
 	@Override
