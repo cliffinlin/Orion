@@ -131,18 +131,13 @@ public class StockAnalyzer {
 				return;
 			}
 
-			setupPulseList(mStock.getAdaptive(period));
-			FourierAnalyzer.analyze(period, mPulseList);
-			ArrayList<Double> adaptiveList = FourierAnalyzer.getRadarList();
-			mStock.setAdaptiveRadar(period, FourierAnalyzer.getRadar());
-
 			setupPulseList(mStock.getTarget(period));
 			FourierAnalyzer.analyze(period, mPulseList);
 			ArrayList<Double> targetList = FourierAnalyzer.getRadarList();
 			mStock.setTargetRadar(period, FourierAnalyzer.getRadar());
 
-			if (adaptiveList.size() != size || targetList.size() != size) {
-				Log.d("return, size=" + size + " adaptiveList.size()=" + adaptiveList.size() + " targetList.size()=" + targetList.size());
+			if (targetList.size() != size) {
+				Log.d("return, size=" + size + " targetList.size()=" + targetList.size());
 				return;
 			}
 
@@ -155,7 +150,7 @@ public class StockAnalyzer {
 				if (macd == null) {
 					continue;
 				}
-				macd.set(difList.get(i), deaList.get(i), histogramList.get(i), adaptiveList.get(i), targetList.get(i));
+				macd.set(difList.get(i), deaList.get(i), histogramList.get(i), targetList.get(i));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

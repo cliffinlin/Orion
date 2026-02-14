@@ -48,10 +48,8 @@ public class Period {
 
 	public String mName = "";
 	public byte[] mThumbnail;
-	public int mAdaptive = StockTrend.LEVEL_NONE;
 	public int mTarget = StockTrend.LEVEL_NONE;
 	public String mTrend = StockTrend.TREND_NONE;
-	public Radar mAdaptiveRadar;
 	public Radar mTargetRadar;
 
 	public ArrayMap<String, StockRadar> mStockRadarMap = new ArrayMap<>();
@@ -141,33 +139,6 @@ public class Period {
 				.getColumnIndex(DatabaseContract.COLUMN_PERIOD_THUMBNAIL(mName))));
 	}
 
-	public int getAdaptive() {
-		return mAdaptive;
-	}
-
-	public void setAdaptive(int adaptive) {
-		mAdaptive = adaptive;
-	}
-
-	public void setAdaptive(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		String adaptiveString = cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ADAPTIVE));
-
-		setAdaptive(fromAdaptiveString(adaptiveString));
-	}
-
-	public int fromAdaptiveString(String adaptiveString) {
-		int result = 0;
-		if (TextUtils.isEmpty(adaptiveString) || adaptiveString.length() != PERIODS.length) {
-			return result;
-		}
-		return Integer.parseInt(adaptiveString.substring(indexOf(mName), indexOf(mName) + 1));
-	}
-
 	public int getTarget() {
 		return mTarget;
 	}
@@ -220,14 +191,6 @@ public class Period {
 			return result;
 		}
 		return trendString.substring(indexOf(mName), indexOf(mName) + 1);
-	}
-
-	public Radar getAdaptiveRadar() {
-		return mAdaptiveRadar;
-	}
-
-	public void setAdaptiveRadar(Radar radar) {
-		mAdaptiveRadar = radar;
 	}
 
 	public Radar getTargetRadar() {

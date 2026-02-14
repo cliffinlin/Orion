@@ -51,7 +51,6 @@ public class StockDataChart {
 	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
-	public ArrayList<Entry> mAdaptiveEntryList = new ArrayList<>();
 	public ArrayList<Entry> mTargetEntryList = new ArrayList<>();
 	public List<Entry>[] mTrendEntryList = new List[StockTrend.LEVELS.length];
 	public List<Entry>[] mChangedEntryList = new List[StockTrend.LEVELS.length];
@@ -62,14 +61,12 @@ public class StockDataChart {
 
 	Stock mStock;
 	String mPeriod;
-	int mAdaptiveLevel;
 	int mTargetLevel;
 	ArrayMap<String, StockTrend> mStockTrendMap;
 
 	public StockDataChart(Stock stock, String period) {
 		mStock = stock;
 		mPeriod = period;
-		mAdaptiveLevel = mStock.getAdaptive(period);
 		mTargetLevel = mStock.getTarget(period);
 
 		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
@@ -93,7 +90,6 @@ public class StockDataChart {
 		}
 		mStock = stock;
 		mPeriod = period;
-		mAdaptiveLevel = mStock.getAdaptive(period);
 		mTargetLevel = mStock.getTarget(period);
 		mStockTrendMap = stockTrendMap;
 	}
@@ -187,14 +183,6 @@ public class StockDataChart {
 		lineData.addDataSet(deaDataSet);
 
 		if (!Setting.getDisplayCandle()) {
-			if (displayTrend(mAdaptiveLevel)) {
-				LineDataSet adaptiveDataSet = new LineDataSet(mAdaptiveEntryList, "Adaptive");
-				adaptiveDataSet.setColor(lineColor(mAdaptiveLevel));
-				adaptiveDataSet.setDrawCircles(false);
-				adaptiveDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-				lineData.addDataSet(adaptiveDataSet);
-			}
-
 			LineDataSet targetDataSet = new LineDataSet(mTargetEntryList, "Target");
 			setLineWidth(targetDataSet, mTargetLevel);
 			targetDataSet.setColor(lineColor(mTargetLevel));
@@ -277,8 +265,6 @@ public class StockDataChart {
 		boolean result = false;
 		if (level == mTargetLevel) {
 			result = true;
-		} else if (level == mAdaptiveLevel) {
-			result = Setting.getDisplayAdaptive();
 		}
 		return result;
 	}
@@ -291,7 +277,7 @@ public class StockDataChart {
 		mDescription.setLength(0);
 		mDescription.append(mPeriod).append(" ");
 		mDescription.append(stock.getNamePriceNetString(" ")).append(" ");
-		StockTrend stockTrend = mStock.getStockTrend(mPeriod, mAdaptiveLevel);
+		StockTrend stockTrend = mStock.getStockTrend(mPeriod, mTargetLevel);
 		if (stockTrend != null) {
 			mDescription.append(stockTrend.toChartString());
 		}
@@ -476,7 +462,6 @@ public class StockDataChart {
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
-		mAdaptiveEntryList.clear();
 		mTargetEntryList.clear();
 		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			if (mTrendEntryList[i] != null) {

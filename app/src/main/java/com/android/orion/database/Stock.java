@@ -112,6 +112,7 @@ public class Stock extends DatabaseTable {
 	private byte[] mRadarThumbnail;
 	private double mSignal;
 	private double mTee;
+	private int mCapital;
 
 	public Stock() {
 		init();
@@ -188,6 +189,7 @@ public class Stock extends DatabaseTable {
 		mSellProfit = 0;
 		mSignal = 0;
 		mTee = 0;
+		mCapital = 0;
 	}
 
 	@Override
@@ -211,7 +213,6 @@ public class Stock extends DatabaseTable {
 		for (String period : Period.PERIODS) {
 			contentValues.put(DatabaseContract.COLUMN_PERIOD_THUMBNAIL(period), getPeriod(period).getThumbnail());
 		}
-		contentValues.put(DatabaseContract.COLUMN_ADAPTIVE, getAdaptiveString());
 		contentValues.put(DatabaseContract.COLUMN_TARGET, getTargetString());
 		contentValues.put(DatabaseContract.COLUMN_TREND, getTrendString());
 
@@ -257,6 +258,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_RADAR_THUMBNAIL, mRadarThumbnail);
 		contentValues.put(DatabaseContract.COLUMN_SIGNAL, mSignal);
 		contentValues.put(DatabaseContract.COLUMN_TEE, mTee);
+		contentValues.put(DatabaseContract.COLUMN_CAPITAL, mCapital);
 		return contentValues;
 	}
 
@@ -289,10 +291,10 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		contentValues.put(DatabaseContract.COLUMN_ADAPTIVE, getAdaptiveString());
 		contentValues.put(DatabaseContract.COLUMN_TARGET, getTargetString());
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
 		contentValues.put(DatabaseContract.COLUMN_TEE, mTee);
+		contentValues.put(DatabaseContract.COLUMN_CAPITAL, mCapital);
 		return contentValues;
 	}
 
@@ -319,7 +321,6 @@ public class Stock extends DatabaseTable {
 
 		for (String period : Period.PERIODS) {
 			getPeriod(period).setThumbnail(stock.getPeriod(period).getThumbnail());
-			getPeriod(period).setAdaptive(stock.getPeriod(period).getAdaptive());
 			getPeriod(period).setTarget(stock.getPeriod(period).getTarget());
 			getPeriod(period).setTrend(stock.getPeriod(period).getTrend());
 		}
@@ -366,6 +367,7 @@ public class Stock extends DatabaseTable {
 		setRadarThumbnail(stock.mRadarThumbnail);
 		setSignal(stock.mSignal);
 		setTee(stock.mTee);
+		setCapital(stock.mCapital);
 	}
 
 	@Override
@@ -391,7 +393,6 @@ public class Stock extends DatabaseTable {
 
 		for (String period : Period.PERIODS) {
 			getPeriod(period).setThumbnail(cursor);
-			getPeriod(period).setAdaptive(cursor);
 			getPeriod(period).setTarget(cursor);
 			getPeriod(period).setTrend(cursor);
 		}
@@ -439,6 +440,7 @@ public class Stock extends DatabaseTable {
 		setRadarThumbnail(cursor);
 		setSignal(cursor);
 		setTee(cursor);
+		setCapital(cursor);
 	}
 
 	public String getClasses() {
@@ -1323,6 +1325,24 @@ public class Stock extends DatabaseTable {
 		setTee(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_TEE)));
 	}
+
+	public int getCapital() {
+		return mCapital;
+	}
+
+	public void setCapital(int capital) {
+		mCapital = capital;
+	}
+
+	public void setCapital(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setCapital(cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_CAPITAL)));
+	}
+
 	public void addFlag(int flag) {
 		mFlag |= flag;
 	}
@@ -1386,28 +1406,6 @@ public class Stock extends DatabaseTable {
 		return getPeriod(period).getStockTrendList(level);
 	}
 
-	public String getAdaptive() {
-		StringBuilder builder = new StringBuilder();
-		for (String period : Period.PERIODS) {
-			builder.append(getAdaptive(period));
-		}
-		return builder.toString();
-	}
-
-	public void setAdaptive(String adaptive) {
-		for (String period : Period.PERIODS) {
-			getPeriod(period).setAdaptive(getPeriod(period).fromAdaptiveString(adaptive));
-		}
-	}
-
-	public int getAdaptive(String period) {
-		return getPeriod(period).getAdaptive();
-	}
-
-	public void setAdaptive(String period, int adaptive) {
-		getPeriod(period).setAdaptive(adaptive);
-	}
-
 	public String getTarget() {
 		StringBuilder builder = new StringBuilder();
 		for (String period : Period.PERIODS) {
@@ -1436,14 +1434,6 @@ public class Stock extends DatabaseTable {
 
 	public void setTrend(String period, String trend) {
 		getPeriod(period).setTrend(trend);
-	}
-
-	public Radar getAdaptiveRadar(String period) {
-		return getPeriod(period).getAdaptiveRadar();
-	}
-
-	public void setAdaptiveRadar(String period, Radar radar) {
-		getPeriod(period).setAdaptiveRadar(radar);
 	}
 
 	public Radar getTargetRadar(String period) {
@@ -1702,14 +1692,6 @@ public class Stock extends DatabaseTable {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getName()).append(separator);
 		builder.append(getPriceNetString());
-		return builder.toString();
-	}
-
-	public String getAdaptiveString() {
-		StringBuilder builder = new StringBuilder();
-		for (String period : Period.PERIODS) {
-			builder.append(getAdaptive(period));
-		}
 		return builder.toString();
 	}
 

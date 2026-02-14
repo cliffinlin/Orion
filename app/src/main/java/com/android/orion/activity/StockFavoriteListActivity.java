@@ -25,10 +25,10 @@ import androidx.annotation.NonNull;
 
 import com.android.orion.R;
 import com.android.orion.config.Config;
+import com.android.orion.constant.Constant;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
-import com.android.orion.constant.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Symbol;
@@ -37,6 +37,7 @@ import com.android.orion.view.SyncHorizontalScrollView;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StockFavoriteListActivity extends ListActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener,
@@ -45,14 +46,18 @@ public class StockFavoriteListActivity extends ListActivity implements
     private static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
     private static final int HEADER_TEXT_DEFAULT_COLOR = Color.BLACK;
     private static final int HEADER_TEXT_HIGHLIGHT_COLOR = Color.RED;
-    private static final long CLICK_INTERVAL = 500; // 500毫秒点击间隔
-    private static final long LOADER_DELAY = 100;   // Loader重启延迟时间
+    private static final long CLICK_INTERVAL = 500;
+    private static final long LOADER_DELAY = 100;
 
     private boolean mIsLoaderInitialized = false;
-    private volatile boolean mIsLoaderLoading = false;
-    private final Object mLoaderLock = new Object();
+    private final AtomicBoolean mIsLoaderLoading = new AtomicBoolean(false);
+    private final AtomicBoolean mIsLoaderReset = new AtomicBoolean(false);
+    private final AtomicBoolean mIsLoaderDestroying = new AtomicBoolean(false);
+    private final AtomicBoolean mIsRestartScheduled = new AtomicBoolean(false);
+
     private long mLastClickTime = 0;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Runnable mSafeRestartRunnable = this::safeRestartLoader;
 
     private int mColumnIndexCode = -1;
     private int mColumnIndexName = -1;
@@ -87,6 +92,7 @@ public class StockFavoriteListActivity extends ListActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+        mIsLoaderDestroying.set(false);
     }
 
     @Override
@@ -96,24 +102,34 @@ public class StockFavoriteListActivity extends ListActivity implements
 
     @Override
     protected void onDestroy() {
-        // 清理Handler中的所有回调
-        mHandler.removeCallbacksAndMessages(null);
+        mIsLoaderDestroying.set(true);
 
-        synchronized (mLoaderLock) {
-            mIsLoaderLoading = false;
-        }
+        mHandler.removeCallbacksAndMessages(null);
+        mIsRestartScheduled.set(false);
+        mIsLoaderLoading.set(false);
+        mIsLoaderReset.set(true);
 
         try {
             if (mLoaderManager != null && mIsLoaderInitialized) {
+                Loader<Cursor> loader = mLoaderManager.getLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+                if (loader != null) {
+                    loader.cancelLoad();
+                }
                 mLoaderManager.destroyLoader(LOADER_ID_STOCK_FAVORITE_LIST);
                 mLoaderManager = null;
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            mIsLoaderInitialized = false;
         }
 
         if (mLeftAdapter != null) {
             try {
+                Cursor cursor = mLeftAdapter.getCursor();
+                if (cursor != null && !cursor.isClosed()) {
+                    cursor.close();
+                }
                 mLeftAdapter.swapCursor(null);
                 mLeftAdapter = null;
             } catch (Exception e) {
@@ -123,6 +139,10 @@ public class StockFavoriteListActivity extends ListActivity implements
 
         if (mRightAdapter != null) {
             try {
+                Cursor cursor = mRightAdapter.getCursor();
+                if (cursor != null && !cursor.isClosed()) {
+                    cursor.close();
+                }
                 mRightAdapter.swapCursor(null);
                 mRightAdapter = null;
             } catch (Exception e) {
@@ -130,7 +150,6 @@ public class StockFavoriteListActivity extends ListActivity implements
             }
         }
 
-        // 清除引用
         mHeaderTextViews.clear();
         mColumnToViewIdMap.clear();
 
@@ -140,15 +159,19 @@ public class StockFavoriteListActivity extends ListActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        resetHeaderTextColor();
-        highlightCurrentSortColumn();
+        if (!mIsLoaderDestroying.get()) {
+            resetHeaderTextColor();
+            highlightCurrentSortColumn();
+        }
     }
 
     @Override
     public void handleOnResume() {
         super.handleOnResume();
-        // 延迟执行Loader重启，避免在生命周期切换时立即执行
-        mHandler.postDelayed(() -> safeRestartLoader(), 200);
+        if (!mIsLoaderDestroying.get()) {
+            mHandler.removeCallbacks(mSafeRestartRunnable);
+            mHandler.postDelayed(mSafeRestartRunnable, 200);
+        }
     }
 
     private void initColumnMapping() {
@@ -211,7 +234,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         Map<Integer, String> periodViewMap = createPeriodViewMap();
         String period = periodViewMap.get(viewId);
         if (period != null) {
-            setVisibility(textView, Setting.getPeriod(period) && Setting.getDisplayThumbnail());
+            textView.setVisibility(Setting.getPeriod(period) && Setting.getDisplayThumbnail() ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -282,12 +305,15 @@ public class StockFavoriteListActivity extends ListActivity implements
 
     @Override
     public void onClick(@NonNull View view) {
-        // 防重复点击
         long currentTime = System.currentTimeMillis();
         if (currentTime - mLastClickTime < CLICK_INTERVAL) {
             return;
         }
         mLastClickTime = currentTime;
+
+        if (mIsLoaderLoading.get() || mIsLoaderReset.get() || mIsLoaderDestroying.get()) {
+            return;
+        }
 
         resetHeaderTextColor();
         setHeaderTextColor(view.getId(), HEADER_TEXT_HIGHLIGHT_COLOR);
@@ -300,8 +326,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         mSortOrder = mSortOrderColumn + mSortOrderDirection;
         Preferences.putString(Setting.SETTING_SORT_ORDER_FAVORITE_LIST, mSortOrder);
 
-        // 延迟执行Loader重启
-        mHandler.postDelayed(() -> safeRestartLoader(), LOADER_DELAY);
+        scheduleRestartLoader();
     }
 
     private void toggleSortOrderDirection() {
@@ -358,16 +383,21 @@ public class StockFavoriteListActivity extends ListActivity implements
 
             @Override
             public Cursor swapCursor(Cursor newCursor) {
-                if (newCursor != null && newCursor.isClosed()) {
-                    return super.swapCursor(null);
+                try {
+                    if (newCursor != null && newCursor.isClosed()) {
+                        return super.swapCursor(null);
+                    }
+                    return super.swapCursor(newCursor);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
                 }
-                return super.swapCursor(newCursor);
             }
 
             @Override
             public void bindView(View view, Context context, Cursor cursor) {
                 try {
-                    if (cursor == null || cursor.isClosed()) {
+                    if (cursor == null || cursor.isClosed() || mIsLoaderDestroying.get()) {
                         return;
                     }
                     super.bindView(view, context, cursor);
@@ -436,16 +466,21 @@ public class StockFavoriteListActivity extends ListActivity implements
 
             @Override
             public Cursor swapCursor(Cursor newCursor) {
-                if (newCursor != null && newCursor.isClosed()) {
-                    return super.swapCursor(null);
+                try {
+                    if (newCursor != null && newCursor.isClosed()) {
+                        return super.swapCursor(null);
+                    }
+                    return super.swapCursor(newCursor);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
                 }
-                return super.swapCursor(newCursor);
             }
 
             @Override
             public void bindView(View view, Context context, Cursor cursor) {
                 try {
-                    if (cursor == null || cursor.isClosed()) {
+                    if (cursor == null || cursor.isClosed() || mIsLoaderDestroying.get()) {
                         return;
                     }
                     super.bindView(view, context, cursor);
@@ -464,7 +499,7 @@ public class StockFavoriteListActivity extends ListActivity implements
     }
 
     private void initLoader() {
-        if (mIsLoaderInitialized) {
+        if (mIsLoaderInitialized || mIsLoaderDestroying.get()) {
             return;
         }
 
@@ -477,68 +512,110 @@ public class StockFavoriteListActivity extends ListActivity implements
         }
 
         try {
-            mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
-            mIsLoaderInitialized = true;
-            synchronized (mLoaderLock) {
-                mIsLoaderLoading = true;
+            if (mLoaderManager != null) {
+                Loader<Cursor> loader = mLoaderManager.getLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+                if (loader == null) {
+                    mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+                    mIsLoaderInitialized = true;
+                    mIsLoaderLoading.set(true);
+                    mIsLoaderReset.set(false);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    void restartLoader() {
-        safeRestartLoader();
-    }
-
     private void safeRestartLoader() {
+        mIsRestartScheduled.set(false);
+
+        if (mIsLoaderDestroying.get() || isFinishing() || isDestroyed()) {
+            return;
+        }
+
         if (!mIsLoaderInitialized) {
             initLoader();
             return;
         }
 
-        synchronized (mLoaderLock) {
-            if (mIsLoaderLoading) {
-                // 如果正在加载，延迟重启
-                mHandler.postDelayed(() -> safeRestartLoader(), LOADER_DELAY);
-                return;
-            }
+        if (mIsLoaderLoading.get() || mIsLoaderReset.get()) {
+            scheduleRestartLoader();
+            return;
+        }
 
-            try {
-                if (mLoaderManager != null) {
-                    Loader<Cursor> loader = mLoaderManager.getLoader(LOADER_ID_STOCK_FAVORITE_LIST);
-                    if (loader != null) {
-                        mIsLoaderLoading = true;
-                        // 使用restartLoader而不是forceLoad，确保数据重新加载
-                        mLoaderManager.restartLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
-                    } else {
-                        mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
-                        mIsLoaderLoading = true;
-                    }
+        try {
+            if (mLoaderManager != null) {
+                Loader<Cursor> loader = mLoaderManager.getLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+                if (loader != null) {
+                    loader.cancelLoad();
+                    mHandler.postDelayed(() -> {
+                        if (!mIsLoaderDestroying.get() && !mIsLoaderLoading.get() && !mIsLoaderReset.get()) {
+                            performRestartLoader();
+                        } else {
+                            scheduleRestartLoader();
+                        }
+                    }, 50);
+                } else {
+                    performInitLoader();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                mIsLoaderLoading = false;
-                recoverLoader();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            mIsLoaderLoading.set(false);
+            recoverLoader();
         }
     }
 
-    private void recoverLoader() {
+    private void performRestartLoader() {
+        if (mIsLoaderDestroying.get() || mIsLoaderLoading.get() || mIsLoaderReset.get()) {
+            scheduleRestartLoader();
+            return;
+        }
+
         try {
             if (mLoaderManager != null) {
-                mLoaderManager.destroyLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+                mIsLoaderLoading.set(true);
+                mIsLoaderReset.set(false);
+                mLoaderManager.restartLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            mIsLoaderLoading.set(false);
+            scheduleRestartLoader();
+        } catch (Exception e) {
+            e.printStackTrace();
+            mIsLoaderLoading.set(false);
+            recoverLoader();
         }
-        mIsLoaderInitialized = false;
-        initLoader();
+    }
+
+    private void performInitLoader() {
+        if (mIsLoaderDestroying.get()) {
+            return;
+        }
+
+        try {
+            if (mLoaderManager != null) {
+                mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+                mIsLoaderInitialized = true;
+                mIsLoaderLoading.set(true);
+                mIsLoaderReset.set(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void scheduleRestartLoader() {
+        if (mIsRestartScheduled.compareAndSet(false, true)) {
+            mHandler.removeCallbacks(mSafeRestartRunnable);
+            mHandler.postDelayed(mSafeRestartRunnable, LOADER_DELAY);
+        }
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
-        if (id == LOADER_ID_STOCK_FAVORITE_LIST) {
+        if (id == LOADER_ID_STOCK_FAVORITE_LIST && !mIsLoaderDestroying.get()) {
             String selection = DatabaseContract.SELECTION_FLAG(Stock.FLAG_FAVORITE);
             return new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
                     DatabaseContract.Stock.PROJECTION_ALL, selection, null, mSortOrder);
@@ -552,8 +629,14 @@ public class StockFavoriteListActivity extends ListActivity implements
             return;
         }
 
-        synchronized (mLoaderLock) {
-            mIsLoaderLoading = false;
+        mIsLoaderLoading.set(false);
+        mIsLoaderReset.set(false);
+
+        if (mIsLoaderDestroying.get() || isFinishing() || isDestroyed()) {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+            return;
         }
 
         cacheColumnIndices(cursor);
@@ -565,28 +648,45 @@ public class StockFavoriteListActivity extends ListActivity implements
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        synchronized (mLoaderLock) {
-            mIsLoaderLoading = false;
-        }
+        mIsLoaderReset.set(true);
+        mIsLoaderLoading.set(false);
         safeSwapCursor(null);
     }
 
     private void safeSwapCursor(Cursor newCursor) {
         try {
+            Cursor oldLeftCursor = null;
+            Cursor oldRightCursor = null;
+
             if (mLeftAdapter != null) {
-                Cursor oldCursor = mLeftAdapter.swapCursor(newCursor);
-                if (oldCursor != null && !oldCursor.isClosed()) {
-                    oldCursor.close();
-                }
+                oldLeftCursor = mLeftAdapter.swapCursor(null);
             }
             if (mRightAdapter != null) {
-                Cursor oldCursor = mRightAdapter.swapCursor(newCursor);
-                if (oldCursor != null && !oldCursor.isClosed()) {
-                    oldCursor.close();
-                }
+                oldRightCursor = mRightAdapter.swapCursor(null);
             }
+
+            if (mLeftAdapter != null && newCursor != null && !newCursor.isClosed() && !mIsLoaderDestroying.get()) {
+                mLeftAdapter.swapCursor(newCursor);
+            }
+            if (mRightAdapter != null && newCursor != null && !newCursor.isClosed() && !mIsLoaderDestroying.get()) {
+                mRightAdapter.swapCursor(newCursor);
+            }
+
+            closeCursorSafely(oldLeftCursor);
+            closeCursorSafely(oldRightCursor);
+
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void closeCursorSafely(Cursor cursor) {
+        if (cursor != null && !cursor.isClosed()) {
+            try {
+                cursor.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -605,11 +705,29 @@ public class StockFavoriteListActivity extends ListActivity implements
         }
     }
 
+    private void recoverLoader() {
+        try {
+            if (mLoaderManager != null) {
+                Loader<Cursor> loader = mLoaderManager.getLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+                if (loader != null) {
+                    loader.cancelLoad();
+                    mLoaderManager.destroyLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            mIsLoaderInitialized = false;
+            mIsLoaderLoading.set(false);
+            mIsLoaderReset.set(false);
+            initLoader();
+        }
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (id <= DatabaseContract.INVALID_ID) return;
 
-        // 防重复点击
         long currentTime = System.currentTimeMillis();
         if (currentTime - mLastClickTime < CLICK_INTERVAL) {
             return;
@@ -683,7 +801,7 @@ public class StockFavoriteListActivity extends ListActivity implements
     private class LeftViewBinder implements SimpleCursorAdapter.ViewBinder {
         @Override
         public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-            if (view == null || cursor == null || columnIndex == -1 || cursor.isClosed()) {
+            if (view == null || cursor == null || columnIndex == -1 || cursor.isClosed() || mIsLoaderDestroying.get()) {
                 return false;
             }
 
@@ -694,17 +812,20 @@ public class StockFavoriteListActivity extends ListActivity implements
         }
 
         void setViewColor(View view, Cursor cursor) {
-            if (view == null || cursor == null || cursor.isClosed()) {
+            if (view == null || cursor == null || cursor.isClosed() || mIsLoaderDestroying.get()) {
                 return;
             }
 
             try {
-                String code = cursor.getString(cursor.getColumnIndex(DatabaseContract.COLUMN_CODE));
-                TextView textView = (TextView) view;
-                if (TextUtils.equals(mAnalyzingStockCode, code)) {
-                    textView.setTextColor(Color.RED);
-                } else {
-                    textView.setTextColor(Color.GRAY);
+                int codeColumnIndex = cursor.getColumnIndex(DatabaseContract.COLUMN_CODE);
+                if (codeColumnIndex != -1) {
+                    String code = cursor.getString(codeColumnIndex);
+                    TextView textView = (TextView) view;
+                    if (TextUtils.equals(mAnalyzingStockCode, code)) {
+                        textView.setTextColor(Color.RED);
+                    } else {
+                        textView.setTextColor(Color.GRAY);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -715,8 +836,8 @@ public class StockFavoriteListActivity extends ListActivity implements
     private class RightViewBinder implements SimpleCursorAdapter.ViewBinder {
         @Override
         public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-            if (view == null || cursor == null || columnIndex == -1 || cursor.isClosed()) {
-                return true; // Return true to indicate we handled this binding
+            if (view == null || cursor == null || columnIndex == -1 || cursor.isClosed() || mIsLoaderDestroying.get()) {
+                return true;
             }
 
             String columnName;
@@ -734,15 +855,12 @@ public class StockFavoriteListActivity extends ListActivity implements
                 return handleProfitDividerContainer(view, cursor);
             }
 
-            // Handle BLOB columns first
             if (DatabaseContract.isPeriodThumbnailColumn(columnName) ||
                     DatabaseContract.COLUMN_TREND_THUMBNAIL.equals(columnName) ||
                     DatabaseContract.COLUMN_RADAR_THUMBNAIL.equals(columnName)) {
-
                 return handleBlobColumn(view, cursor, columnIndex, columnName);
             }
 
-            // Handle other column types
             return handleTextColumns(view, cursor, columnIndex, columnName);
         }
 
@@ -753,7 +871,12 @@ public class StockFavoriteListActivity extends ListActivity implements
 
             LinearLayout container = (LinearLayout) view;
 
-            if (Utility.hasFlag(cursor.getInt(mColumnIndexFlag), Stock.FLAG_TRADE)) {
+            int flagValue = 0;
+            if (mColumnIndexFlag != -1 && !cursor.isNull(mColumnIndexFlag)) {
+                flagValue = cursor.getInt(mColumnIndexFlag);
+            }
+
+            if (Utility.hasFlag(flagValue, Stock.FLAG_TRADE)) {
                 view.setVisibility(View.VISIBLE);
             } else {
                 view.setVisibility(View.GONE);
@@ -823,7 +946,6 @@ public class StockFavoriteListActivity extends ListActivity implements
         }
 
         private boolean handleBlobColumn(View view, Cursor cursor, int columnIndex, String columnName) {
-            // Set visibility based on settings for period thumbnails
             if (DatabaseContract.isPeriodThumbnailColumn(columnName)) {
                 String period = Period.fromColumnName(columnName);
                 view.setVisibility(Setting.getPeriod(period) && Setting.getDisplayThumbnail() ? View.VISIBLE : View.GONE);
@@ -831,7 +953,6 @@ public class StockFavoriteListActivity extends ListActivity implements
                 view.setVisibility(View.VISIBLE);
             }
 
-            // Handle ImageView BLOB data
             if (view instanceof ImageView) {
                 try {
                     if (!cursor.isNull(columnIndex)) {
@@ -850,10 +971,10 @@ public class StockFavoriteListActivity extends ListActivity implements
                     e.printStackTrace();
                     ((ImageView) view).setImageDrawable(null);
                 }
-                return true; // We handled this binding
+                return true;
             }
 
-            return true; // For non-ImageViews, we still handle it to prevent string conversion
+            return true;
         }
 
         private boolean handleTextColumns(View view, Cursor cursor, int columnIndex, String columnName) {
@@ -878,7 +999,10 @@ public class StockFavoriteListActivity extends ListActivity implements
                 if (DatabaseContract.COLUMN_PRICE.equals(columnName)) {
                     double value = cursor.getDouble(columnIndex);
                     textView.setText(String.valueOf(value));
-                    double net = cursor.getDouble(mColumnIndexNet);
+                    double net = 0;
+                    if (mColumnIndexNet != -1 && !cursor.isNull(mColumnIndexNet)) {
+                        net = cursor.getDouble(mColumnIndexNet);
+                    }
                     setTextColorByValue(textView, net);
                 } else if (DatabaseContract.COLUMN_NET.equals(columnName) ||
                         DatabaseContract.COLUMN_SIGNAL.equals(columnName)) {
@@ -886,7 +1010,11 @@ public class StockFavoriteListActivity extends ListActivity implements
                     textView.setText(String.valueOf(value));
                     setTextColorByValue(textView, value);
                 } else if (DatabaseContract.COLUMN_BUY_PROFIT.equals(columnName)) {
-                    if (Utility.hasFlag(cursor.getInt(mColumnIndexFlag), Stock.FLAG_TRADE)) {
+                    int flagValue = 0;
+                    if (mColumnIndexFlag != -1 && !cursor.isNull(mColumnIndexFlag)) {
+                        flagValue = cursor.getInt(mColumnIndexFlag);
+                    }
+                    if (Utility.hasFlag(flagValue, Stock.FLAG_TRADE)) {
                         double profit = cursor.getDouble(columnIndex);
                         textView.setText(String.valueOf(profit));
                         textView.setTextColor(profit > 0 ? Color.RED : Color.GRAY);
@@ -895,7 +1023,11 @@ public class StockFavoriteListActivity extends ListActivity implements
                     }
                     return true;
                 } else if (DatabaseContract.COLUMN_SELL_PROFIT.equals(columnName)) {
-                    if (Utility.hasFlag(cursor.getInt(mColumnIndexFlag), Stock.FLAG_TRADE)) {
+                    int flagValue = 0;
+                    if (mColumnIndexFlag != -1 && !cursor.isNull(mColumnIndexFlag)) {
+                        flagValue = cursor.getInt(mColumnIndexFlag);
+                    }
+                    if (Utility.hasFlag(flagValue, Stock.FLAG_TRADE)) {
                         double profit = cursor.getDouble(columnIndex);
                         textView.setText(String.valueOf(profit));
                         textView.setTextColor(profit < 0 ? Color.RED : Color.GRAY);
@@ -906,7 +1038,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                 } else if (DatabaseContract.COLUMN_MODIFIED.equals(columnName)) {
                     textView.setText(cursor.getString(columnIndex));
                 } else {
-                    return false; // Let the adapter handle other columns
+                    return false;
                 }
             } catch (Exception e) {
                 e.printStackTrace();

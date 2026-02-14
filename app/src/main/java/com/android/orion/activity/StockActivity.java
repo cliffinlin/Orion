@@ -913,14 +913,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					return;
 				}
 
-				setAdaptiveIfChanged(Period.MONTH, mTradeLevelPickerMonth.getValue());
-				setAdaptiveIfChanged(Period.WEEK, mTradeLevelPickerWeek.getValue());
-				setAdaptiveIfChanged(Period.DAY, mTradeLevelPickerDay.getValue());
-				setAdaptiveIfChanged(Period.MIN60, mTradeLevelPickerMin60.getValue());
-				setAdaptiveIfChanged(Period.MIN30, mTradeLevelPickerMin30.getValue());
-				setAdaptiveIfChanged(Period.MIN15, mTradeLevelPickerMin15.getValue());
-				setAdaptiveIfChanged(Period.MIN5, mTradeLevelPickerMin5.getValue());
-
 				if (TextUtils.equals(mAction, Constant.ACTION_STOCK_NEW)) {
 					if (!mStockDatabaseManager.isStockExist(mStock)) {
 						mStock.setCreated(Utility.getCurrentDateTimeString());
@@ -979,18 +971,12 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		if (isCrosshairIconShow(imageView)) {
 			imageView.setImageResource(R.drawable.ic_crosshair_unchecked);
 			mStock.setTarget(period, StockTrend.LEVEL_NONE);
-			mStock.setAdaptive(period, StockTrend.LEVEL_NONE);
 			if (picker != null) {
 				picker.setTargetValue(StockTrend.LEVEL_NONE);
 			}
 		} else {
 			imageView.setImageResource(R.drawable.ic_crosshair_checked);
 			mStock.setTarget(period, target);
-			int adaptive = target - 1;
-			if (adaptive < StockTrend.LEVEL_NONE) {
-				adaptive = StockTrend.LEVEL_NONE;
-			}
-			mStock.setAdaptive(period, adaptive);
 			if (picker != null) {
 				picker.setTargetValue(target);
 			}
@@ -1041,16 +1027,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	private void restorePeriodToTarget(String period, TradeLevelPicker picker, TextView netTextView, ImageView targetImageView) {
 		int target = mStock.getTarget(period);
 		if (target > StockTrend.LEVEL_NONE) {
-			mStock.setAdaptive(period, target - 1);
 			picker.setValue(target);
 			updateNetTextView(period, target, netTextView);
 			updateTargetImageView(period, target, targetImageView);
-		}
-	}
-
-	void setAdaptiveIfChanged(String period, int value) {
-		if (value != mStock.getTarget(period) && value != mStock.getAdaptive(period)) {
-			mStock.setAdaptive(period, value);
 		}
 	}
 }

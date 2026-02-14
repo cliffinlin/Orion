@@ -70,9 +70,6 @@ public class StockTrend extends DatabaseTable {
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_CHANGED = 1 << 0;
 
-	public static final int ADAPTIVE = 1;
-	public static final int TARGET = 2;
-
 	public static final int[] LEVELS = {LEVEL_NONE,
 			LEVEL_DRAW, LEVEL_STROKE, LEVEL_SEGMENT, LEVEL_LINE,
 			LEVEL_OUT_LINE, LEVEL_SUPER_LINE, LEVEL_TREND_LINE};

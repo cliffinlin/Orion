@@ -33,7 +33,6 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_WIDTH = THUMBNAIL_SIZE;
 	public static final int THUMBNAIL_HEIGHT = THUMBNAIL_SIZE;
 	public static final int THUMBNAIL_STROKE_WIDTH = 1;
-	public static final int THUMBNAIL_ADAPTIVE_BAR_WIDTH = 6 * THUMBNAIL_STROKE_WIDTH;
 	public static final int THUMBNAIL_TARGET_BAR_WIDTH = 12 * THUMBNAIL_STROKE_WIDTH;
 	public static final int THUMBNAIL_AXIS_WIDTH = 6 * THUMBNAIL_STROKE_WIDTH;
 	public static final int THUMBNAIL_STROKE_COLOR = Color.GRAY;
@@ -42,7 +41,6 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_SCATTER_SIZE = 10;
 	public static final int THUMBNAIL_TREND_COLOR_UP = Config.COLOR_DARK_RED;
 	public static final int THUMBNAIL_TREND_COLOR_DOWN = Config.COLOR_DARK_GREEN;
-	public static final int THUMBNAIL_RADA_COLOR_ADAPTIVE = Color.GRAY;
 	public static final int THUMBNAIL_RADA_COLOR_TARGET = Color.BLACK;
 
 	int mPeriods;
@@ -647,7 +645,7 @@ public class TrendAnalyzer {
 				if (stockData.vertexOf(StockTrend.getVertexTOP(level))) {
 					mXValues[level].add((float) index);
 					mYValues[level].add((float) stockData.getCandle().getTop());
-					if (mStock.getAdaptive(period) == level) {
+					if (mStock.getTarget(period) == level) {
 						mStock.setTrend(period, Symbol.MINUS);
 						if (mStock.getPrice() > stockData.getCandle().getTop()) {
 							mStock.setTrend(period, Symbol.ADD);//TODO
@@ -656,7 +654,7 @@ public class TrendAnalyzer {
 				} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
 					mXValues[level].add((float) index);
 					mYValues[level].add((float) stockData.getCandle().getBottom());
-					if (mStock.getAdaptive(period) == level) {
+					if (mStock.getTarget(period) == level) {
 						mStock.setTrend(period, Symbol.ADD);
 						if (mStock.getPrice() < stockData.getCandle().getBottom()) {
 							mStock.setTrend(period, Symbol.MINUS);//TODO
@@ -740,22 +738,6 @@ public class TrendAnalyzer {
 				xValuesAxis, yValuesAxis, barColor, barWidth, axisColor);
 	}
 
-	private void drawDoubleBars(float startX, float endX, float centerY,
-								StockTrend adaptiveTrend, int adaptiveLevel,
-								StockTrend targetTrend, int targetLevel) {
-		float lineWidth = endX - startX;
-
-		// 柱子位置（40%和60%位置）
-		float adaptiveCenterX = startX + lineWidth * 0.5f;
-		float targetCenterX = startX + lineWidth * 0.5f;
-
-		drawDoubleBars(adaptiveCenterX, centerY, getAxisColor(adaptiveLevel),
-				startX, adaptiveCenterX + lineWidth * 0.05f, adaptiveTrend, getAdaptiveBarColor(adaptiveTrend.getNextNet()), THUMBNAIL_ADAPTIVE_BAR_WIDTH);
-
-		drawDoubleBars(targetCenterX, centerY, getAxisColor(targetLevel),
-				targetCenterX - lineWidth * 0.05f, endX, targetTrend, getTargetBarColor(targetTrend.getNextNet()), THUMBNAIL_TARGET_BAR_WIDTH);
-	}
-
 	private void drawDoubleBars(float centerX, float centerY, int axisColor,
 								float axisStartX, float axisEndX, StockTrend trend, int barColor, float barWidth) {
 		if (trend == null) {
@@ -783,14 +765,6 @@ public class TrendAnalyzer {
 
 	private int getAxisColor(int level) {
 		return StockTrend.getColor(level);
-	}
-
-	private int getAdaptiveBarColor(double value) {
-		if (value > 0) {
-			return THUMBNAIL_TREND_COLOR_UP;
-		} else {
-			return THUMBNAIL_TREND_COLOR_DOWN;
-		}
 	}
 
 	private int getTargetBarColor(double value) {
