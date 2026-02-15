@@ -66,6 +66,8 @@ public class StockDealActivity extends DatabaseActivity implements
 	String mBuyDate = "";
 	String mSellDate = "";
 
+	boolean mSellChecked = false;
+
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
 		@Override
@@ -91,6 +93,9 @@ public class StockDealActivity extends DatabaseActivity implements
 						mStockDeal.setCreated(Utility.getCurrentDateTimeString());
 						mStockDatabaseManager.insertStockDeal(mStockDeal);
 					} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_DEAL_EDIT)) {
+						if (mSellChecked) {
+							mStock.setTee(mStock.getTee() + mStockDeal.getProfit());
+						}
 						mStockDeal.setModified(Utility.getCurrentDateTimeString());
 						mStockDatabaseManager.updateStockDealByID(mStockDeal);
 					}
@@ -344,6 +349,7 @@ public class StockDealActivity extends DatabaseActivity implements
 		if (group == mRadioGroupDealType) {
 			switch (checkedId) {
 				case R.id.radio_deal_buy:
+					mSellChecked = false;
 					mStockDeal.setType(StockDeal.TYPE_BUY);
 
 					mEditTextBuyPrice.setEnabled(true);
@@ -365,10 +371,11 @@ public class StockDealActivity extends DatabaseActivity implements
 					mEditTextDealProfit.setText(String.valueOf(mStockDeal.getProfit()));
 					break;
 				case R.id.radio_deal_sell:
+					mSellChecked = true;
 					mStockDeal.setType(StockDeal.TYPE_SELL);
 
 					mEditTextBuyPrice.setEnabled(false);
-					mEditTextBuyPrice.setText("");
+//					mEditTextBuyPrice.setText("");
 
 					mEditTextSellPrice.setEnabled(true);
 					if (mStockDeal.getSell() != 0) {
