@@ -55,6 +55,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 	float mTotalProfit = 0;
 	float mTotalBonus = 0;
+	float mTotalTee = 0;
 	String mDescription = "";
 	Menu mMenu = null;
 	ListView mListView = null;
@@ -199,7 +200,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 			swapStockCursor(mStatisticsChartList.get(0), cursor);
 		}
 
-		mDescription = "Profit=" + mTotalProfit + ",  Bonus=" + mTotalBonus;
+		mDescription = "Profit=" + mTotalProfit + ",  Bonus=" + mTotalBonus + ",  Tee=" + mTotalTee;
 	}
 
 	@Override
@@ -289,6 +290,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 		mTotalProfit = 0;
 		mTotalBonus = 0;
+		mTotalTee = 0;
 
 		if (mStockList == null) {
 			return;
@@ -335,6 +337,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 					mTotalProfit += (float) stock.getProfit();
 					mTotalBonus += (float) stock.getBonusInYear();
+					mTotalTee += (float) stock.getTee();
 
 					if (stock != null) {
 						if (mStock.getId() == stock.getId()) {
