@@ -11,14 +11,11 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -104,11 +101,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 	// 持仓一致性检查提示文字
 	TextView mTextViewHoldConsistencyHint;
-
-	// Order type下拉列表
-	private Spinner mSpinnerOrderType;
-	private ArrayAdapter<CharSequence> mOrderTypeAdapter;
-	private int mSelectedOrderType = Stock.ORDER_TYPE_NONE; // 保存选中的值，默认为NONE
 
 	LinearLayout mLayoutTradeLevelPickers;
 	LinearLayout mLayoutMonthPicker;
@@ -200,80 +192,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 		// 初始化持仓一致性检查提示TextView
 		mTextViewHoldConsistencyHint = findViewById(R.id.textview_hold_consistency_hint);
-
-		// 初始化Order type下拉列表
-		mSpinnerOrderType = findViewById(R.id.spinner_order_type);
-
-		// 创建订单类型数组（注意第一个是空字符串，对应ORDER_TYPE_NONE）
-		String[] orderTypeDisplayValues = new String[]{
-				"",  // 对应 ORDER_TYPE_NONE
-				getString(R.string.order_type_small),    // 对应 ORDER_TYPE_SMALL
-				getString(R.string.order_type_medium),   // 对应 ORDER_TYPE_MEDIUM
-				getString(R.string.order_type_large),    // 对应 ORDER_TYPE_LARGE
-				getString(R.string.order_type_extra_large) // 对应 ORDER_TYPE_EXTRA_LARGE
-		};
-
-		// 创建自定义的ArrayAdapter，重写getView方法以设置颜色
-		mOrderTypeAdapter = new ArrayAdapter<CharSequence>(this,
-				android.R.layout.simple_spinner_item, orderTypeDisplayValues) {
-			@Override
-			public View getView(int position, View convertView, android.view.ViewGroup parent) {
-				View view = super.getView(position, convertView, parent);
-				TextView textView = (TextView) view;
-
-				// 根据位置设置文字颜色
-				if (position >= 0 && position < Stock.ORDER_TYPE_COLORS.length) {
-					textView.setTextColor(Stock.ORDER_TYPE_COLORS[position]);
-				} else {
-					textView.setTextColor(Color.BLACK);
-				}
-
-				return view;
-			}
-
-			@Override
-			public View getDropDownView(int position, View convertView, android.view.ViewGroup parent) {
-				View view = super.getDropDownView(position, convertView, parent);
-				TextView textView = (TextView) view;
-
-				// 下拉列表中的选项也设置对应的颜色
-				if (position >= 0 && position < Stock.ORDER_TYPE_COLORS.length) {
-					textView.setTextColor(Stock.ORDER_TYPE_COLORS[position]);
-				} else {
-					textView.setTextColor(Color.BLACK);
-				}
-
-				return view;
-			}
-		};
-
-		// 设置下拉列表样式
-		mOrderTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// 将Adapter设置给Spinner
-		mSpinnerOrderType.setAdapter(mOrderTypeAdapter);
-
-		// 设置Spinner选择监听器
-		mSpinnerOrderType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				// position 0 对应 ORDER_TYPE_NONE
-				// position 1 对应 ORDER_TYPE_SMALL
-				// position 2 对应 ORDER_TYPE_MEDIUM
-				// position 3 对应 ORDER_TYPE_LARGE
-				// position 4 对应 ORDER_TYPE_EXTRA_LARGE
-				mSelectedOrderType = position;
-
-				// 选中后也更新选中项的文字颜色
-				if (view instanceof TextView) {
-					((TextView) view).setTextColor(Stock.ORDER_TYPE_COLORS[position]);
-				}
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-				mSelectedOrderType = Stock.ORDER_TYPE_NONE;
-			}
-		});
 
 		mLayoutTradeLevelPickers = findViewById(R.id.layout_trade_level_pickers);
 		mLayoutMonthPicker = findViewById(R.id.layout_month_picker);
@@ -692,7 +610,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	}
 
 	private void setupTradeLevelPickerListener(TradeLevelPicker picker, final String period,
-	                                           final TextView netTextView, final ImageView targetImageView) {
+											   final TextView netTextView, final ImageView targetImageView) {
 		if (picker == null) {
 			return;
 		}
@@ -741,19 +659,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
 
 		mEditTextStockTee.setText(String.format(Locale.getDefault(), "%.2f", mStock.getTee()));
-
-		// 设置Order type下拉列表的值
-		if (mStock != null) {
-			int orderType = mStock.getOrderType();
-			// 确保值在有效范围内
-			if (orderType >= Stock.ORDER_TYPE_NONE && orderType <= Stock.ORDER_TYPE_EXTRA_LARGE) {
-				mSpinnerOrderType.setSelection(orderType);
-				mSelectedOrderType = orderType;
-			} else {
-				mSpinnerOrderType.setSelection(Stock.ORDER_TYPE_NONE);
-				mSelectedOrderType = Stock.ORDER_TYPE_NONE;
-			}
-		}
 
 		mTextViewStockHoldValue.setText(String.valueOf(mStock.getHold()));
 
@@ -991,11 +896,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					}
 				} catch (Exception e) {
 					mStock.setTee(0.0);
-				}
-
-				// 保存Order type
-				if (mSpinnerOrderType != null) {
-					mStock.setOrderType(mSelectedOrderType);
 				}
 
 				String name = mEditTextStockName.getText().toString();

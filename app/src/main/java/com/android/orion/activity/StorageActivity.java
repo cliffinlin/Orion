@@ -286,8 +286,6 @@ public class StorageActivity extends DatabaseActivity {
 								stock.setQuota(Long.parseLong(parser.nextText()));
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_TEE)) {
 								stock.setTee(Double.parseDouble(parser.nextText()));
-							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_ORDER_TYPE)) {
-								stock.setOrderType(Integer.parseInt(parser.nextText()));
 							}
 						} else if (parseType == XML_PARSE_TYPE_STOCK_DEAL) {
 							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_BUY)) {
@@ -443,9 +441,6 @@ public class StorageActivity extends DatabaseActivity {
 				}
 				if (stock.getTee() > 0) {
 					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_TEE, String.valueOf(stock.getTee()));
-				}
-				if (stock.getOrderType() != Stock.ORDER_TYPE_NONE) {
-					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_ORDER_TYPE, String.valueOf(stock.getOrderType()));
 				}
 				count++;
 				xmlSerializer.endTag(null, XML_TAG_STOCK_TRADE);

@@ -134,11 +134,6 @@
     <string name="order_by_roi">Order by Roi</string>
     <string name="order_by_valuation">Order by Valuation</string>
     <string name="order_by_yield">Order by Yield</string>
-    <string name="order_type">order type</string>
-    <string name="order_type_small">small</string>
-    <string name="order_type_medium">medium</string>
-    <string name="order_type_large">large</string>
-    <string name="order_type_extra_large">extra large</string>
     <string name="outline">OutLine</string>
     <string name="out_of_trading_hours">Out of trading hours</string>
     <string name="pb">Pb</string>

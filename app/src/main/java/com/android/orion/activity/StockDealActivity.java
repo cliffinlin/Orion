@@ -375,7 +375,6 @@ public class StockDealActivity extends DatabaseActivity implements
 					mStockDeal.setType(StockDeal.TYPE_SELL);
 
 					mEditTextBuyPrice.setEnabled(false);
-//					mEditTextBuyPrice.setText("");
 
 					mEditTextSellPrice.setEnabled(true);
 					if (mStockDeal.getSell() != 0) {
