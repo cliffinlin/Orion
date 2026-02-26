@@ -438,6 +438,18 @@ public class StockDeal extends DatabaseTable {
 		return TextUtils.equals(mType, StockDeal.TYPE_BUY);
 	}
 
+	public boolean isSellType() {
+		return TextUtils.equals(mType, StockDeal.TYPE_SELL);
+	}
+
+	public static boolean isBuyType(String type) {
+		return TextUtils.equals(type, TYPE_BUY);
+	}
+
+	public static boolean isSellType(String type) {
+		return TextUtils.equals(type, TYPE_SELL);
+	}
+
 	public void setupValue() {
 		if (mVolume == 0) {
 			mValue = 0;

@@ -1308,7 +1308,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setTee(double tee) {
-		mTee = tee;
+		mTee = Utility.Round2(tee);
 	}
 
 	void setTee(Cursor cursor) {

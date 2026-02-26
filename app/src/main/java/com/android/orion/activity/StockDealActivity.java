@@ -1,6 +1,5 @@
 package com.android.orion.activity;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.os.Handler;
@@ -66,7 +65,7 @@ public class StockDealActivity extends DatabaseActivity implements
 	String mBuyDate = "";
 	String mSellDate = "";
 
-	boolean mSellChecked = false;
+	String mOriginalDealType = "";
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -82,6 +81,7 @@ public class StockDealActivity extends DatabaseActivity implements
 					} else {
 						mSellDate = mStockDeal.getDate();
 					}
+					mOriginalDealType = mStockDeal.getType();
 					mStock.setSE(mStockDeal.getSE());
 					mStock.setCode(mStockDeal.getCode());
 					mStockDatabaseManager.getStock(mStock);
@@ -93,7 +93,7 @@ public class StockDealActivity extends DatabaseActivity implements
 						mStockDeal.setCreated(Utility.getCurrentDateTimeString());
 						mStockDatabaseManager.insertStockDeal(mStockDeal);
 					} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_DEAL_EDIT)) {
-						if (mSellChecked) {
+						if (StockDeal.isBuyType(mOriginalDealType) && mStockDeal.isSellType()) {
 							mStockDeal.setBuy(0);
 							mStock.setTee(mStock.getTee() + mStockDeal.getProfit());
 						}
@@ -115,6 +115,7 @@ public class StockDealActivity extends DatabaseActivity implements
 					mStockDeal.setType(StockDeal.TYPE_BUY);
 					mStockDeal.setBuy(mStock.getPrice());
 					mStockDeal.setDate(Utility.getCurrentDateString());
+					mOriginalDealType = mStockDeal.getType();
 					updateView();
 					break;
 
@@ -350,7 +351,6 @@ public class StockDealActivity extends DatabaseActivity implements
 		if (group == mRadioGroupDealType) {
 			switch (checkedId) {
 				case R.id.radio_deal_buy:
-					mSellChecked = false;
 					mStockDeal.setType(StockDeal.TYPE_BUY);
 
 					mEditTextBuyPrice.setEnabled(true);
@@ -372,7 +372,6 @@ public class StockDealActivity extends DatabaseActivity implements
 					mEditTextDealProfit.setText(String.valueOf(mStockDeal.getProfit()));
 					break;
 				case R.id.radio_deal_sell:
-					mSellChecked = true;
 					mStockDeal.setType(StockDeal.TYPE_SELL);
 
 					mEditTextBuyPrice.setEnabled(false);
