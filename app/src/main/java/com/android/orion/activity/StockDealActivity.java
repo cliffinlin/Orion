@@ -94,6 +94,7 @@ public class StockDealActivity extends DatabaseActivity implements
 						mStockDatabaseManager.insertStockDeal(mStockDeal);
 					} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_DEAL_EDIT)) {
 						if (mSellChecked) {
+							mStockDeal.setBuy(0);
 							mStock.setTee(mStock.getTee() + mStockDeal.getProfit());
 						}
 						mStockDeal.setModified(Utility.getCurrentDateTimeString());
