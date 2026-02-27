@@ -393,7 +393,7 @@ public class StockDataChart {
 			if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_BUY)) {
 				color = stockDeal.getProfit() > 0 ? Color.RED : Color.GREEN;
 			} else if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_SELL)) {
-				color = stockDeal.getProfit() > 0 ? Color.YELLOW : Color.MAGENTA;
+				color = stockDeal.getProfit() > 0 ? Color.CYAN : Color.MAGENTA;
 			} else {
 				color = Color.BLACK;
 			}
