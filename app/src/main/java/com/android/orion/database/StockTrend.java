@@ -614,6 +614,27 @@ public class StockTrend extends DatabaseTable {
 		return vertexBottom;
 	}
 
+	public static String getLevelName(int level) {
+		switch (level) {
+			case StockTrend.LEVEL_DRAW:
+				return "DRAW";
+			case StockTrend.LEVEL_STROKE:
+				return "STROKE";
+			case StockTrend.LEVEL_SEGMENT:
+				return "SEGMENT";
+			case StockTrend.LEVEL_LINE:
+				return "LINE";
+			case StockTrend.LEVEL_OUT_LINE:
+				return "OUT_LINE";
+			case StockTrend.LEVEL_SUPER_LINE:
+				return "SUPER_LINE";
+			case StockTrend.LEVEL_TREND_LINE:
+				return "TREND_LINE";
+			default:
+				return "LEVEL_" + level;
+		}
+	}
+
 	public static String directionToString(int direction) {
 		StringBuilder builder = new StringBuilder();
 		if (direction == DIRECTION_UP) {

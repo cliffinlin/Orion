@@ -435,7 +435,7 @@ public class StorageActivity extends DatabaseActivity {
 
 			try {
 				xmlSerializer.startTag(null, XML_TAG_STOCK_TRADE);
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_TARGET, stock.getTarget());
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_TARGET, stock.getTargetString());
 				if (stock.getQuota() > 0) {
 					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_QUOTA, String.valueOf(stock.getQuota()));
 				}

@@ -738,21 +738,6 @@ public class TrendAnalyzer {
 				xValuesAxis, yValuesAxis, barColor, barWidth, axisColor);
 	}
 
-	private void drawDoubleBars(float centerX, float centerY, int axisColor,
-								float axisStartX, float axisEndX, StockTrend trend, int barColor, float barWidth) {
-		if (trend == null) {
-			return;
-		}
-		List<Float> xValuesBar = Arrays.asList(centerX, centerX);
-		List<Float> yValuesBar = Arrays.asList(centerY, centerY + (float) trend.getNextNet());
-
-		List<Float> xValuesAxis = Arrays.asList(axisStartX, axisEndX);
-		List<Float> yValuesAxis = Arrays.asList(centerY, centerY);
-
-		addToLineConfigList(xValuesBar, yValuesBar,
-				xValuesAxis, yValuesAxis, barColor, barWidth, axisColor);
-	}
-
 	private void addToLineConfigList(List<Float> xValuesBar, List<Float> yValuesBar,
 									 List<Float> xValuesAxis, List<Float> yValuesAxis,
 									 int barColor, float barWidth, int axisColor) {

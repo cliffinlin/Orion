@@ -1383,17 +1383,9 @@ public class Stock extends DatabaseTable {
 		return getPeriod(period).getStockTrendList(level);
 	}
 
-	public String getTarget() {
-		StringBuilder builder = new StringBuilder();
+	public void setTarget(String targetString) {
 		for (String period : Period.PERIODS) {
-			builder.append(getTarget(period));
-		}
-		return builder.toString();
-	}
-
-	public void setTarget(String target) {
-		for (String period : Period.PERIODS) {
-			getPeriod(period).setTarget(getPeriod(period).fromTargetString(target));
+			getPeriod(period).setTarget(getPeriod(period).fromTargetString(targetString));
 		}
 	}
 
