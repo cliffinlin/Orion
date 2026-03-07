@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:textColor="@android:color/black"
             android:ellipsize="end"
             android:singleLine="true"
             android:maxWidth="200dp" />
@@ -91,6 +92,11 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sell" />
         </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -101,8 +107,10 @@
                 android:id="@+id/textview_deal_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
                 android:labelFor="@+id/edittext_deal_date"
-                android:text="@string/date" />
+                android:text="@string/deal_date" />
 
             <EditText
                 android:id="@+id/edittext_deal_date"

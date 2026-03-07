@@ -32,6 +32,7 @@
     <string name="custom">Custom</string>
     <string name="date">Date</string>
     <string name="deal">Deal</string>
+    <string name="deal_date">Deal date</string>
     <string name="deal_delete">Deal delete</string>
     <string name="deal_edit">Deal edit</string>
     <string name="deal_insert">Deal insert</string>
