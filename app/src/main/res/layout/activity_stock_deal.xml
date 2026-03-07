@@ -138,6 +138,32 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/textview_deal_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:labelFor="@+id/edittext_deal_value"
+            android:text="@string/deal_value" />
+
+        <EditText
+            android:id="@+id/edittext_deal_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="14dp"
+            android:inputType="numberDecimal"
+            android:focusable="false"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:enabled="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
             android:id="@+id/textview_deal_profit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -152,7 +178,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:layout_marginRight="14dp"
-            android:inputType="numberSigned" />
+            android:inputType="numberSigned"
+            android:focusable="false"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:enabled="false" />
     </LinearLayout>
 
     <LinearLayout

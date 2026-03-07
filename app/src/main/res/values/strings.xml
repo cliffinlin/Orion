@@ -38,6 +38,7 @@
     <string name="deal_list">Deal list</string>
     <string name="deal_price">Deal price</string>
     <string name="deal_profit">Deal profit</string>
+    <string name="deal_value">Deal value</string>
     <string name="deal_volume">Deal volume</string>
     <string name="deal_volume_prompt">Volume:</string>
     <string name="debt_to_net_assets_rato">D2B</string>

@@ -49,6 +49,7 @@ public class StockDealActivity extends DatabaseActivity implements
 
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
+	EditText mEditTextDealValue;
 	EditText mEditTextDealProfit;
 	EditText mEditTextBuyPrice;
 	EditText mEditTextSellPrice;
@@ -158,6 +159,7 @@ public class StockDealActivity extends DatabaseActivity implements
 		mRadioGroupDealType = findViewById(R.id.radiogroup_deal_type);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
+		mEditTextDealValue = findViewById(R.id.edittext_deal_value);
 		mEditTextDealProfit = findViewById(R.id.edittext_deal_profit);
 		mEditTextBuyPrice = findViewById(R.id.edittext_buy_price);
 		mEditTextSellPrice = findViewById(R.id.edittext_sell_price);
@@ -172,6 +174,7 @@ public class StockDealActivity extends DatabaseActivity implements
 		mRadioGroupDealType.setOnCheckedChangeListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
+		mEditTextDealValue.setOnClickListener(this);
 		mEditTextDealProfit.setOnClickListener(this);
 		mEditTextBuyPrice.setOnClickListener(this);
 		mEditTextSellPrice.setOnClickListener(this);
@@ -184,11 +187,14 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextStockName.setFocusable(false);
 		mEditTextStockCode.setInputType(InputType.TYPE_NULL);
 		mEditTextStockCode.setFocusable(false);
+		mEditTextDealValue.setInputType(InputType.TYPE_NULL);
+		mEditTextDealValue.setFocusable(false);
 		mEditTextDealProfit.setInputType(InputType.TYPE_NULL);
 		mEditTextDealProfit.setFocusable(false);
 
 		mEditTextStockName.setEnabled(false);
 		mEditTextStockCode.setEnabled(false);
+		mEditTextDealValue.setEnabled(false);
 		mEditTextDealProfit.setEnabled(false);
 
 		mListStockAccount = new ArrayList<>();
@@ -234,6 +240,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				}
 				mStockDeal.setBuy(buy);
 				setupDeal();
+				mEditTextDealValue.setText(String.valueOf(mStockDeal.getValue()));
 				mEditTextDealProfit.setText(String.valueOf(mStockDeal.getProfit()));
 			}
 		});
@@ -262,6 +269,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				}
 				mStockDeal.setSell(sell);
 				setupDeal();
+				mEditTextDealValue.setText(String.valueOf(mStockDeal.getValue()));
 				mEditTextDealProfit.setText(String.valueOf(mStockDeal.getProfit()));
 			}
 		});
@@ -292,6 +300,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				}
 				mStockDeal.setVolume(volume);
 				setupDeal();
+				mEditTextDealValue.setText(String.valueOf(mStockDeal.getValue()));
 				mEditTextDealProfit.setText(String.valueOf(mStockDeal.getProfit()));
 			}
 		});
@@ -335,6 +344,7 @@ public class StockDealActivity extends DatabaseActivity implements
 		}
 		mEditTextStockName.setText(mStockDeal.getName());
 		mEditTextStockCode.setText(mStockDeal.getCode());
+		mEditTextDealValue.setText(String.valueOf(mStockDeal.getValue()));
 		mEditTextDealProfit.setText(String.valueOf(mStockDeal.getProfit()));
 		mEditTextDealVolume.setText(String.valueOf(mStockDeal.getVolume()));
 		mEditTextDealDate.setText(mStockDeal.getDate());
@@ -369,6 +379,7 @@ public class StockDealActivity extends DatabaseActivity implements
 						mEditTextDealDate.setText(Utility.getCurrentDateString());
 					}
 					setupDeal();
+					mEditTextDealValue.setText(String.valueOf(mStockDeal.getValue()));
 					mEditTextDealProfit.setText(String.valueOf(mStockDeal.getProfit()));
 					break;
 				case R.id.radio_deal_sell:
@@ -389,6 +400,7 @@ public class StockDealActivity extends DatabaseActivity implements
 						mEditTextDealDate.setText(Utility.getCurrentDateString());
 					}
 					setupDeal();
+					mEditTextDealValue.setText(String.valueOf(mStockDeal.getValue()));
 					mEditTextDealProfit.setText(String.valueOf(mStockDeal.getProfit()));
 					break;
 			}
