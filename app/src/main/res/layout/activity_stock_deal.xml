@@ -12,7 +12,10 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center_vertical"
-        android:padding="12dp">
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
 
         <TextView
             android:id="@+id/textview_display_stock_name"
@@ -31,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:textColor="@android:color/darker_gray"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:ellipsize="end"
             android:singleLine="true" />
 
@@ -42,37 +45,48 @@
         android:layout_height="1dip"
         android:background="@drawable/divider_line" />
 
+    <!-- Stock Account Row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp">
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/textview_stock_account"
-            android:layout_width="120dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/stock_account" />
+            android:text="@string/stock_account"
+            android:textSize="16sp" />
 
         <Spinner
             android:id="@+id/spinner_stock_account"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <!-- Buy Type Row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
         android:gravity="center_vertical">
 
         <RadioButton
             android:id="@+id/radio_deal_buy"
-            android:layout_width="120dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="@string/buy" />
+            android:text="@string/buy"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/textview_buy_price"
@@ -81,6 +95,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:text="@string/buy_price"
+            android:textSize="16sp"
             android:visibility="gone" />
 
         <EditText
@@ -91,21 +106,28 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:inputType="numberDecimal"
-            android:ems="10" />
+            android:ems="10"
+            android:textSize="16sp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
     </LinearLayout>
 
     <!-- Sell Type Row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
         android:gravity="center_vertical">
 
         <RadioButton
             android:id="@+id/radio_deal_sell"
-            android:layout_width="120dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="@string/sell" />
+            android:text="@string/sell"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/textview_sell_price"
@@ -114,6 +136,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:text="@string/sell_price"
+            android:textSize="16sp"
             android:visibility="gone" />
 
         <EditText
@@ -124,21 +147,28 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:inputType="numberDecimal"
-            android:ems="10" />
+            android:ems="10"
+            android:textSize="16sp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
     </LinearLayout>
 
     <!-- Deal Date Row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
         android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/textview_deal_date"
-            android:layout_width="120dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="@string/deal_date" />
+            android:text="@string/deal_date"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/edittext_deal_date"
@@ -150,21 +180,28 @@
             android:focusable="true"
             android:clickable="true"
             android:inputType="text"
-            android:cursorVisible="true" />
+            android:cursorVisible="true"
+            android:textSize="16sp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
     </LinearLayout>
 
     <!-- Deal Value Row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
         android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/textview_deal_value"
-            android:layout_width="120dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="@string/deal_value" />
+            android:text="@string/deal_value"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/edittext_deal_value"
@@ -177,21 +214,28 @@
             android:focusable="false"
             android:clickable="false"
             android:cursorVisible="false"
-            android:enabled="false" />
+            android:enabled="false"
+            android:textSize="16sp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
     </LinearLayout>
 
     <!-- Deal Profit Row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
         android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/textview_deal_profit"
-            android:layout_width="120dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="@string/deal_profit" />
+            android:text="@string/deal_profit"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/edittext_deal_profit"
@@ -204,21 +248,28 @@
             android:focusable="false"
             android:clickable="false"
             android:cursorVisible="false"
-            android:enabled="false" />
+            android:enabled="false"
+            android:textSize="16sp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
     </LinearLayout>
 
     <!-- Deal Volume Row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
         android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/textview_deal_volume"
-            android:layout_width="120dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="@string/deal_volume" />
+            android:text="@string/deal_volume"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/edittext_deal_volume"
@@ -227,7 +278,10 @@
             android:layout_weight="1"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:inputType="numberSigned">
+            android:inputType="numberSigned"
+            android:textSize="16sp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
             <requestFocus />
         </EditText>
     </LinearLayout>
@@ -238,7 +292,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:layout_marginTop="8dp">
 
         <Button
             android:id="@+id/button_cancel"
@@ -246,8 +304,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginRight="6dp"
-            android:text="@string/cancel" />
+            android:layout_marginRight="8dp"
+            android:text="@string/cancel"
+            android:textSize="16sp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp" />
 
         <Button
             android:id="@+id/button_ok"
@@ -255,8 +316,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginLeft="6dp"
-            android:text="@string/ok" />
+            android:layout_marginLeft="8dp"
+            android:text="@string/ok"
+            android:textSize="16sp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp" />
     </LinearLayout>
 
 </LinearLayout>
