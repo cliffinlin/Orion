@@ -44,106 +44,135 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="12dp">
 
         <TextView
             android:id="@+id/textview_stock_account"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:labelFor="@+id/spinner_stock_account"
+            android:layout_gravity="center_vertical"
             android:text="@string/stock_account" />
 
         <Spinner
             android:id="@+id/spinner_stock_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
     </LinearLayout>
 
+    <!-- Buy Type Row -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <RadioButton
+            android:id="@+id/radio_deal_buy"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="@string/buy" />
 
         <TextView
-            android:id="@+id/textview_deal_type"
+            android:id="@+id/textview_buy_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:text="@string/type" />
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="@string/buy_price"
+            android:visibility="gone" />
 
-        <RadioGroup
-            android:id="@+id/radiogroup_deal_type"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/edittext_buy_price"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1">
-
-            <RadioButton
-                android:id="@+id/radio_deal_buy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/buy" />
-
-            <RadioButton
-                android:id="@+id/radio_deal_sell"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sell" />
-        </RadioGroup>
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:inputType="numberDecimal"
+            android:ems="10" />
     </LinearLayout>
 
+    <!-- Sell Type Row -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:gravity="center_vertical">
 
-        <LinearLayout
+        <RadioButton
+            android:id="@+id/radio_deal_sell"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="@string/sell" />
+
+        <TextView
+            android:id="@+id/textview_sell_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="8">
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="@string/sell_price"
+            android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/textview_deal_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:labelFor="@+id/edittext_deal_date"
-                android:text="@string/deal_date" />
-
-            <EditText
-                android:id="@+id/edittext_deal_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="14dp"
-                android:focusable="true"
-                android:clickable="true"
-                android:inputType="text" />
-        </LinearLayout>
+        <EditText
+            android:id="@+id/edittext_sell_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:inputType="numberDecimal"
+            android:ems="10" />
     </LinearLayout>
 
+    <!-- Deal Date Row -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/textview_deal_date"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="@string/deal_date" />
+
+        <EditText
+            android:id="@+id/edittext_deal_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:focusable="true"
+            android:clickable="true"
+            android:inputType="text"
+            android:cursorVisible="true" />
+    </LinearLayout>
+
+    <!-- Deal Value Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/textview_deal_value"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_deal_value"
             android:text="@string/deal_value" />
 
         <EditText
             android:id="@+id/edittext_deal_value"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="14dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:inputType="numberDecimal"
             android:focusable="false"
             android:clickable="false"
@@ -151,25 +180,26 @@
             android:enabled="false" />
     </LinearLayout>
 
+    <!-- Deal Profit Row -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/textview_deal_profit"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_deal_profit"
             android:text="@string/deal_profit" />
 
         <EditText
             android:id="@+id/edittext_deal_profit"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="14dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:inputType="numberSigned"
             android:focusable="false"
             android:clickable="false"
@@ -177,85 +207,38 @@
             android:enabled="false" />
     </LinearLayout>
 
+    <!-- Deal Volume Row -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/textview_buy_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_buy_price"
-            android:text="@string/buy_price" />
-
-        <EditText
-            android:id="@+id/edittext_buy_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="14dp"
-            android:layout_weight="0.08"
-            android:ems="10"
-            android:inputType="numberDecimal" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/textview_sell_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_sell_price"
-            android:text="@string/sell_price" />
-
-        <EditText
-            android:id="@+id/edittext_sell_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="14dp"
-            android:layout_weight="0.08"
-            android:ems="10"
-            android:inputType="numberDecimal" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/textview_deal_volume"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_deal_volume"
             android:text="@string/deal_volume" />
 
         <EditText
             android:id="@+id/edittext_deal_volume"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="14dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:inputType="numberSigned">
             <requestFocus />
         </EditText>
     </LinearLayout>
 
+    <!-- Buttons -->
     <LinearLayout
         style="?android:buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="12dp">
 
         <Button
             android:id="@+id/button_cancel"
@@ -263,6 +246,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginRight="6dp"
             android:text="@string/cancel" />
 
         <Button
@@ -271,6 +255,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginLeft="6dp"
             android:text="@string/ok" />
     </LinearLayout>
 
