@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.orion.R;
@@ -47,8 +48,8 @@ public class StockDealActivity extends DatabaseActivity implements
 	Spinner mSpinnerStockAccount;
 	RadioGroup mRadioGroupDealType;
 
-	EditText mEditTextStockName;
-	EditText mEditTextStockCode;
+	TextView mTextViewStockName;
+	TextView mTextViewStockCode;
 	EditText mEditTextDealValue;
 	EditText mEditTextDealProfit;
 	EditText mEditTextBuyPrice;
@@ -157,8 +158,8 @@ public class StockDealActivity extends DatabaseActivity implements
 	void initView() {
 		mSpinnerStockAccount = findViewById(R.id.spinner_stock_account);
 		mRadioGroupDealType = findViewById(R.id.radiogroup_deal_type);
-		mEditTextStockName = findViewById(R.id.edittext_stock_name);
-		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
+		mTextViewStockName = findViewById(R.id.textview_display_stock_name);
+		mTextViewStockCode = findViewById(R.id.textview_display_stock_code);
 		mEditTextDealValue = findViewById(R.id.edittext_deal_value);
 		mEditTextDealProfit = findViewById(R.id.edittext_deal_profit);
 		mEditTextBuyPrice = findViewById(R.id.edittext_buy_price);
@@ -172,8 +173,8 @@ public class StockDealActivity extends DatabaseActivity implements
 		mRadioDealSell = findViewById(R.id.radio_deal_sell);
 
 		mRadioGroupDealType.setOnCheckedChangeListener(this);
-		mEditTextStockName.setOnClickListener(this);
-		mEditTextStockCode.setOnClickListener(this);
+		mTextViewStockName.setOnClickListener(this);
+		mTextViewStockCode.setOnClickListener(this);
 		mEditTextDealValue.setOnClickListener(this);
 		mEditTextDealProfit.setOnClickListener(this);
 		mEditTextBuyPrice.setOnClickListener(this);
@@ -183,17 +184,17 @@ public class StockDealActivity extends DatabaseActivity implements
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
-		mEditTextStockName.setInputType(InputType.TYPE_NULL);
-		mEditTextStockName.setFocusable(false);
-		mEditTextStockCode.setInputType(InputType.TYPE_NULL);
-		mEditTextStockCode.setFocusable(false);
+		mTextViewStockName.setInputType(InputType.TYPE_NULL);
+		mTextViewStockName.setFocusable(false);
+		mTextViewStockCode.setInputType(InputType.TYPE_NULL);
+		mTextViewStockCode.setFocusable(false);
 		mEditTextDealValue.setInputType(InputType.TYPE_NULL);
 		mEditTextDealValue.setFocusable(false);
 		mEditTextDealProfit.setInputType(InputType.TYPE_NULL);
 		mEditTextDealProfit.setFocusable(false);
 
-		mEditTextStockName.setEnabled(false);
-		mEditTextStockCode.setEnabled(false);
+		mTextViewStockName.setEnabled(false);
+		mTextViewStockCode.setEnabled(false);
 		mEditTextDealValue.setEnabled(false);
 		mEditTextDealProfit.setEnabled(false);
 
@@ -342,8 +343,8 @@ public class StockDealActivity extends DatabaseActivity implements
 			}
 			mEditTextBuyPrice.setEnabled(false);
 		}
-		mEditTextStockName.setText(mStockDeal.getName());
-		mEditTextStockCode.setText(mStockDeal.getCode());
+		mTextViewStockName.setText(mStockDeal.getName());
+		mTextViewStockCode.setText(mStockDeal.getCode());
 		mEditTextDealValue.setText(String.valueOf(mStockDeal.getValue()));
 		mEditTextDealProfit.setText(String.valueOf(mStockDeal.getProfit()));
 		mEditTextDealVolume.setText(String.valueOf(mStockDeal.getVolume()));

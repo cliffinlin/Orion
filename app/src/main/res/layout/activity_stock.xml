@@ -9,7 +9,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- 显示模式：名称和代码紧挨着显示（编辑时显示） -->
         <LinearLayout
             android:id="@+id/layout_stock_name_code_display"
             android:layout_width="match_parent"
@@ -21,7 +20,6 @@
             android:padding="12dp"
             android:visibility="gone">
 
-            <!-- 名称和代码在同一水平布局中 -->
             <TextView
                 android:id="@+id/textview_display_stock_name"
                 android:layout_width="wrap_content"
@@ -32,7 +30,6 @@
                 android:singleLine="true"
                 android:maxWidth="200dp" />
 
-            <!-- 代码紧跟在名称后面 -->
             <TextView
                 android:id="@+id/textview_display_stock_code"
                 android:layout_width="wrap_content"
