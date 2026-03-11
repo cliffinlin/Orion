@@ -23,6 +23,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.android.orion.R;
 import com.android.orion.activity.MainActivity;
+import com.android.orion.activity.StockFavoriteListActivity;
 import com.android.orion.config.Config;
 import com.android.orion.interfaces.NetworkChangedListener;
 import com.android.orion.manager.ConnectionManager;
@@ -144,7 +145,7 @@ public class StockService extends Service implements NetworkChangedListener {
 	}
 
 	private PendingIntent createPendingIntent() {
-		Intent intent = new Intent(this, MainActivity.class);
+		Intent intent = new Intent(this, StockFavoriteListActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 		int flags = PendingIntent.FLAG_UPDATE_CURRENT;
