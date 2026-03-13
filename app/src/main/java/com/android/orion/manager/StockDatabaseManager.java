@@ -1,6 +1,5 @@
 package com.android.orion.manager;
 
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -16,7 +15,6 @@ import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
-import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockRadar;
 import com.android.orion.database.StockShare;
 import com.android.orion.database.StockTrend;
@@ -26,7 +24,6 @@ import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class StockDatabaseManager extends DatabaseManager implements StockListener {
 	public static String TAG = Config.TAG + StockDatabaseManager.class.getSimpleName();
@@ -729,96 +726,6 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		Cursor cursor = null;
 		try {
 			cursor = queryStockFinancial(stockFinancial);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				cursor.moveToNext();
-				result = true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-		return result;
-	}
-
-	public Uri insertStockPerceptron(StockPerceptron stockPerceptron) {
-		if (stockPerceptron == null) {
-			return null;
-		}
-		return insert(DatabaseContract.StockPerceptron.CONTENT_URI, stockPerceptron.getContentValues());
-	}
-
-	public int deleteStockPerceptron(long id) {
-		return delete(DatabaseContract.StockPerceptron.CONTENT_URI, DatabaseContract.SELECTION_ID(id), null);
-	}
-
-	public int updateStockPerceptron(StockPerceptron stockPerceptron, ContentValues contentValues) {
-		if (stockPerceptron == null) {
-			return 0;
-		}
-		return update(DatabaseContract.StockPerceptron.CONTENT_URI, contentValues, DatabaseContract.SELECTION_PERIOD_LEVEL_TYPE(stockPerceptron.getPeriod(), stockPerceptron.getLevel(), stockPerceptron.getType()), null);
-	}
-
-	public Cursor queryStockPerceptron(String selection, String[] selectionArgs, String sortOrder) {
-		return query(DatabaseContract.StockPerceptron.CONTENT_URI,
-				DatabaseContract.StockPerceptron.PROJECTION_ALL, selection,
-				selectionArgs, sortOrder);
-	}
-
-	public Cursor queryStockPerceptron(StockPerceptron stockPerceptron) {
-		if (stockPerceptron == null) {
-			return null;
-		}
-		return query(DatabaseContract.StockPerceptron.CONTENT_URI,
-				DatabaseContract.StockPerceptron.PROJECTION_ALL, DatabaseContract.SELECTION_PERIOD_LEVEL_TYPE(stockPerceptron.getPeriod(), stockPerceptron.getLevel(), stockPerceptron.getType()), null, DatabaseContract.ORDER_PERIOD_LEVEL_ASC);
-	}
-
-	public void getStockPerceptron(StockPerceptron stockPerceptron) {
-		if (stockPerceptron == null) {
-			return;
-		}
-
-		Cursor cursor = null;
-		try {
-			String selection = DatabaseContract.SELECTION_PERIOD_LEVEL_TYPE(stockPerceptron.getPeriod(), stockPerceptron.getLevel(), stockPerceptron.getType());
-			cursor = query(DatabaseContract.StockPerceptron.CONTENT_URI, DatabaseContract.StockPerceptron.PROJECTION_ALL, selection, null, DatabaseContract.ORDER_PERIOD_LEVEL_DESC);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				cursor.moveToNext();
-				stockPerceptron.set(cursor);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-	}
-
-	public void getStockPerceptronById(StockPerceptron stockPerceptron) {
-		if (stockPerceptron == null) {
-			return;
-		}
-		Cursor cursor = null;
-		try {
-			cursor = queryStockPerceptron(DatabaseContract.SELECTION_ID(stockPerceptron.getId()), null, null);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				cursor.moveToNext();
-				stockPerceptron.set(cursor);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-	}
-
-	public boolean isStockPerceptronExist(StockPerceptron stockPerceptron) {
-		boolean result = false;
-		if (stockPerceptron == null) {
-			return result;
-		}
-		Cursor cursor = null;
-		try {
-			cursor = queryStockPerceptron(stockPerceptron);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				result = true;

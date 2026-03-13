@@ -42,9 +42,6 @@ public class StockContentProvider extends ContentProvider {
 	public static final int STOCK_TREND = 700;
 	public static final int STOCK_TREND_ID = 701;
 
-	public static final int STOCK_PERCEPTRON = 800;
-	public static final int STOCK_PERCEPTRON_ID = 801;
-
 	public static final int TDX_DATA = 900;
 	public static final int TDX_DATA_ID = 901;
 
@@ -90,11 +87,6 @@ public class StockContentProvider extends ContentProvider {
 				DatabaseContract.StockTrend.TABLE_NAME, STOCK_TREND);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.StockTrend.TABLE_NAME + "/#", STOCK_TREND_ID);
-
-		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.StockPerceptron.TABLE_NAME, STOCK_PERCEPTRON);
-		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.StockPerceptron.TABLE_NAME + "/#", STOCK_PERCEPTRON_ID);
 
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.TDXData.TABLE_NAME, TDX_DATA);
@@ -172,13 +164,6 @@ public class StockContentProvider extends ContentProvider {
 				break;
 			case STOCK_TREND_ID:
 				type = DatabaseContract.StockTrend.CONTENT_ITEM_TYPE;
-				break;
-
-			case STOCK_PERCEPTRON:
-				type = DatabaseContract.StockPerceptron.CONTENT_TYPE;
-				break;
-			case STOCK_PERCEPTRON_ID:
-				type = DatabaseContract.StockPerceptron.CONTENT_ITEM_TYPE;
 				break;
 
 			case TDX_DATA:
@@ -280,15 +265,6 @@ public class StockContentProvider extends ContentProvider {
 						+ uri.getLastPathSegment());
 				break;
 
-			case STOCK_PERCEPTRON:
-				builder.setTables(DatabaseContract.StockPerceptron.TABLE_NAME);
-				break;
-			case STOCK_PERCEPTRON_ID:
-				builder.setTables(DatabaseContract.StockPerceptron.TABLE_NAME);
-				builder.appendWhere(BaseColumns._ID + " = "
-						+ uri.getLastPathSegment());
-				break;
-
 			case TDX_DATA:
 				builder.setTables(DatabaseContract.TDXData.TABLE_NAME);
 				break;
@@ -371,11 +347,6 @@ public class StockContentProvider extends ContentProvider {
 				case STOCK_TREND:
 					id = mStockDatabaseManager.mDatabase.insert(
 							DatabaseContract.StockTrend.TABLE_NAME, null, contentValues);
-					break;
-
-				case STOCK_PERCEPTRON:
-					id = mStockDatabaseManager.mDatabase.insert(
-							DatabaseContract.StockPerceptron.TABLE_NAME, null, contentValues);
 					break;
 
 				case TDX_DATA:
@@ -562,21 +533,6 @@ public class StockContentProvider extends ContentProvider {
 							selectionArgs);
 					break;
 
-				case STOCK_PERCEPTRON:
-					result = mStockDatabaseManager.mDatabase.update(
-							DatabaseContract.StockPerceptron.TABLE_NAME, values, selection,
-							selectionArgs);
-					break;
-				case STOCK_PERCEPTRON_ID:
-					whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
-					if (!TextUtils.isEmpty(selection)) {
-						whereClause += " AND " + whereClause;
-					}
-					result = mStockDatabaseManager.mDatabase.update(
-							DatabaseContract.StockPerceptron.TABLE_NAME, values, whereClause,
-							selectionArgs);
-					break;
-
 				case TDX_DATA:
 					result = mStockDatabaseManager.mDatabase.update(
 							DatabaseContract.TDXData.TABLE_NAME, values, selection,
@@ -740,21 +696,6 @@ public class StockContentProvider extends ContentProvider {
 					}
 					result = mStockDatabaseManager.mDatabase.delete(
 							DatabaseContract.StockTrend.TABLE_NAME, whereClause,
-							selectionArgs);
-					break;
-
-				case STOCK_PERCEPTRON:
-					result = mStockDatabaseManager.mDatabase.delete(
-							DatabaseContract.StockPerceptron.TABLE_NAME, selection,
-							selectionArgs);
-					break;
-				case STOCK_PERCEPTRON_ID:
-					whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
-					if (!TextUtils.isEmpty(selection)) {
-						whereClause += " AND " + whereClause;
-					}
-					result = mStockDatabaseManager.mDatabase.delete(
-							DatabaseContract.StockPerceptron.TABLE_NAME, whereClause,
 							selectionArgs);
 					break;
 

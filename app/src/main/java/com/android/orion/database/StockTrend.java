@@ -103,7 +103,6 @@ public class StockTrend extends DatabaseTable {
 	private double mPrevNet;
 	private double mNet;
 	private double mNextNet;
-	private double mPredict;
 
 	public StockTrend() {
 		init();
@@ -148,7 +147,6 @@ public class StockTrend extends DatabaseTable {
 		mPrevNet = 0;
 		mNet = 0;
 		mNextNet = 0;
-		mPredict = 0;
 	}
 
 	@Override
@@ -171,7 +169,6 @@ public class StockTrend extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_PREV_NET, mPrevNet);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_NEXT_NET, mNextNet);
-		contentValues.put(DatabaseContract.COLUMN_PREDICT, mPredict);
 
 		return contentValues;
 	}
@@ -201,7 +198,6 @@ public class StockTrend extends DatabaseTable {
 		setPrevNet(stockTrend.mPrevNet);
 		setNet(stockTrend.mNet);
 		setNextNet(stockTrend.mNextNet);
-		setPredict(stockTrend.mPredict);
 	}
 
 	@Override
@@ -230,7 +226,6 @@ public class StockTrend extends DatabaseTable {
 		setPrevNet(cursor);
 		setNet(cursor);
 		setNextNet(cursor);
-		setPredict(cursor);
 	}
 
 	public String getSE() {
@@ -487,23 +482,6 @@ public class StockTrend extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_NEXT_NET)));
 	}
 
-	public double getPredict() {
-		return mPredict;
-	}
-
-	public void setPredict(double predict) {
-		mPredict = predict;
-	}
-
-	void setPredict(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setPredict(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PREDICT)));
-	}
-
 	public void addFlag(int flag) {
 		mFlag |= flag;
 	}
@@ -532,15 +510,13 @@ public class StockTrend extends DatabaseTable {
 				+ mTurn + Symbol.TAB
 				+ mPrevNet + Symbol.TAB
 				+ mNet + Symbol.TAB
-				+ mNextNet + Symbol.TAB
-				+ mPredict + Symbol.TAB;
+				+ mNextNet + Symbol.TAB;
 	}
 
 	public String toChartString() {
 		return Symbol.L + mLevel + " "
 				+ mType + " "
-				+ (int) mNet + "/" + (int) mNextNet + Symbol.PERCENT + " "
-				+ Symbol.QUESTION + " " + (int) mPredict + Symbol.PERCENT;
+				+ (int) mNet + "/" + (int) mNextNet + Symbol.PERCENT;
 	}
 
 	public String toNotifyString() {

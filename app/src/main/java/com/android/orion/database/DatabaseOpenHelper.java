@@ -22,7 +22,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			db.execSQL(DatabaseContract.StockData.CREATE_TABLE);
 			db.execSQL(DatabaseContract.StockRadar.CREATE_TABLE);
 			db.execSQL(DatabaseContract.StockTrend.CREATE_TABLE);
-			db.execSQL(DatabaseContract.StockPerceptron.CREATE_TABLE);
 			db.execSQL(DatabaseContract.StockDeal.CREATE_TABLE);
 			db.execSQL(DatabaseContract.StockFinancial.CREATE_TABLE);
 			db.execSQL(DatabaseContract.StockBonus.CREATE_TABLE);
@@ -47,7 +46,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			db.execSQL(DatabaseContract.StockData.DELETE_TABLE);
 			db.execSQL(DatabaseContract.StockRadar.DELETE_TABLE);
 			db.execSQL(DatabaseContract.StockTrend.DELETE_TABLE);
-			db.execSQL(DatabaseContract.StockPerceptron.DELETE_TABLE);
 			db.execSQL(DatabaseContract.StockDeal.DELETE_TABLE);
 			db.execSQL(DatabaseContract.StockFinancial.DELETE_TABLE);
 			db.execSQL(DatabaseContract.StockBonus.DELETE_TABLE);

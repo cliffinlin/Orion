@@ -94,7 +94,6 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 					for (Stock stock : mStockArrayMap.values()) {
 						mStockDatabaseManager.deleteStockData(stock);
 						mStockDatabaseManager.deleteStockTrend(stock);
-						mStockDatabaseManager.deleteStockPerceptron(stock.getId());
 						Setting.setDownloadStockDataTimeMillis(stock, 0);
 						mStockDataProvider.download(stock);
 					}

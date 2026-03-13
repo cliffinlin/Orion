@@ -9,12 +9,10 @@ import com.android.orion.data.Period;
 import com.android.orion.data.Radar;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockRadar;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.manager.StockNotificationManager;
-import com.android.orion.provider.StockPerceptronProvider;
 import com.android.orion.constant.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
@@ -54,7 +52,6 @@ public class TrendAnalyzer {
 	ArrayList<CurveThumbnail.CircleConfig> mCircleConfigList = new ArrayList<>();
 	ArrayList<StockData> mStockDataList = new ArrayList<>();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
-	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
 
 	private TrendAnalyzer() {
 	}
@@ -307,19 +304,6 @@ public class TrendAnalyzer {
 		if (!finished && turn > 0) {
 			double nextNet = Utility.Round2(100.0 * (mStock.getPrice() - turn) / turn);
 			stockTrend.setNextNet(nextNet);
-		}
-
-		StockPerceptron stockPerceptron = mStockPerceptronProvider.getStockPerceptron(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
-		if (stockPerceptron != null) {
-			if (finished) {
-				stockPerceptron.getNetMap().put(stockTrend.getNet(), stockTrend.getNextNet());
-				mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
-			}
-			double predict = stockPerceptron.predict(stockTrend.getNet());
-			if ((predict * stockTrend.getNextNet() < 0)) {
-				predict = 0;
-			}
-			stockTrend.setPredict(predict);
 		}
 		stockTrendList.add(stockTrend);
 	}

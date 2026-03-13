@@ -30,7 +30,6 @@ public class DatabaseContract {
 	public static final String COLUMN_PREV_NET = "prev_net";
 	public static final String COLUMN_NET = "net";
 	public static final String COLUMN_NEXT_NET = "next_net";
-	public static final String COLUMN_PREDICT = "predict";
 	public static final String COLUMN_VOLUME = "volume";
 	public static final String COLUMN_VALUE = "value";
 	public static final String COLUMN_TEXT = "text";
@@ -73,6 +72,7 @@ public class DatabaseContract {
 	public static final String COLUMN_BUY = "buy";
 	public static final String COLUMN_SELL = "sell";
 	public static final String COLUMN_QUOTA = "quota";
+	public static final String COLUMN_TRADING = "trading";
 	public static final String COLUMN_HOLD = "hold";
 	public static final String COLUMN_COST = "cost";
 	public static final String COLUMN_PROFIT = "profit";
@@ -319,7 +319,7 @@ public class DatabaseContract {
 				COLUMN_TARGET, COLUMN_TREND, COLUMN_SIGNAL, COLUMN_TEE,
 				COLUMN_FLAG,
 				COLUMN_ROI, COLUMN_IR, COLUMN_IRR, COLUMN_ROE, COLUMN_PE, COLUMN_PB,
-				COLUMN_QUOTA, COLUMN_HOLD, COLUMN_PROFIT, COLUMN_BONUS, COLUMN_BONUS_IN_YEAR, COLUMN_VALUATION, COLUMN_COST,
+				COLUMN_QUOTA, COLUMN_TRADING, COLUMN_HOLD, COLUMN_PROFIT, COLUMN_BONUS, COLUMN_BONUS_IN_YEAR, COLUMN_VALUATION, COLUMN_COST,
 				COLUMN_SHARE, COLUMN_MARKET_VALUE,
 				COLUMN_MAIN_BUSINESS_INCOME, COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR,
 				COLUMN_NET_PROFIT, COLUMN_NET_PROFIT_IN_YEAR,
@@ -372,6 +372,7 @@ public class DatabaseContract {
 				+ COLUMN_PE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_PB + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_QUOTA + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_TRADING + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_HOLD + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_PROFIT + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_BONUS + DOUBLE_TYPE + COMMA_SEP
@@ -496,7 +497,7 @@ public class DatabaseContract {
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_PERIOD, COLUMN_DATE, COLUMN_TIME,
 				COLUMN_LEVEL, COLUMN_TYPE, COLUMN_FLAG, COLUMN_DIRECTION,
-				COLUMN_TURN, COLUMN_PREV_NET, COLUMN_NET, COLUMN_NEXT_NET, COLUMN_PREDICT,
+				COLUMN_TURN, COLUMN_PREV_NET, COLUMN_NET, COLUMN_NEXT_NET,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -516,43 +517,6 @@ public class DatabaseContract {
 				+ COLUMN_PREV_NET + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NEXT_NET + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_PREDICT + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
-		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
-				+ CREATE_TABLE_CONTENT;
-	}
-
-	public static abstract class StockPerceptron implements BaseColumns {
-		public static final String TABLE_NAME = "stock_perceptron";
-
-		public static final Uri CONTENT_URI = Uri.withAppendedPath(
-				DatabaseContract.CONTENT_URI, TABLE_NAME);
-		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String[] PROJECTION_ALL = {_ID,
-				COLUMN_PERIOD, COLUMN_LEVEL, COLUMN_TYPE,
-				COLUMN_WEIGHT, COLUMN_BIAS, COLUMN_ERROR, COLUMN_DELTA, COLUMN_TIMES,
-				COLUMN_X_MIN, COLUMN_X_MAX, COLUMN_Y_MIN, COLUMN_Y_MAX,
-				COLUMN_CREATED, COLUMN_MODIFIED};
-		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
-				+ TABLE_NAME;
-		private static final String CREATE_TABLE_CONTENT = " (" + _ID
-				+ " INTEGER PRIMARY KEY,"
-				+ COLUMN_PERIOD + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_LEVEL + INTEGER_TYPE + COMMA_SEP
-				+ COLUMN_TYPE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_WEIGHT + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_BIAS + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_ERROR + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_DELTA + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_TIMES + INTEGER_TYPE + COMMA_SEP
-				+ COLUMN_X_MIN + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_X_MAX + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_Y_MIN + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_Y_MAX + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
