@@ -115,6 +115,7 @@ public class StockDealActivity extends DatabaseActivity implements
 					mStockDeal.setPrice(mStock.getPrice());
 					mStockDeal.setType(StockDeal.TYPE_BUY);
 					mStockDeal.setBuy(mStock.getPrice());
+					mStockDeal.setVolume(mStock.getTrading());
 					mStockDeal.setDate(Utility.getCurrentDateString());
 					mOriginalDealType = mStockDeal.getType();
 					updateView();
