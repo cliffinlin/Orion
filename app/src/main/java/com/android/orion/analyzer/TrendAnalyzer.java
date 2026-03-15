@@ -814,16 +814,6 @@ public class TrendAnalyzer {
 		int colorQuadrant3 = Color.GRAY;   // 第三象限 - 灰色
 		int colorQuadrant4 = Color.MAGENTA;// 第四象限 - 紫色
 
-		// 注意：数学坐标系的角度需要转换为Canvas坐标系
-		// 数学坐标系：0°指向右（东），90°指向上（北）
-		// Canvas坐标系：0°指向右（东），90°指向下（南）
-		//
-		// 转换公式：canvasAngle = (450 - mathAngle) % 360
-		// 这样转换后：
-		// 数学0°（东）-> Canvas 90°（下）- 第四象限
-		// 数学90°（北）-> Canvas 0°（右）- 第一象限
-		// 数学180°（西）-> Canvas 270°（上）- 第二象限
-		// 数学270°（南）-> Canvas 180°（左）- 第三象限
 
 		// 使用精确的圆心坐标
 		// 第一象限（数学0°-90°）在Canvas中显示为右上角

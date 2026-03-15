@@ -73,17 +73,16 @@ public class CurveThumbnail extends Drawable {
 		bgPaint.setColor(backgroundColor);
 		bgPaint.setStyle(Paint.Style.FILL);
 
-		// 计算数据范围
+		// 计算数据范围 - 圆圈不参与数据范围计算
 		DataRange lineRange = calculateLineDataRange();
 		DataRange scatterRange = calculateScatterDataRange();
-		DataRange circleRange = calculateCircleDataRange();
-		DataRange combinedRange = combineDataRanges(lineRange, scatterRange, circleRange);
+		DataRange combinedRange = combineDataRanges(lineRange, scatterRange);
 
 		// 构建所有图形元素
-		this.drawnSectors = buildAllSectors();
-		this.drawnLines = buildAllLines(combinedRange);
-		this.drawnScatterPoints = buildAllScatterPoints(combinedRange);
-		this.drawnCirclePoints = buildAllCirclePoints(combinedRange);
+		this.drawnSectors = buildAllSectors();                 // 扇形使用固定坐标
+		this.drawnLines = buildAllLines(combinedRange);        // 折线需要映射
+		this.drawnScatterPoints = buildAllScatterPoints(combinedRange);  // 散点需要映射
+		this.drawnCirclePoints = buildAllCirclePoints();       // 圆圈使用固定坐标，不映射
 		this.drawnMarker = buildMarker(combinedRange);
 	}
 
@@ -110,18 +109,6 @@ public class CurveThumbnail extends Drawable {
 		}
 
 		// 转换为 Canvas 坐标系角度
-		// 目标：数学第一象限（0°-90°，右上角）应显示在 Canvas 的右上角
-		// Canvas坐标系：0°指向右（东），90°指向下（南）
-		//
-		// 转换策略：
-		// 1. 首先在 Y 轴上进行镜像：canvasAngle1 = (360 - startAngleMath) % 360
-		// 2. 然后旋转 -90° 使象限对齐：canvasAngle = (canvasAngle1 - 90 + 360) % 360
-		//
-		// 这样转换后：
-		// 数学0°（东）-> Canvas 270°（上）
-		// 数学90°（北）-> Canvas 180°（左）
-		// 数学180°（西）-> Canvas 90°（下）
-		// 数学270°（南）-> Canvas 0°（右）
 		public float getCanvasStartAngle() {
 			// 第一步：Y轴镜像
 			float mirroredAngle = (360 - startAngleMath) % 360;
@@ -139,7 +126,10 @@ public class CurveThumbnail extends Drawable {
 	// 构建所有扇形
 	private List<DrawnSector> buildAllSectors() {
 		List<DrawnSector> result = new ArrayList<>();
-		for (SectorConfig config : sectorConfigs) {
+
+		for (int i = 0; i < sectorConfigs.size(); i++) {
+			SectorConfig config = sectorConfigs.get(i);
+
 			Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 			paint.setStyle(Paint.Style.FILL);
 			paint.setColor(config.color);
@@ -148,36 +138,32 @@ public class CurveThumbnail extends Drawable {
 			float canvasStartAngle = config.getCanvasStartAngle();
 			float canvasSweepAngle = config.getCanvasSweepAngle();
 
-			result.add(new DrawnSector(config.centerX, config.centerY,
+			DrawnSector sector = new DrawnSector(config.centerX, config.centerY,
 					config.radius, canvasStartAngle,
-					canvasSweepAngle, config.useCenter, paint));
+					canvasSweepAngle, config.useCenter, paint);
+
+			result.add(sector);
 		}
 		return result;
 	}
 
-	// 扇形绘制类（内部使用 Canvas 坐标系）
-	private static class DrawnSector {
-		final float centerX;
-		final float centerY;
-		final float radius;
-		final float canvasStartAngle;   // Canvas 坐标系起始角度
-		final float canvasSweepAngle;   // Canvas 坐标系扫过角度
-		final boolean useCenter;
-		final Paint paint;
+	// 构建所有圆圈 - 使用固定坐标，不经过映射
+	private List<DrawnCirclePoint> buildAllCirclePoints() {
+		List<DrawnCirclePoint> result = new ArrayList<>();
 
-		DrawnSector(float centerX, float centerY, float radius,
-		            float canvasStartAngle, float canvasSweepAngle,
-		            boolean useCenter, Paint paint) {
-			this.centerX = centerX;
-			this.centerY = centerY;
-			this.radius = radius;
-			this.canvasStartAngle = canvasStartAngle;
-			this.canvasSweepAngle = canvasSweepAngle;
-			this.useCenter = useCenter;
-			this.paint = paint;
+		for (int i = 0; i < circlePoints.size(); i++) {
+			CircleConfig circleConfig = circlePoints.get(i);
+			// 圆圈使用原始坐标，不经过映射
+			float x = circleConfig.xValue;
+			float y = circleConfig.yValue;
+
+			Paint paint = createCirclePaint(circleConfig.color, circleConfig.strokeWidth);
+			result.add(new DrawnCirclePoint(x, y, paint, circleConfig.radius));
 		}
+		return result;
 	}
 
+	// 构建所有折线
 	private List<DrawnLine> buildAllLines(DataRange range) {
 		List<DrawnLine> result = new ArrayList<>();
 		for (LineConfig lineConfig : lines) {
@@ -188,36 +174,16 @@ public class CurveThumbnail extends Drawable {
 		return result;
 	}
 
+	// 构建所有散点
 	private List<DrawnScatterPoint> buildAllScatterPoints(DataRange range) {
 		List<DrawnScatterPoint> result = new ArrayList<>();
 		for (ScatterConfig scatterConfig : scatterPoints) {
-			DrawnScatterPoint point = buildScatterPoint(scatterConfig, range);
-			result.add(point);
+			float x = preciseMapToX(scatterConfig.xValue, range.minX, range.maxX);
+			float y = preciseMapToY(scatterConfig.yValue, range.minY, range.maxY);
+			Paint paint = createScatterPaint(scatterConfig.color);
+			result.add(new DrawnScatterPoint(x, y, paint, scatterConfig.radius));
 		}
 		return result;
-	}
-
-	private List<DrawnCirclePoint> buildAllCirclePoints(DataRange range) {
-		List<DrawnCirclePoint> result = new ArrayList<>();
-		for (CircleConfig circleConfig : circlePoints) {
-			DrawnCirclePoint circle = buildCirclePoint(circleConfig, range);
-			result.add(circle);
-		}
-		return result;
-	}
-
-	private DrawnScatterPoint buildScatterPoint(ScatterConfig scatterConfig, DataRange range) {
-		float x = preciseMapToX(scatterConfig.xValue, range.minX, range.maxX);
-		float y = preciseMapToY(scatterConfig.yValue, range.minY, range.maxY);
-		Paint paint = createScatterPaint(scatterConfig.color);
-		return new DrawnScatterPoint(x, y, paint, scatterConfig.radius);
-	}
-
-	private DrawnCirclePoint buildCirclePoint(CircleConfig circleConfig, DataRange range) {
-		float x = preciseMapToX(circleConfig.xValue, range.minX, range.maxX);
-		float y = preciseMapToY(circleConfig.yValue, range.minY, range.maxY);
-		Paint paint = createCirclePaint(circleConfig.color, circleConfig.strokeWidth);
-		return new DrawnCirclePoint(x, y, paint, circleConfig.radius);
 	}
 
 	private Paint createScatterPaint(int color) {
@@ -325,38 +291,7 @@ public class CurveThumbnail extends Drawable {
 		);
 	}
 
-	private DataRange calculateCircleDataRange() {
-		if (circlePoints.isEmpty()) {
-			return null;
-		}
-
-		float minX = Float.MAX_VALUE;
-		float maxX = Float.MIN_VALUE;
-		float minY = Float.MAX_VALUE;
-		float maxY = Float.MIN_VALUE;
-
-		for (CircleConfig circle : circlePoints) {
-			minX = Math.min(minX, circle.xValue);
-			maxX = Math.max(maxX, circle.xValue);
-			minY = Math.min(minY, circle.yValue);
-			maxY = Math.max(maxY, circle.yValue);
-		}
-
-		if (minX == maxX) maxX = minX + 1;
-		if (minY == maxY) maxY = minY + 1;
-
-		float xMargin = (maxX - minX) * 0.05f;
-		float yMargin = (maxY - minY) * 0.05f;
-
-		return new DataRange(
-				minX - xMargin,
-				maxX + xMargin,
-				minY - yMargin,
-				maxY + yMargin
-		);
-	}
-
-	private DataRange combineDataRanges(DataRange lineRange, DataRange scatterRange, DataRange circleRange) {
+	private DataRange combineDataRanges(DataRange lineRange, DataRange scatterRange) {
 		DataRange result = lineRange;
 
 		if (scatterRange != null) {
@@ -364,14 +299,6 @@ public class CurveThumbnail extends Drawable {
 				result = scatterRange;
 			} else {
 				result = mergeDataRanges(result, scatterRange);
-			}
-		}
-
-		if (circleRange != null) {
-			if (result == null) {
-				result = circleRange;
-			} else {
-				result = mergeDataRanges(result, circleRange);
 			}
 		}
 
@@ -442,7 +369,9 @@ public class CurveThumbnail extends Drawable {
 		}
 
 		// 先绘制扇形（最底层）
-		for (DrawnSector sector : drawnSectors) {
+		for (int i = 0; i < drawnSectors.size(); i++) {
+			DrawnSector sector = drawnSectors.get(i);
+
 			canvas.drawArc(sector.centerX - sector.radius,
 					sector.centerY - sector.radius,
 					sector.centerX + sector.radius,
@@ -462,7 +391,9 @@ public class CurveThumbnail extends Drawable {
 		}
 
 		// 然后绘制圆圈
-		for (DrawnCirclePoint circle : drawnCirclePoints) {
+		for (int i = 0; i < drawnCirclePoints.size(); i++) {
+			DrawnCirclePoint circle = drawnCirclePoints.get(i);
+
 			canvas.drawCircle(circle.x, circle.y, circle.radius, circle.paint);
 		}
 
@@ -653,6 +584,28 @@ public class CurveThumbnail extends Drawable {
 			this.centerY = centerY;
 			this.paint = paint;
 			this.halfSize = halfSize;
+		}
+	}
+
+	private static class DrawnSector {
+		final float centerX;
+		final float centerY;
+		final float radius;
+		final float canvasStartAngle;   // Canvas 坐标系起始角度
+		final float canvasSweepAngle;   // Canvas 坐标系扫过角度
+		final boolean useCenter;
+		final Paint paint;
+
+		DrawnSector(float centerX, float centerY, float radius,
+		            float canvasStartAngle, float canvasSweepAngle,
+		            boolean useCenter, Paint paint) {
+			this.centerX = centerX;
+			this.centerY = centerY;
+			this.radius = radius;
+			this.canvasStartAngle = canvasStartAngle;
+			this.canvasSweepAngle = canvasSweepAngle;
+			this.useCenter = useCenter;
+			this.paint = paint;
 		}
 	}
 
