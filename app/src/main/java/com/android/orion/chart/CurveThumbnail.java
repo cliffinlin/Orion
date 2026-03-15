@@ -18,62 +18,164 @@ public class CurveThumbnail extends Drawable {
 	private final int height;
 	private final int backgroundColor;
 	private final List<LineConfig> lines;
-	private final List<ScatterConfig> scatterPoints; // 改为ScatterConfig列表
-	private final List<CircleConfig> circlePoints; // 新增圆圈配置列表
+	private final List<ScatterConfig> scatterPoints;
+	private final List<CircleConfig> circlePoints;
+	private final List<SectorConfig> sectorConfigs;
 	private final CrossMarkerConfig markerConfig;
 	private final Paint bgPaint;
 	private final List<DrawnLine> drawnLines;
 	private final List<DrawnScatterPoint> drawnScatterPoints;
-	private final List<DrawnCirclePoint> drawnCirclePoints; // 新增绘制的圆圈列表
+	private final List<DrawnCirclePoint> drawnCirclePoints;
+	private final List<DrawnSector> drawnSectors;
 	private final DrawnMarker drawnMarker;
 
 	// 保持原有构造函数兼容性
 	public CurveThumbnail(int size, int backgroundColor,
-						  List<LineConfig> lines, CrossMarkerConfig markerConfig) {
+	                      List<LineConfig> lines, CrossMarkerConfig markerConfig) {
 		this(size, size, backgroundColor, lines, markerConfig);
 	}
 
-	// 新的构造函数，支持分别设置宽度和高度
+	// 支持宽度和高度的构造函数
 	public CurveThumbnail(int width, int height, int backgroundColor,
-						  List<LineConfig> lines, CrossMarkerConfig markerConfig) {
-		this(width, height, backgroundColor, lines, null, null, markerConfig);
+	                      List<LineConfig> lines, CrossMarkerConfig markerConfig) {
+		this(width, height, backgroundColor, lines, null, null, null, markerConfig);
 	}
 
-	// 新增构造函数，支持散点配置
+	// 支持散点配置的构造函数
 	public CurveThumbnail(int width, int height, int backgroundColor,
-						  List<LineConfig> lines, List<ScatterConfig> scatterPoints,
-						  CrossMarkerConfig markerConfig) {
-		this(width, height, backgroundColor, lines, scatterPoints, null, markerConfig);
+	                      List<LineConfig> lines, List<ScatterConfig> scatterPoints,
+	                      CrossMarkerConfig markerConfig) {
+		this(width, height, backgroundColor, lines, scatterPoints, null, null, markerConfig);
 	}
 
-	// 新增构造函数，支持散点和圆圈配置
+	// 支持散点和圆圈配置的构造函数
 	public CurveThumbnail(int width, int height, int backgroundColor,
-						  List<LineConfig> lines, List<ScatterConfig> scatterPoints,
-						  List<CircleConfig> circlePoints, CrossMarkerConfig markerConfig) {
+	                      List<LineConfig> lines, List<ScatterConfig> scatterPoints,
+	                      List<CircleConfig> circlePoints, CrossMarkerConfig markerConfig) {
+		this(width, height, backgroundColor, lines, scatterPoints, circlePoints, null, markerConfig);
+	}
+
+	// 支持扇形配置的构造函数
+	public CurveThumbnail(int width, int height, int backgroundColor,
+	                      List<LineConfig> lines, List<ScatterConfig> scatterPoints,
+	                      List<CircleConfig> circlePoints, List<SectorConfig> sectorConfigs,
+	                      CrossMarkerConfig markerConfig) {
 		this.width = width;
 		this.height = height;
 		this.backgroundColor = backgroundColor;
 		this.lines = lines != null ? lines : new ArrayList<LineConfig>();
 		this.scatterPoints = scatterPoints != null ? scatterPoints : new ArrayList<ScatterConfig>();
 		this.circlePoints = circlePoints != null ? circlePoints : new ArrayList<CircleConfig>();
+		this.sectorConfigs = sectorConfigs != null ? sectorConfigs : new ArrayList<SectorConfig>();
 		this.markerConfig = markerConfig;
 
 		bgPaint = new Paint();
 		bgPaint.setColor(backgroundColor);
 		bgPaint.setStyle(Paint.Style.FILL);
 
-		// 分别计算折线、散点和圆圈的数据范围
+		// 计算数据范围
 		DataRange lineRange = calculateLineDataRange();
 		DataRange scatterRange = calculateScatterDataRange();
 		DataRange circleRange = calculateCircleDataRange();
-
-		// 合并数据范围
 		DataRange combinedRange = combineDataRanges(lineRange, scatterRange, circleRange);
 
+		// 构建所有图形元素
+		this.drawnSectors = buildAllSectors();
 		this.drawnLines = buildAllLines(combinedRange);
 		this.drawnScatterPoints = buildAllScatterPoints(combinedRange);
 		this.drawnCirclePoints = buildAllCirclePoints(combinedRange);
 		this.drawnMarker = buildMarker(combinedRange);
+	}
+
+	// 扇形配置类 - 使用数学坐标系角度
+	public static class SectorConfig {
+		public final float centerX;           // 圆心X坐标
+		public final float centerY;           // 圆心Y坐标
+		public final float radius;             // 半径
+		public final float startAngleMath;     // 起始角度（度），数学坐标系：0°指向右（东），90°指向上（北）
+		public final float sweepAngleMath;     // 扫过的角度（度），正值为逆时针
+		public final int color;                 // 颜色
+		public final boolean useCenter;        // 是否连接到圆心（形成扇形）
+
+		public SectorConfig(float centerX, float centerY, float radius,
+		                    float startAngleMath, float sweepAngleMath,
+		                    int color, boolean useCenter) {
+			this.centerX = centerX;
+			this.centerY = centerY;
+			this.radius = radius;
+			this.startAngleMath = startAngleMath;
+			this.sweepAngleMath = sweepAngleMath;
+			this.color = color;
+			this.useCenter = useCenter;
+		}
+
+		// 转换为 Canvas 坐标系角度
+		// 目标：数学第一象限（0°-90°，右上角）应显示在 Canvas 的右上角
+		// Canvas坐标系：0°指向右（东），90°指向下（南）
+		//
+		// 转换策略：
+		// 1. 首先在 Y 轴上进行镜像：canvasAngle1 = (360 - startAngleMath) % 360
+		// 2. 然后旋转 -90° 使象限对齐：canvasAngle = (canvasAngle1 - 90 + 360) % 360
+		//
+		// 这样转换后：
+		// 数学0°（东）-> Canvas 270°（上）
+		// 数学90°（北）-> Canvas 180°（左）
+		// 数学180°（西）-> Canvas 90°（下）
+		// 数学270°（南）-> Canvas 0°（右）
+		public float getCanvasStartAngle() {
+			// 第一步：Y轴镜像
+			float mirroredAngle = (360 - startAngleMath) % 360;
+			// 第二步：旋转-90度使象限对齐
+			float canvasAngle = (mirroredAngle - 90 + 360) % 360;
+			return canvasAngle;
+		}
+
+		// Canvas 中的 sweepAngle 需要保持方向一致
+		public float getCanvasSweepAngle() {
+			return sweepAngleMath;
+		}
+	}
+
+	// 构建所有扇形
+	private List<DrawnSector> buildAllSectors() {
+		List<DrawnSector> result = new ArrayList<>();
+		for (SectorConfig config : sectorConfigs) {
+			Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+			paint.setStyle(Paint.Style.FILL);
+			paint.setColor(config.color);
+
+			// 使用转换后的 Canvas 角度
+			float canvasStartAngle = config.getCanvasStartAngle();
+			float canvasSweepAngle = config.getCanvasSweepAngle();
+
+			result.add(new DrawnSector(config.centerX, config.centerY,
+					config.radius, canvasStartAngle,
+					canvasSweepAngle, config.useCenter, paint));
+		}
+		return result;
+	}
+
+	// 扇形绘制类（内部使用 Canvas 坐标系）
+	private static class DrawnSector {
+		final float centerX;
+		final float centerY;
+		final float radius;
+		final float canvasStartAngle;   // Canvas 坐标系起始角度
+		final float canvasSweepAngle;   // Canvas 坐标系扫过角度
+		final boolean useCenter;
+		final Paint paint;
+
+		DrawnSector(float centerX, float centerY, float radius,
+		            float canvasStartAngle, float canvasSweepAngle,
+		            boolean useCenter, Paint paint) {
+			this.centerX = centerX;
+			this.centerY = centerY;
+			this.radius = radius;
+			this.canvasStartAngle = canvasStartAngle;
+			this.canvasSweepAngle = canvasSweepAngle;
+			this.useCenter = useCenter;
+			this.paint = paint;
+		}
 	}
 
 	private List<DrawnLine> buildAllLines(DataRange range) {
@@ -86,7 +188,6 @@ public class CurveThumbnail extends Drawable {
 		return result;
 	}
 
-	// 构建所有散点
 	private List<DrawnScatterPoint> buildAllScatterPoints(DataRange range) {
 		List<DrawnScatterPoint> result = new ArrayList<>();
 		for (ScatterConfig scatterConfig : scatterPoints) {
@@ -96,7 +197,6 @@ public class CurveThumbnail extends Drawable {
 		return result;
 	}
 
-	// 构建所有圆圈
 	private List<DrawnCirclePoint> buildAllCirclePoints(DataRange range) {
 		List<DrawnCirclePoint> result = new ArrayList<>();
 		for (CircleConfig circleConfig : circlePoints) {
@@ -106,7 +206,6 @@ public class CurveThumbnail extends Drawable {
 		return result;
 	}
 
-	// 构建单个散点
 	private DrawnScatterPoint buildScatterPoint(ScatterConfig scatterConfig, DataRange range) {
 		float x = preciseMapToX(scatterConfig.xValue, range.minX, range.maxX);
 		float y = preciseMapToY(scatterConfig.yValue, range.minY, range.maxY);
@@ -114,7 +213,6 @@ public class CurveThumbnail extends Drawable {
 		return new DrawnScatterPoint(x, y, paint, scatterConfig.radius);
 	}
 
-	// 构建单个圆圈
 	private DrawnCirclePoint buildCirclePoint(CircleConfig circleConfig, DataRange range) {
 		float x = preciseMapToX(circleConfig.xValue, range.minX, range.maxX);
 		float y = preciseMapToY(circleConfig.yValue, range.minY, range.maxY);
@@ -122,7 +220,6 @@ public class CurveThumbnail extends Drawable {
 		return new DrawnCirclePoint(x, y, paint, circleConfig.radius);
 	}
 
-	// 创建散点画笔
 	private Paint createScatterPaint(int color) {
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint.setStyle(Paint.Style.FILL);
@@ -130,7 +227,6 @@ public class CurveThumbnail extends Drawable {
 		return paint;
 	}
 
-	// 创建圆圈画笔
 	private Paint createCirclePaint(int color, float strokeWidth) {
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint.setStyle(Paint.Style.STROKE);
@@ -163,10 +259,9 @@ public class CurveThumbnail extends Drawable {
 		return paint;
 	}
 
-	// 计算折线的数据范围
 	private DataRange calculateLineDataRange() {
 		if (lines.isEmpty()) {
-			return new DataRange(0, 1, 0, 1); // 默认范围
+			return new DataRange(0, 1, 0, 1);
 		}
 
 		float minX = Float.MAX_VALUE;
@@ -199,10 +294,9 @@ public class CurveThumbnail extends Drawable {
 		);
 	}
 
-	// 计算散点的数据范围
 	private DataRange calculateScatterDataRange() {
 		if (scatterPoints.isEmpty()) {
-			return null; // 没有散点数据
+			return null;
 		}
 
 		float minX = Float.MAX_VALUE;
@@ -231,10 +325,9 @@ public class CurveThumbnail extends Drawable {
 		);
 	}
 
-	// 计算圆圈的数据范围
 	private DataRange calculateCircleDataRange() {
 		if (circlePoints.isEmpty()) {
-			return null; // 没有圆圈数据
+			return null;
 		}
 
 		float minX = Float.MAX_VALUE;
@@ -263,7 +356,6 @@ public class CurveThumbnail extends Drawable {
 		);
 	}
 
-	// 合并数据范围
 	private DataRange combineDataRanges(DataRange lineRange, DataRange scatterRange, DataRange circleRange) {
 		DataRange result = lineRange;
 
@@ -283,7 +375,6 @@ public class CurveThumbnail extends Drawable {
 			}
 		}
 
-		// 如果所有数据范围都是null，返回默认范围
 		if (result == null) {
 			return new DataRange(0, 1, 0, 1);
 		}
@@ -291,7 +382,6 @@ public class CurveThumbnail extends Drawable {
 		return result;
 	}
 
-	// 合并两个数据范围
 	private DataRange mergeDataRanges(DataRange range1, DataRange range2) {
 		float minX = Math.min(range1.minX, range2.minX);
 		float maxX = Math.max(range1.maxX, range2.maxX);
@@ -320,7 +410,6 @@ public class CurveThumbnail extends Drawable {
 		return path;
 	}
 
-	// 高精度坐标映射方法 - 使用宽度和高度
 	private float preciseMapToX(float value, float minX, float maxX) {
 		if (maxX == minX) {
 			return width / 2f;
@@ -331,7 +420,6 @@ public class CurveThumbnail extends Drawable {
 
 	private float preciseMapToY(float value, float minY, float maxY) {
 		if (maxY == minY) {
-			// 所有y值相同时，显示在中间位置
 			return height / 2f;
 		}
 		float normalized = (value - minY) / (maxY - minY);
@@ -340,14 +428,12 @@ public class CurveThumbnail extends Drawable {
 
 	@Override
 	public void draw(@NonNull Canvas canvas) {
-		// 使用实际绘制区域的宽度和高度
 		Rect bounds = getBounds();
 		int drawWidth = bounds.width() > 0 ? bounds.width() : width;
 		int drawHeight = bounds.height() > 0 ? bounds.height() : height;
 
 		canvas.drawRect(0, 0, drawWidth, drawHeight, bgPaint);
 
-		// 保存画布状态，进行缩放以适应绘制区域
 		canvas.save();
 		if (drawWidth != width || drawHeight != height) {
 			float scaleX = (float) drawWidth / width;
@@ -355,33 +441,39 @@ public class CurveThumbnail extends Drawable {
 			canvas.scale(scaleX, scaleY);
 		}
 
-		// 先绘制折线
+		// 先绘制扇形（最底层）
+		for (DrawnSector sector : drawnSectors) {
+			canvas.drawArc(sector.centerX - sector.radius,
+					sector.centerY - sector.radius,
+					sector.centerX + sector.radius,
+					sector.centerY + sector.radius,
+					sector.canvasStartAngle, sector.canvasSweepAngle,
+					sector.useCenter, sector.paint);
+		}
+
+		// 然后绘制折线
 		for (DrawnLine line : drawnLines) {
 			canvas.drawPath(line.path, line.paint);
 		}
 
-		// 然后绘制散点（在折线之上）
+		// 然后绘制散点
 		for (DrawnScatterPoint point : drawnScatterPoints) {
 			canvas.drawCircle(point.x, point.y, point.radius, point.paint);
 		}
 
-		// 然后绘制圆圈（在散点之上）
+		// 然后绘制圆圈
 		for (DrawnCirclePoint circle : drawnCirclePoints) {
 			canvas.drawCircle(circle.x, circle.y, circle.radius, circle.paint);
 		}
 
-		// 最后绘制十字标记（在最上层）
+		// 最后绘制十字标记
 		if (drawnMarker != null) {
-			// 确保完全对称的十字标记
 			float left = Math.round((drawnMarker.centerX - drawnMarker.halfSize) * 100) / 100f;
 			float right = Math.round((drawnMarker.centerX + drawnMarker.halfSize) * 100) / 100f;
 			float top = Math.round((drawnMarker.centerY - drawnMarker.halfSize) * 100) / 100f;
 			float bottom = Math.round((drawnMarker.centerY + drawnMarker.halfSize) * 100) / 100f;
 
-			// 水平线（确保左右对称）
 			canvas.drawLine(left, drawnMarker.centerY, right, drawnMarker.centerY, drawnMarker.paint);
-
-			// 垂直线（确保上下对称）
 			canvas.drawLine(drawnMarker.centerX, top, drawnMarker.centerX, bottom, drawnMarker.paint);
 		}
 
@@ -400,6 +492,9 @@ public class CurveThumbnail extends Drawable {
 		for (DrawnCirclePoint circle : drawnCirclePoints) {
 			circle.paint.setAlpha(alpha);
 		}
+		for (DrawnSector sector : drawnSectors) {
+			sector.paint.setAlpha(alpha);
+		}
 		if (drawnMarker != null) {
 			drawnMarker.paint.setAlpha(alpha);
 		}
@@ -416,6 +511,9 @@ public class CurveThumbnail extends Drawable {
 		}
 		for (DrawnCirclePoint circle : drawnCirclePoints) {
 			circle.paint.setColorFilter(colorFilter);
+		}
+		for (DrawnSector sector : drawnSectors) {
+			sector.paint.setColorFilter(colorFilter);
 		}
 		if (drawnMarker != null) {
 			drawnMarker.paint.setColorFilter(colorFilter);
@@ -448,7 +546,7 @@ public class CurveThumbnail extends Drawable {
 		}
 
 		public LineConfig(List<Float> xValues, List<Float> yValues,
-						  int color, float strokeWidth) {
+		                  int color, float strokeWidth) {
 			this.xValues = xValues;
 			this.yValues = yValues;
 			this.color = color;
@@ -471,7 +569,7 @@ public class CurveThumbnail extends Drawable {
 		}
 	}
 
-	// 圆圈配置类（新增）
+	// 圆圈配置类
 	public static class CircleConfig {
 		public final float xValue;
 		public final float yValue;
@@ -497,7 +595,7 @@ public class CurveThumbnail extends Drawable {
 		public final float size;
 
 		public CrossMarkerConfig(float xValue, float yValue,
-								 int color, float strokeWidth, float size) {
+		                         int color, float strokeWidth, float size) {
 			this.xValue = xValue;
 			this.yValue = yValue;
 			this.color = color;
@@ -516,7 +614,6 @@ public class CurveThumbnail extends Drawable {
 		}
 	}
 
-	// 散点类
 	private static class DrawnScatterPoint {
 		final float x;
 		final float y;
@@ -531,7 +628,6 @@ public class CurveThumbnail extends Drawable {
 		}
 	}
 
-	// 圆圈类（新增）
 	private static class DrawnCirclePoint {
 		final float x;
 		final float y;

@@ -50,6 +50,7 @@ public class TrendAnalyzer {
 	ArrayList<CurveThumbnail.LineConfig> mLineConfigList = new ArrayList<>();
 	ArrayList<CurveThumbnail.ScatterConfig> mScatterConfigList = new ArrayList<>();
 	ArrayList<CurveThumbnail.CircleConfig> mCircleConfigList = new ArrayList<>();
+	ArrayList<CurveThumbnail.SectorConfig> mSectorConfigList = new ArrayList<>();  // 新增扇形配置列表
 	ArrayList<StockData> mStockDataList = new ArrayList<>();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 
@@ -465,7 +466,6 @@ public class TrendAnalyzer {
 								if (last.vertexOf(StockTrend.getVertexTOP(level))) {
 									StockData vertexData = chooseVertex(current_start, current_end, StockTrend.VERTEX_TOP);
 									if ((vertexData != last) && (vertexData.getCandle().getTop() > last.getCandle().getTop())) {
-//										Log.d("mPeriod=" + mPeriod + " level=" + level + " " + vertexData.getDateTime() + " vertexData.getCandle().getTop()=" + vertexData.getCandle().getTop() + ">= " + last.getDateTime() + " last.getCandle().getTop()=" + last.getCandle().getTop());
 										last.removeVertex(StockTrend.getVertexTOP(level));
 										vertexList.remove(last);
 										if (upgradeVertex(vertexData, level, vertexList)) {
@@ -474,7 +474,6 @@ public class TrendAnalyzer {
 								} else if (last.vertexOf(StockTrend.getVertexBottom(level))) {
 									StockData vertexData = chooseVertex(current_start, current_end, StockTrend.VERTEX_BOTTOM);
 									if ((vertexData != last) && (vertexData.getCandle().getBottom() < last.getCandle().getBottom())) {
-//										Log.d("mPeriod=" + mPeriod + " level=" + level + " " + vertexData.getDateTime() + " vertexData.getCandle().getBottom()=" + vertexData.getCandle().getBottom() + "<= " + last.getDateTime() + " last.getCandle().getBottom()=" + last.getCandle().getBottom());
 										last.removeVertex(StockTrend.getVertexBottom(level));
 										vertexList.remove(last);
 										if (upgradeVertex(vertexData, level, vertexList)) {
@@ -632,7 +631,7 @@ public class TrendAnalyzer {
 					if (mStock.getTarget(period) == level) {
 						mStock.setTrend(period, Symbol.MINUS);
 						if (mStock.getPrice() > stockData.getCandle().getTop()) {
-							mStock.setTrend(period, Symbol.ADD);//TODO
+							mStock.setTrend(period, Symbol.ADD);
 						}
 					}
 				} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
@@ -641,7 +640,7 @@ public class TrendAnalyzer {
 					if (mStock.getTarget(period) == level) {
 						mStock.setTrend(period, Symbol.ADD);
 						if (mStock.getPrice() < stockData.getCandle().getBottom()) {
-							mStock.setTrend(period, Symbol.MINUS);//TODO
+							mStock.setTrend(period, Symbol.MINUS);
 						}
 					}
 				}
@@ -708,7 +707,7 @@ public class TrendAnalyzer {
 	}
 
 	private void drawSingleBar(float startX, float endX, float centerX, float centerY, int axisColor,
-							   StockTrend trend, int barColor, float barWidth) {
+	                           StockTrend trend, int barColor, float barWidth) {
 		if (trend == null) {
 			return;
 		}
@@ -723,8 +722,8 @@ public class TrendAnalyzer {
 	}
 
 	private void addToLineConfigList(List<Float> xValuesBar, List<Float> yValuesBar,
-									 List<Float> xValuesAxis, List<Float> yValuesAxis,
-									 int barColor, float barWidth, int axisColor) {
+	                                 List<Float> xValuesAxis, List<Float> yValuesAxis,
+	                                 int barColor, float barWidth, int axisColor) {
 		mLineConfigList.add(new CurveThumbnail.LineConfig(
 				xValuesBar, yValuesBar, barColor, barWidth));
 
@@ -748,8 +747,9 @@ public class TrendAnalyzer {
 		mLineConfigList.clear();
 		mScatterConfigList.clear();
 		mCircleConfigList.clear();
+		mSectorConfigList.clear();  // 清空扇形列表
 
-		setupBaseLines();
+		setupBaseLines();  // 这会填充 mSectorConfigList
 
 		Radar radar;
 		double signal = 0;
@@ -764,6 +764,7 @@ public class TrendAnalyzer {
 		}
 		signal = Utility.Round2(signal);
 		mStock.setSignal(signal);
+
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
 				mStockDataList = mStock.getStockDataList(period, StockTrend.LEVEL_NONE);
@@ -787,9 +788,11 @@ public class TrendAnalyzer {
 			}
 		}
 
+		// 创建包含扇形的缩略图
 		CurveThumbnail thumbnail = new CurveThumbnail(
 				THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, Color.TRANSPARENT,
-				mLineConfigList, mScatterConfigList, mCircleConfigList, null
+				mLineConfigList, mScatterConfigList, mCircleConfigList,
+				mSectorConfigList, null  // 传入扇形配置
 		);
 
 		byte[] thumbnailBytes = Utility.thumbnailToBytes(thumbnail);
@@ -799,7 +802,43 @@ public class TrendAnalyzer {
 	private void setupBaseLines() {
 		float centerX = (float) THUMBNAIL_SIZE / 2f;
 		float centerY = (float) THUMBNAIL_SIZE / 2f;
+		float radius = THUMBNAIL_SIZE / 4.5f;  // 与同心圆相同的半径
 
+		// 清空之前的扇形配置
+		mSectorConfigList.clear();
+
+		// 定义象限颜色
+		int colorQuadrant1 = Color.RED;    // 第一象限 - 红色（东到北：0°-90°）
+		int colorQuadrant2 = Color.GREEN;  // 第二象限 - 绿色（北到西：90°-180°）
+		int colorQuadrant3 = Color.GRAY;   // 第三象限 - 灰色（西到南：180°-270°）
+		int colorQuadrant4 = Color.MAGENTA;// 第四象限 - 紫色（南到东：270°-360°）
+
+		// 直接使用数学坐标系角度
+		// 第一象限：从0°（东）逆时针到90°（北）- 红色
+		mSectorConfigList.add(new CurveThumbnail.SectorConfig(
+				centerX, centerY, radius,
+				0f, 90f,  // 数学角度：从0°开始，逆时针扫过90°到90°
+				colorQuadrant1, true));
+
+		// 第二象限：从90°（北）逆时针到180°（西）- 绿色
+		mSectorConfigList.add(new CurveThumbnail.SectorConfig(
+				centerX, centerY, radius,
+				90f, 90f,  // 数学角度：从90°开始，逆时针扫过90°到180°
+				colorQuadrant2, true));
+
+		// 第三象限：从180°（西）逆时针到270°（南）- 灰色
+		mSectorConfigList.add(new CurveThumbnail.SectorConfig(
+				centerX, centerY, radius,
+				180f, 90f,  // 数学角度：从180°开始，逆时针扫过90°到270°
+				colorQuadrant3, true));
+
+		// 第四象限：从270°（南）逆时针到360°（东）- 紫色
+		mSectorConfigList.add(new CurveThumbnail.SectorConfig(
+				centerX, centerY, radius,
+				270f, 90f,  // 数学角度：从270°开始，逆时针扫过90°到360°
+				colorQuadrant4, true));
+
+		// 原有的坐标轴
 		mLineConfigList.add(createLineConfig(
 				Arrays.asList(0f, (float) THUMBNAIL_SIZE),
 				Arrays.asList(centerY, centerY),
@@ -812,8 +851,13 @@ public class TrendAnalyzer {
 				Color.BLACK, THUMBNAIL_STROKE_WIDTH
 		));
 
-		mCircleConfigList.add(new CurveThumbnail.CircleConfig(centerX, centerY, Color.BLACK, THUMBNAIL_SIZE / 4.5f, THUMBNAIL_STROKE_WIDTH));
-		mCircleConfigList.add(new CurveThumbnail.CircleConfig(centerX, centerY, Color.BLACK, THUMBNAIL_SIZE / 2.5f, THUMBNAIL_STROKE_WIDTH));
+		// 原有的同心圆
+		mCircleConfigList.add(new CurveThumbnail.CircleConfig(
+				centerX, centerY, Color.BLACK,
+				THUMBNAIL_SIZE / 4.5f, THUMBNAIL_STROKE_WIDTH));
+		mCircleConfigList.add(new CurveThumbnail.CircleConfig(
+				centerX, centerY, Color.BLACK,
+				THUMBNAIL_SIZE / 2.5f, THUMBNAIL_STROKE_WIDTH));
 	}
 
 	private void setupRadarPoint(Radar radar, String period, int upColor, int downColor) {
@@ -839,7 +883,6 @@ public class TrendAnalyzer {
 
 		switch (period) {
 			case Period.DAY:
-//				addRadialLine(x, y, -lineRadius, 0, color, strokeWidth);
 				break;
 			case Period.MIN60:
 				addRadialLine(x, y, 0, lineRadius, color, strokeWidth);
@@ -868,7 +911,7 @@ public class TrendAnalyzer {
 	}
 
 	private CurveThumbnail.LineConfig createLineConfig(List<Float> xValues, List<Float> yValues,
-													   int color, float strokeWidth) {
+	                                                   int color, float strokeWidth) {
 		return new CurveThumbnail.LineConfig(xValues, yValues, color, strokeWidth);
 	}
 
