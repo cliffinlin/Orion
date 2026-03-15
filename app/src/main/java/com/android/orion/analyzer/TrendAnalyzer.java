@@ -802,40 +802,52 @@ public class TrendAnalyzer {
 	private void setupBaseLines() {
 		float centerX = (float) THUMBNAIL_SIZE / 2f;
 		float centerY = (float) THUMBNAIL_SIZE / 2f;
-		float radius = THUMBNAIL_SIZE / 4.5f;  // 与同心圆相同的半径
+		float radiusSmall = THUMBNAIL_SIZE / 4.5f;  // 小圆半径
+		float radiusLarge = THUMBNAIL_SIZE / 2.5f;  // 大圆半径
 
 		// 清空之前的扇形配置
 		mSectorConfigList.clear();
 
-		// 定义象限颜色
-		int colorQuadrant1 = Color.RED;    // 第一象限 - 红色（东到北：0°-90°）
-		int colorQuadrant2 = Color.GREEN;  // 第二象限 - 绿色（北到西：90°-180°）
-		int colorQuadrant3 = Color.GRAY;   // 第三象限 - 灰色（西到南：180°-270°）
-		int colorQuadrant4 = Color.MAGENTA;// 第四象限 - 紫色（南到东：270°-360°）
+		// 定义象限颜色（保持原来的颜色不变）
+		int colorQuadrant1 = Color.RED;    // 第一象限 - 红色
+		int colorQuadrant2 = Color.GREEN;  // 第二象限 - 绿色
+		int colorQuadrant3 = Color.GRAY;   // 第三象限 - 灰色
+		int colorQuadrant4 = Color.MAGENTA;// 第四象限 - 紫色
 
-		// 直接使用数学坐标系角度
-		// 第一象限：从0°（东）逆时针到90°（北）- 红色
+		// 注意：数学坐标系的角度需要转换为Canvas坐标系
+		// 数学坐标系：0°指向右（东），90°指向上（北）
+		// Canvas坐标系：0°指向右（东），90°指向下（南）
+		//
+		// 转换公式：canvasAngle = (450 - mathAngle) % 360
+		// 这样转换后：
+		// 数学0°（东）-> Canvas 90°（下）- 第四象限
+		// 数学90°（北）-> Canvas 0°（右）- 第一象限
+		// 数学180°（西）-> Canvas 270°（上）- 第二象限
+		// 数学270°（南）-> Canvas 180°（左）- 第三象限
+
+		// 使用精确的圆心坐标
+		// 第一象限（数学0°-90°）在Canvas中显示为右上角
 		mSectorConfigList.add(new CurveThumbnail.SectorConfig(
-				centerX, centerY, radius,
-				0f, 90f,  // 数学角度：从0°开始，逆时针扫过90°到90°
+				centerX, centerY, radiusSmall,
+				0f, 90f,  // 数学角度
 				colorQuadrant1, true));
 
-		// 第二象限：从90°（北）逆时针到180°（西）- 绿色
+		// 第二象限（数学90°-180°）在Canvas中显示为左上角
 		mSectorConfigList.add(new CurveThumbnail.SectorConfig(
-				centerX, centerY, radius,
-				90f, 90f,  // 数学角度：从90°开始，逆时针扫过90°到180°
+				centerX, centerY, radiusSmall,
+				90f, 90f,  // 数学角度
 				colorQuadrant2, true));
 
-		// 第三象限：从180°（西）逆时针到270°（南）- 灰色
+		// 第三象限（数学180°-270°）在Canvas中显示为左下角
 		mSectorConfigList.add(new CurveThumbnail.SectorConfig(
-				centerX, centerY, radius,
-				180f, 90f,  // 数学角度：从180°开始，逆时针扫过90°到270°
+				centerX, centerY, radiusSmall,
+				180f, 90f,  // 数学角度
 				colorQuadrant3, true));
 
-		// 第四象限：从270°（南）逆时针到360°（东）- 紫色
+		// 第四象限（数学270°-360°）在Canvas中显示为右下角
 		mSectorConfigList.add(new CurveThumbnail.SectorConfig(
-				centerX, centerY, radius,
-				270f, 90f,  // 数学角度：从270°开始，逆时针扫过90°到360°
+				centerX, centerY, radiusSmall,
+				270f, 90f,  // 数学角度
 				colorQuadrant4, true));
 
 		// 原有的坐标轴
@@ -851,13 +863,13 @@ public class TrendAnalyzer {
 				Color.BLACK, THUMBNAIL_STROKE_WIDTH
 		));
 
-		// 原有的同心圆
+		// 原有的同心圆（使用相同的圆心坐标）
 		mCircleConfigList.add(new CurveThumbnail.CircleConfig(
 				centerX, centerY, Color.BLACK,
-				THUMBNAIL_SIZE / 4.5f, THUMBNAIL_STROKE_WIDTH));
+				radiusSmall, THUMBNAIL_STROKE_WIDTH));
 		mCircleConfigList.add(new CurveThumbnail.CircleConfig(
 				centerX, centerY, Color.BLACK,
-				THUMBNAIL_SIZE / 2.5f, THUMBNAIL_STROKE_WIDTH));
+				radiusLarge, THUMBNAIL_STROKE_WIDTH));
 	}
 
 	private void setupRadarPoint(Radar radar, String period, int upColor, int downColor) {
