@@ -805,40 +805,37 @@ public class TrendAnalyzer {
 		float radiusSmall = THUMBNAIL_SIZE / 4.5f;  // 小圆半径
 		float radiusLarge = THUMBNAIL_SIZE / 2.5f;  // 大圆半径
 
-		// 清空之前的扇形配置
-		mSectorConfigList.clear();
-
 		// 定义象限颜色（保持原来的颜色不变）
 		int colorQuadrant1 = Color.RED;    // 第一象限 - 红色
 		int colorQuadrant2 = Color.GREEN;  // 第二象限 - 绿色
 		int colorQuadrant3 = Color.GRAY;   // 第三象限 - 灰色
 		int colorQuadrant4 = Color.MAGENTA;// 第四象限 - 紫色
 
+		if (mStock.hasFlag(Stock.FLAG_TRADE)) {
+			// 第一象限（数学0°-90°）在Canvas中显示为右上角
+			mSectorConfigList.add(new CurveThumbnail.SectorConfig(
+					centerX, centerY, radiusSmall,
+					0f, 90f,  // 数学角度
+					colorQuadrant1, true));
 
-		// 使用精确的圆心坐标
-		// 第一象限（数学0°-90°）在Canvas中显示为右上角
-		mSectorConfigList.add(new CurveThumbnail.SectorConfig(
-				centerX, centerY, radiusSmall,
-				0f, 90f,  // 数学角度
-				colorQuadrant1, true));
+			// 第二象限（数学90°-180°）在Canvas中显示为左上角
+			mSectorConfigList.add(new CurveThumbnail.SectorConfig(
+					centerX, centerY, radiusSmall,
+					90f, 90f,  // 数学角度
+					colorQuadrant2, true));
 
-		// 第二象限（数学90°-180°）在Canvas中显示为左上角
-		mSectorConfigList.add(new CurveThumbnail.SectorConfig(
-				centerX, centerY, radiusSmall,
-				90f, 90f,  // 数学角度
-				colorQuadrant2, true));
+			// 第三象限（数学180°-270°）在Canvas中显示为左下角
+			mSectorConfigList.add(new CurveThumbnail.SectorConfig(
+					centerX, centerY, radiusSmall,
+					180f, 90f,  // 数学角度
+					colorQuadrant3, true));
 
-		// 第三象限（数学180°-270°）在Canvas中显示为左下角
-		mSectorConfigList.add(new CurveThumbnail.SectorConfig(
-				centerX, centerY, radiusSmall,
-				180f, 90f,  // 数学角度
-				colorQuadrant3, true));
-
-		// 第四象限（数学270°-360°）在Canvas中显示为右下角
-		mSectorConfigList.add(new CurveThumbnail.SectorConfig(
-				centerX, centerY, radiusSmall,
-				270f, 90f,  // 数学角度
-				colorQuadrant4, true));
+			// 第四象限（数学270°-360°）在Canvas中显示为右下角
+			mSectorConfigList.add(new CurveThumbnail.SectorConfig(
+					centerX, centerY, radiusSmall,
+					270f, 90f,  // 数学角度
+					colorQuadrant4, true));
+		}
 
 		// 原有的坐标轴
 		mLineConfigList.add(createLineConfig(
