@@ -634,12 +634,16 @@ public class TrendAnalyzer {
 					if (nextNet == nextNetOfDay) {
 						found = true;
 						levelList.add(i);
-						levelOfPeriods.put(period, i);
-						level = i;
-//						break;
 					}
 				}
-				if (!found) {
+				if (found) {
+					if (levelList.size() > 1) {
+						level = levelList.get(1);
+					} else {
+						level = levelList.get(0);
+					}
+					levelOfPeriods.put(period, level);
+				} else {
 					return;
 				}
 			}
@@ -657,7 +661,7 @@ public class TrendAnalyzer {
 				}
 				nextNet = (float) stockTrend.getNextNet();
 				Log.d(period + " " + i + " " + nextNet);
-//				mStock.setTarget(period, i);
+				mStock.setTarget(period, i);//__TEST_CASE__
 			}
 		}
 	}
