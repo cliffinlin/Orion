@@ -2,6 +2,7 @@ package com.android.orion.analyzer;
 
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 
 import com.android.orion.chart.CurveThumbnail;
 import com.android.orion.config.Config;
@@ -588,17 +589,84 @@ public class TrendAnalyzer {
 	}
 
 	public void setupThumbnail(Stock stock) {
-		setup(stock);
 		try {
-			for (String period : Period.PERIODS) {
-				if (Setting.getPeriod(period)) {
-					setupPeriodThumbnail(period);
-				}
-			}
+			setup(stock);
+			setupStockTarget();
+			setupStockTarget();
+			setupPeriodThumbnail();
 			setupTrendThumbnail();
 			setupRadarThumbnail();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void setupStockTarget() {
+		StockTrend stockTrend = mStock.getStockTrend(Period.DAY, mStock.getTarget(Period.DAY));
+		if (stockTrend == null) {
+			return;
+		}
+		float nextNet = (float) stockTrend.getNextNet();
+		if (nextNet == 0) {
+			return;
+		}
+
+		int counter = 0;
+		int targetOfDay = mStock.getTarget(Period.DAY);
+		int level = 0;
+		float nextNetOfDay = nextNet;
+		ArrayList<Integer> levelList = new ArrayList<>();
+		ArrayMap<String, Integer> levelOfPeriods = new ArrayMap<>();
+		for (String period : Period.PERIODS) {
+			if (Setting.getPeriod(period)) {
+				counter++;
+				boolean found = false;
+				levelList.clear();
+				for (int i = targetOfDay; i < StockTrend.LEVELS.length; i++) {
+					if (i < level) {
+						continue;
+					}
+					stockTrend = mStock.getStockTrend(period, i);
+					if (stockTrend == null) {
+						continue;
+					}
+					nextNet = (float) stockTrend.getNextNet();
+					if (nextNet == nextNetOfDay) {
+						found = true;
+						levelList.add(i);
+						levelOfPeriods.put(period, i);
+						level = i;
+//						break;
+					}
+				}
+				if (!found) {
+					return;
+				}
+			}
+		}
+		if (levelOfPeriods.isEmpty() || levelOfPeriods.size() != counter) {
+			return;
+		}
+
+		for (String period : Period.PERIODS) {
+			if (Setting.getPeriod(period)) {
+				int i = levelOfPeriods.get(period);
+				stockTrend = mStock.getStockTrend(period, i);
+				if (stockTrend == null) {
+					continue;
+				}
+				nextNet = (float) stockTrend.getNextNet();
+				Log.d(period + " " + i + " " + nextNet);
+//				mStock.setTarget(period, i);
+			}
+		}
+	}
+
+	public void setupPeriodThumbnail() {
+		for (String period : Period.PERIODS) {
+			if (Setting.getPeriod(period)) {
+				setupPeriodThumbnail(period);
+			}
 		}
 	}
 
