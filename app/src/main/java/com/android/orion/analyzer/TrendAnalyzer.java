@@ -638,7 +638,11 @@ public class TrendAnalyzer {
 				}
 				if (found) {
 					if (levelList.size() > 1) {
-						level = levelList.get(1);
+						if (levelList.get(1) - level > 1) {
+							level = levelList.get(0);
+						} else {
+							level = levelList.get(1);
+						}
 					} else {
 						level = levelList.get(0);
 					}
@@ -661,7 +665,7 @@ public class TrendAnalyzer {
 				}
 				nextNet = (float) stockTrend.getNextNet();
 				Log.d(period + " " + i + " " + nextNet);
-				mStock.setTarget(period, i);//__TEST_CASE__
+				mStock.setTarget(period, i);
 			}
 		}
 	}

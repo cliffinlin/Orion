@@ -81,7 +81,6 @@ public class TradeLevelPicker extends NumberPicker {
         super.setOnValueChangedListener(new OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                Log.d(TAG, "onValueChange: " + oldVal + " -> " + newVal);
 
                 // 更新文本颜色
                 updateTextColor(newVal);
@@ -92,9 +91,7 @@ public class TradeLevelPicker extends NumberPicker {
                     if (newVal != lastPlayedValue) {
                         lastPlayedValue = newVal;
                         sendPlayMessage();
-                        Log.d(TAG, "播放声音，值变化: " + oldVal + " -> " + newVal);
                     } else {
-                        Log.d(TAG, "跳过声音播放，值与上次播放时相同: " + newVal);
                     }
                 }
 
@@ -122,7 +119,6 @@ public class TradeLevelPicker extends NumberPicker {
             case MotionEvent.ACTION_CANCEL:
                 // 手指抬起时，重置lastPlayedValue，确保下一次触摸可以从头开始
                 lastPlayedValue = -1;
-                Log.d(TAG, "触摸结束，重置lastPlayedValue");
                 break;
         }
 
@@ -176,11 +172,9 @@ public class TradeLevelPicker extends NumberPicker {
                         return true; // 消费所有触摸事件，不传递给父控件
                     }
                 });
-
-                Log.d(TAG, "已禁用内部EditText的点击和聚焦");
             }
         } catch (Exception e) {
-            Log.e(TAG, "禁用内部EditText失败: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -338,7 +332,6 @@ public class TradeLevelPicker extends NumberPicker {
     // 启用/禁用声音
     public void setSoundEnabled(boolean enabled) {
         this.isSoundEnabled = enabled;
-        Log.d(TAG, "声音 " + (enabled ? "启用" : "禁用"));
     }
 
     // 检查声音是否启用
@@ -350,7 +343,6 @@ public class TradeLevelPicker extends NumberPicker {
         try {
             int soundResourceId = getResources().getIdentifier("sound_picker", "raw", getContext().getPackageName());
             if (soundResourceId == 0) {
-                Log.e(TAG, "未找到声音资源: sound_picker.ogg");
                 isSoundEnabled = false;
                 return;
             }
@@ -358,13 +350,11 @@ public class TradeLevelPicker extends NumberPicker {
             mediaPlayer = MediaPlayer.create(getContext(), soundResourceId);
             if (mediaPlayer != null) {
                 mediaPlayer.setVolume(0.3f, 0.3f); // 降低音量避免刺耳
-                Log.d(TAG, "媒体播放器初始化成功");
             } else {
-                Log.e(TAG, "无法创建媒体播放器");
                 isSoundEnabled = false;
             }
         } catch (Exception e) {
-            Log.e(TAG, "初始化媒体播放器失败: " + e.getMessage());
+            e.printStackTrace();
             isSoundEnabled = false;
         }
     }
@@ -390,11 +380,10 @@ public class TradeLevelPicker extends NumberPicker {
                 mediaPlayer.start();
             }
         } catch (IllegalStateException e) {
-            Log.e(TAG, "媒体播放器状态异常: " + e.getMessage());
-            // 重新初始化媒体播放器
+            e.printStackTrace();
             reinitMediaPlayer();
         } catch (Exception e) {
-            Log.e(TAG, "播放声音时发生错误: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -413,9 +402,8 @@ public class TradeLevelPicker extends NumberPicker {
                     mediaPlayer.stop();
                 }
                 mediaPlayer.release();
-                Log.d(TAG, "媒体播放器已释放");
             } catch (Exception e) {
-                Log.e(TAG, "释放媒体播放器时发生错误: " + e.getMessage());
+                e.printStackTrace();
             }
             mediaPlayer = null;
         }
@@ -424,7 +412,6 @@ public class TradeLevelPicker extends NumberPicker {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        Log.d(TAG, "附加到窗口");
         // 初始颜色更新
         updateTextColor(getValue());
         // 确保内部EditText被禁用
@@ -434,7 +421,6 @@ public class TradeLevelPicker extends NumberPicker {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        Log.d(TAG, "从窗口分离");
         releaseMediaPlayer();
         if (soundHandler != null) {
             soundHandler.removeCallbacksAndMessages(null);
@@ -459,7 +445,6 @@ public class TradeLevelPicker extends NumberPicker {
      * 手动测试声音播放
      */
     public void testSound() {
-        Log.d(TAG, "手动测试声音播放");
         if (soundHandler != null) {
             soundHandler.post(new Runnable() {
                 @Override
