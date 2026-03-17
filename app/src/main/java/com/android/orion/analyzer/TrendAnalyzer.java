@@ -825,7 +825,7 @@ public class TrendAnalyzer {
 		mCircleConfigList.clear();
 		mSectorConfigList.clear();  // 清空扇形列表
 
-		setupBaseLines();  // 这会填充 mSectorConfigList
+		setupBaseLines();  // 这会填充 mSectorConfigList 和 mCircleConfigList
 
 		Radar radar;
 		double signal = 0;
@@ -864,11 +864,21 @@ public class TrendAnalyzer {
 			}
 		}
 
-		// 创建包含扇形的缩略图
+		// 创建坐标轴配置（使用原来的黑色，线宽不变）
+		// 使用 createRadarAxis() 创建从中心向外画的坐标轴，更适合雷达图
+		CurveThumbnail.AxisConfig axisConfig = CurveThumbnail.AxisConfig.createRadarAxis(
+				Color.BLACK, THUMBNAIL_STROKE_WIDTH
+		);
+
+		// 创建包含扇形和坐标轴的缩略图
 		CurveThumbnail thumbnail = new CurveThumbnail(
 				THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, Color.TRANSPARENT,
-				mLineConfigList, mScatterConfigList, mCircleConfigList,
-				mSectorConfigList, null  // 传入扇形配置
+				mLineConfigList,      // 折线配置 - 包含径向线
+				mScatterConfigList,   // 散点配置 - 雷达点
+				mCircleConfigList,    // 圆圈配置 - 同心圆
+				mSectorConfigList,    // 扇形配置 - 象限
+				null,                 // 十字标记 - 不需要
+				axisConfig            // 坐标轴配置 - 新的横纵轴
 		);
 
 		byte[] thumbnailBytes = Utility.thumbnailToBytes(thumbnail);
@@ -913,20 +923,6 @@ public class TrendAnalyzer {
 					colorQuadrant4, true));
 		}
 
-		// 原有的坐标轴
-		mLineConfigList.add(createLineConfig(
-				Arrays.asList(0f, (float) THUMBNAIL_SIZE),
-				Arrays.asList(centerY, centerY),
-				Color.BLACK, THUMBNAIL_STROKE_WIDTH
-		));
-
-		mLineConfigList.add(createLineConfig(
-				Arrays.asList(centerX, centerX),
-				Arrays.asList(0f, (float) THUMBNAIL_SIZE),
-				Color.BLACK, THUMBNAIL_STROKE_WIDTH
-		));
-
-		// 原有的同心圆（使用相同的圆心坐标）
 		mCircleConfigList.add(new CurveThumbnail.CircleConfig(
 				centerX, centerY, Color.BLACK,
 				radiusSmall, THUMBNAIL_STROKE_WIDTH));
@@ -946,7 +942,7 @@ public class TrendAnalyzer {
 		final float lineRadius = THUMBNAIL_SIZE / 5f;
 		final float strokeWidth = 4f * THUMBNAIL_STROKE_WIDTH;
 
-		radius = (float) (THUMBNAIL_SIZE / 2f * Math.abs(radar.amplitude));
+		radius = (float) (THUMBNAIL_SIZE / 2.5f * Math.abs(radar.amplitude));
 		double angle = radar.phase;
 		float x = centerX + (float) (radius * Math.cos(angle));
 		float y = centerY + (float) (radius * Math.sin(angle));
