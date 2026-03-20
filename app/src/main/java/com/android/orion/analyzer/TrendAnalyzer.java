@@ -898,28 +898,61 @@ public class TrendAnalyzer {
 		int colorQuadrant4 = Color.MAGENTA;// 第四象限 - 紫色
 
 		if (mStock.hasFlag(Stock.FLAG_TRADE)) {
+			float sweepAngle1 = 0f;
+			float sweepAngle2 = 0f;
+			float sweepAngle3 = 0f;
+			float sweepAngle4 = 0f;
+			float gauge = 0f;
+
+			if (mStock.getQuota() > 0) {
+				gauge = (float) mStock.getHold() / (float) mStock.getQuota();
+			}
+			float angle = gauge * 360f / 2f % 90;
+
+			if (gauge > 2f) {
+				colorQuadrant4 = Color.CYAN;
+				sweepAngle4 = 90f;
+				sweepAngle1 = 90f;
+				sweepAngle2 = 90f;
+				sweepAngle3 = 90f;
+			} else if (gauge > 1.5f) {
+				sweepAngle4 = angle;
+				sweepAngle1 = 90f;
+				sweepAngle2 = 90f;
+				sweepAngle3 = 90f;
+			} else if (gauge > 1f) {
+				sweepAngle1 = angle;
+				sweepAngle2 = 90f;
+				sweepAngle3 = 90f;
+			} else if (gauge > 0.5f) {
+				sweepAngle2 = angle;
+				sweepAngle3 = 90f;
+			} else if (gauge > 0f) {
+				sweepAngle3 = angle;
+			}
+
 			// 第一象限（数学0°-90°）在Canvas中显示为右上角
 			mSectorConfigList.add(new CurveThumbnail.SectorConfig(
 					centerX, centerY, radiusSmall,
-					0f, 90f,  // 数学角度
+					0f, sweepAngle1,  // 数学角度
 					colorQuadrant1, true));
 
 			// 第二象限（数学90°-180°）在Canvas中显示为左上角
 			mSectorConfigList.add(new CurveThumbnail.SectorConfig(
 					centerX, centerY, radiusSmall,
-					90f, 90f,  // 数学角度
+					90f, sweepAngle2,  // 数学角度
 					colorQuadrant2, true));
 
 			// 第三象限（数学180°-270°）在Canvas中显示为左下角
 			mSectorConfigList.add(new CurveThumbnail.SectorConfig(
 					centerX, centerY, radiusSmall,
-					180f, 90f,  // 数学角度
+					180f, sweepAngle3,  // 数学角度
 					colorQuadrant3, true));
 
 			// 第四象限（数学270°-360°）在Canvas中显示为右下角
 			mSectorConfigList.add(new CurveThumbnail.SectorConfig(
 					centerX, centerY, radiusSmall,
-					270f, 90f,  // 数学角度
+					270f, sweepAngle4,  // 数学角度
 					colorQuadrant4, true));
 		}
 

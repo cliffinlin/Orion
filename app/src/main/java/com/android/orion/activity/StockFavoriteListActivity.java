@@ -920,16 +920,16 @@ public class StockFavoriteListActivity extends ListActivity implements
                 holdPortion.setLayoutParams(holdParams);
                 remainingPortion.setLayoutParams(remainingParams);
 
-                if (ratio > 1.0f) {
+                if (ratio > 2.0f) {
+                    holdPortion.setBackgroundColor(Color.CYAN);
+                }  else if (ratio > 1.5f) {
                     holdPortion.setBackgroundColor(Color.MAGENTA);
-                } else if (ratio == 1.0f) {
+                } else if (ratio > 1.0f) {
                     holdPortion.setBackgroundColor(Color.RED);
-                } else if (ratio == 0.5f) {
-                    holdPortion.setBackgroundColor(Color.BLACK);
-                } else if (ratio < 0.5f) {
-                    holdPortion.setBackgroundColor(Color.GRAY);
-                } else {
+                } else if (ratio > 0.5f) {
                     holdPortion.setBackgroundColor(Color.GREEN);
+                } else {
+                    holdPortion.setBackgroundColor(Color.GRAY);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
