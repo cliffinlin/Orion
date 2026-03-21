@@ -2,12 +2,16 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
-    compileSdkVersion 29
+    namespace 'com.android.orion'  // Added: replaces package attribute in manifest
+    compileSdk 33  // Updated from 29 to 33
     buildToolsVersion "30.0.3"
+
     defaultConfig {
         applicationId "com.android.orion"
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 33  // Updated from 29 to 33 (required by Google Play)
+        versionCode 518
+        versionName "V1.1.36_R20260321"
     }
 
     signingConfigs {
@@ -29,7 +33,19 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release  // Added: ensures release build uses your keystore
         }
+        debug {
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    // Optional: Configure Lint to be less strict if needed
+    lint {
+        // Uncomment if you want to temporarily disable the target SDK check
+        // disable 'ExpiredTargetSdkVersion'
+        // Or check only for errors, not warnings
+        // abortOnError false
     }
 
     gradle.projectsEvaluated {
