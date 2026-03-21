@@ -931,28 +931,28 @@ public class TrendAnalyzer {
 				sweepAngle3 = angle;
 			}
 
-			// 第一象限（数学0°-90°）在Canvas中显示为右上角
+			// 第一象限 - 从90度开始，顺时针扫描
 			mSectorConfigList.add(new CurveThumbnail.SectorConfig(
 					centerX, centerY, radiusSmall,
-					0f, sweepAngle1,  // 数学角度
+					90f, sweepAngle1,  // startAngle从90度开始
 					colorQuadrant1, true));
 
-			// 第二象限（数学90°-180°）在Canvas中显示为左上角
+			// 第二象限 - 从180度开始，顺时针扫描
 			mSectorConfigList.add(new CurveThumbnail.SectorConfig(
 					centerX, centerY, radiusSmall,
-					90f, sweepAngle2,  // 数学角度
+					180f, sweepAngle2,  // startAngle从180度开始
 					colorQuadrant2, true));
 
-			// 第三象限（数学180°-270°）在Canvas中显示为左下角
+			// 第三象限 - 从270度开始，顺时针扫描
 			mSectorConfigList.add(new CurveThumbnail.SectorConfig(
 					centerX, centerY, radiusSmall,
-					180f, sweepAngle3,  // 数学角度
+					270f, sweepAngle3,  // startAngle从270度开始
 					colorQuadrant3, true));
 
-			// 第四象限（数学270°-360°）在Canvas中显示为右下角
+			// 第四象限 - 从0度开始，顺时针扫描
 			mSectorConfigList.add(new CurveThumbnail.SectorConfig(
 					centerX, centerY, radiusSmall,
-					270f, sweepAngle4,  // 数学角度
+					0f, sweepAngle4,  // startAngle从0度开始
 					colorQuadrant4, true));
 		}
 

@@ -163,16 +163,24 @@ public class CurveThumbnail extends Drawable {
 			// 数学坐标系：0°指向右（东），90°指向上（北），正角度逆时针
 			// Canvas坐标系：0°指向右（东），正角度顺时针
 
-			// 修正角度偏移：当前显示顺时针旋转了90度，所以需要逆时针旋转90度
-			// 公式：canvasAngle = -startAngleMath - 90
-			float canvasAngle = -startAngleMath - 90;
+			// 转换公式：canvasAngle = -startAngleMath
+			// 这样可以直接保持象限对应关系
+			// 例如：
+			// startAngleMath = 0° (第四象限起始) -> canvasAngle = 0° (指向右)
+			// startAngleMath = 90° (第一象限起始) -> canvasAngle = -90° (指向下)
+			// startAngleMath = 180° (第二象限起始) -> canvasAngle = -180° (指向左)
+			// startAngleMath = 270° (第三象限起始) -> canvasAngle = -270° (指向上)
+			float canvasAngle = -startAngleMath;
+
 			// 确保角度在0-360范围内
 			canvasAngle = (canvasAngle + 360) % 360;
 			return canvasAngle;
 		}
 
 		public float getCanvasSweepAngle() {
-			// 扫过角度保持不变（正角度还是逆时针）
+			// 扫过角度保持正数，实现顺时针扫描
+			// 因为数学角度逆时针为正，Canvas顺时针为正
+			// 所以直接返回sweepAngleMath即可实现顺时针扫描
 			return sweepAngleMath;
 		}
 	}
