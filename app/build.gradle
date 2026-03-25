@@ -11,7 +11,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 33  // Updated from 29 to 33 (required by Google Play)
         versionCode 518
-        versionName "V1.1.36_R20260321"
+        versionName "V1.1.36_R20260325"
     }
 
     signingConfigs {

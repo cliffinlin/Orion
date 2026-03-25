@@ -70,7 +70,7 @@ public class StockNotificationManager {
 		}
 
 		String notifyString = "";
-		if (stock.hasFlag(Stock.FLAG_TRADE)) {
+		if (stock.hasFlag(Stock.FLAG_TARGET)) {
 			mTradeAnalyzer.analyzeProfit(stock);
 			if (stockTrend.getNet() > 0) {
 				if (stock.getBuyProfit() > 0) {

@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +18,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TradeLevelPicker extends NumberPicker {
+public class TargetLevelPicker extends NumberPicker {
 
-    private static final String TAG = "TradeLevelPicker";
+    private static final String TAG = "TargetLevelPicker";
     private static final int MSG_PLAY_SOUND = 1;
 
     private MediaPlayer mediaPlayer;
@@ -52,17 +51,17 @@ public class TradeLevelPicker extends NumberPicker {
         }
     }
 
-    public TradeLevelPicker(Context context) {
+    public TargetLevelPicker(Context context) {
         super(context);
         init();
     }
 
-    public TradeLevelPicker(Context context, AttributeSet attrs) {
+    public TargetLevelPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public TradeLevelPicker(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TargetLevelPicker(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

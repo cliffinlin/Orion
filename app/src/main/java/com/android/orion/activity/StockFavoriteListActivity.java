@@ -876,7 +876,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                 flagValue = cursor.getInt(mColumnIndexFlag);
             }
 
-            if (Utility.hasFlag(flagValue, Stock.FLAG_TRADE)) {
+            if (Utility.hasFlag(flagValue, Stock.FLAG_TARGET)) {
                 view.setVisibility(View.VISIBLE);
             } else {
                 view.setVisibility(View.GONE);
@@ -1014,7 +1014,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                     if (mColumnIndexFlag != -1 && !cursor.isNull(mColumnIndexFlag)) {
                         flagValue = cursor.getInt(mColumnIndexFlag);
                     }
-                    if (Utility.hasFlag(flagValue, Stock.FLAG_TRADE)) {
+                    if (Utility.hasFlag(flagValue, Stock.FLAG_TARGET)) {
                         double profit = cursor.getDouble(columnIndex);
                         textView.setText(String.valueOf(profit));
                         textView.setTextColor(profit > 0 ? Color.RED : Color.GRAY);
@@ -1027,7 +1027,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                     if (mColumnIndexFlag != -1 && !cursor.isNull(mColumnIndexFlag)) {
                         flagValue = cursor.getInt(mColumnIndexFlag);
                     }
-                    if (Utility.hasFlag(flagValue, Stock.FLAG_TRADE)) {
+                    if (Utility.hasFlag(flagValue, Stock.FLAG_TARGET)) {
                         double profit = cursor.getDouble(columnIndex);
                         textView.setText(String.valueOf(profit));
                         textView.setTextColor(profit < 0 ? Color.RED : Color.GRAY);

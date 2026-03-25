@@ -396,10 +396,10 @@
                     android:gravity="start">
 
                     <CheckBox
-                        android:id="@+id/checkbox_trade"
+                        android:id="@+id/checkbox_target"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/trade"
+                        android:text="@string/target"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -421,7 +421,7 @@
 
             <!-- 交易级别选择器 -->
             <LinearLayout
-                android:id="@+id/layout_trade_level_pickers"
+                android:id="@+id/layout_target_level_pickers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -445,8 +445,8 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <com.android.orion.widget.TradeLevelPicker
-                        android:id="@+id/trade_level_picker_month"
+                    <com.android.orion.widget.TargetLevelPicker
+                        android:id="@+id/target_level_picker_month"
                         android:layout_width="72dp"
                         android:layout_height="54dp" />
 
@@ -484,8 +484,8 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <com.android.orion.widget.TradeLevelPicker
-                        android:id="@+id/trade_level_picker_week"
+                    <com.android.orion.widget.TargetLevelPicker
+                        android:id="@+id/target_level_picker_week"
                         android:layout_width="72dp"
                         android:layout_height="54dp" />
 
@@ -523,8 +523,8 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <com.android.orion.widget.TradeLevelPicker
-                        android:id="@+id/trade_level_picker_day"
+                    <com.android.orion.widget.TargetLevelPicker
+                        android:id="@+id/target_level_picker_day"
                         android:layout_width="72dp"
                         android:layout_height="54dp" />
 
@@ -562,8 +562,8 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <com.android.orion.widget.TradeLevelPicker
-                        android:id="@+id/trade_level_picker_min60"
+                    <com.android.orion.widget.TargetLevelPicker
+                        android:id="@+id/target_level_picker_min60"
                         android:layout_width="72dp"
                         android:layout_height="54dp" />
 
@@ -601,8 +601,8 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <com.android.orion.widget.TradeLevelPicker
-                        android:id="@+id/trade_level_picker_min30"
+                    <com.android.orion.widget.TargetLevelPicker
+                        android:id="@+id/target_level_picker_min30"
                         android:layout_width="72dp"
                         android:layout_height="54dp" />
 
@@ -640,8 +640,8 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <com.android.orion.widget.TradeLevelPicker
-                        android:id="@+id/trade_level_picker_min15"
+                    <com.android.orion.widget.TargetLevelPicker
+                        android:id="@+id/target_level_picker_min15"
                         android:layout_width="72dp"
                         android:layout_height="54dp" />
 
@@ -679,8 +679,8 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <com.android.orion.widget.TradeLevelPicker
-                        android:id="@+id/trade_level_picker_min5"
+                    <com.android.orion.widget.TargetLevelPicker
+                        android:id="@+id/target_level_picker_min5"
                         android:layout_width="72dp"
                         android:layout_height="54dp" />
 

@@ -592,7 +592,6 @@ public class TrendAnalyzer {
 		try {
 			setup(stock);
 			setupStockTarget();
-			setupStockTarget();
 			setupPeriodThumbnail();
 			setupTrendThumbnail();
 			setupRadarThumbnail();
@@ -671,6 +670,10 @@ public class TrendAnalyzer {
 	}
 
 	public void setupPeriodThumbnail() {
+		if (!Setting.getDisplayThumbnail()) {
+			return;
+		}
+
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
 				setupPeriodThumbnail(period);
@@ -897,7 +900,7 @@ public class TrendAnalyzer {
 		int colorQuadrant3 = Color.GRAY;   // 第三象限 - 灰色
 		int colorQuadrant4 = Color.MAGENTA;// 第四象限 - 紫色
 
-		if (mStock.hasFlag(Stock.FLAG_TRADE)) {
+		if (mStock.hasFlag(Stock.FLAG_TARGET)) {
 			float sweepAngle1 = 0f;
 			float sweepAngle2 = 0f;
 			float sweepAngle3 = 0f;

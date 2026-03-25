@@ -33,7 +33,7 @@ public class TradeAnalyzer {
 		mStock.setBuyProfit(0);
 		mStock.setSellProfit(0);
 
-		if (!mStock.hasFlag(Stock.FLAG_TRADE)) {
+		if (!mStock.hasFlag(Stock.FLAG_TARGET)) {
 			return;
 		}
 
