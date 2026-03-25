@@ -42,7 +42,7 @@ public class Stock extends DatabaseTable {
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_FAVORITE = 1 << 0;
 	public static final int FLAG_TARGET = 1 << 1;
-	public static final int FLAG_AUTO = 1 << 2;
+	public static final int FLAG_MANUAL = 1 << 2;
 
 	public static final double ROI_COEFFICIENT = 10;
 

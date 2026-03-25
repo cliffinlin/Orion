@@ -104,6 +104,7 @@ public class StockDealActivity extends DatabaseActivity implements
 					mStockDatabaseManager.updateStockDeal(mStock);
 					mStockDatabaseManager.updateStock(mStock,
 							mStock.getContentValues());
+					mBackgroundHandler.downloadStockData(mStock);
 					break;
 
 				case MESSAGE_NEW_DEAL:

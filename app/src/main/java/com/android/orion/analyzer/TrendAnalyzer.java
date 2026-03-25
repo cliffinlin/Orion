@@ -601,6 +601,9 @@ public class TrendAnalyzer {
 	}
 
 	public void setupStockTarget() {
+		if (mStock.hasFlag(Stock.FLAG_MANUAL)) {
+			return;
+		}
 		StockTrend stockTrend = mStock.getStockTrend(Period.DAY, mStock.getTarget(Period.DAY));
 		if (stockTrend == null) {
 			return;

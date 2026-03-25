@@ -41,6 +41,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	double mDividendB = 0.0;
 	double mDividendC = 0.0;
 	CheckBox mCheckBoxTarget;
+	CheckBox mCheckBoxManual;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextStockQuota;
@@ -141,6 +142,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 	void initView() {
 		mCheckBoxTarget = findViewById(R.id.checkbox_target);
+		mCheckBoxManual = findViewById(R.id.checkbox_manual);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockQuota = findViewById(R.id.edittext_stock_quota);
@@ -221,6 +223,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mTextViewDisplayStockCode = findViewById(R.id.textview_display_stock_code);
 
 		mCheckBoxTarget.setOnClickListener(this);
+		mCheckBoxManual.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockQuota.setOnClickListener(this);
@@ -244,6 +247,20 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		// 设置Trading加减按钮的点击监听
 		mButtonTradingMinus.setOnClickListener(this);
 		mButtonTradingPlus.setOnClickListener(this);
+
+		// 设置Target CheckBox的监听器
+		mCheckBoxTarget.setOnCheckedChangeListener((buttonView, isChecked) -> {
+			updateQuotaEditState(isChecked);
+		});
+
+		// 设置Manual CheckBox的监听器
+		mCheckBoxManual.setOnCheckedChangeListener((buttonView, isChecked) -> {
+			if (isChecked) {
+				mStock.addFlag(Stock.FLAG_MANUAL);
+			} else {
+				mStock.removeFlag(Stock.FLAG_MANUAL);
+			}
+		});
 
 		// 创建并添加配额EditText的文本变化监听器
 		mQuotaTextWatcher = new TextWatcher() {
@@ -321,11 +338,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					mStock.setCode(s.toString());
 				}
 			}
-		});
-
-		// 添加Trade复选框的监听器来控制Quota的编辑状态
-		mCheckBoxTarget.setOnCheckedChangeListener((buttonView, isChecked) -> {
-			updateQuotaEditState(isChecked);
 		});
 
 		if (TextUtils.equals(mAction, Constant.ACTION_STOCK_NEW)) {
@@ -790,7 +802,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	}
 
 	private void setupTargetLevelPickerListener(TargetLevelPicker picker, final String period,
-	                                           final TextView netTextView, final ImageView targetImageView) {
+	                                            final TextView netTextView, final ImageView targetImageView) {
 		if (picker == null) {
 			return;
 		}
@@ -824,6 +836,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	void updateView() {
 		boolean isTargetChecked = mStock.hasFlag(Stock.FLAG_TARGET);
 		mCheckBoxTarget.setChecked(isTargetChecked);
+
+		boolean isManualChecked = mStock.hasFlag(Stock.FLAG_MANUAL);
+		mCheckBoxManual.setChecked(isManualChecked);
 
 		// 根据Target状态更新Quota的显示状态
 		updateQuotaEditState(isTargetChecked);
@@ -971,6 +986,10 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 				// Target复选框状态改变会通过OnCheckedChangeListener处理
 				break;
 
+			case R.id.checkbox_manual:
+				// Manual复选框状态改变会通过OnCheckedChangeListener处理
+				break;
+
 			case R.id.button_quota_minus:
 				// 点击减号按钮，减少配额100
 				if (mIsQuotaEditable) {
@@ -1113,6 +1132,13 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					mStock.setTrading(0);
 				}
 
+				// 保存Manual标志
+				if (mCheckBoxManual.isChecked()) {
+					mStock.addFlag(Stock.FLAG_MANUAL);
+				} else {
+					mStock.removeFlag(Stock.FLAG_MANUAL);
+				}
+
 				try {
 					String teeText = mEditTextStockTee.getText().toString();
 					if (!TextUtils.isEmpty(teeText)) {
@@ -1162,6 +1188,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 							mStock.getContentValuesEdit());
 					mStockDataProvider.analyze(mStock);
 				}
+				mBackgroundHandler.downloadStockData(mStock);
 				getIntent().putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 				setResult(RESULT_OK, getIntent());
 				finish();

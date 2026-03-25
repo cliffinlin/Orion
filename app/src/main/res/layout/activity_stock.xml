@@ -393,13 +393,22 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="start">
+                    android:gravity="start"
+                    android:orientation="horizontal">
 
                     <CheckBox
                         android:id="@+id/checkbox_target"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/target"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox_manual"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="@string/manual"
                         android:textSize="14sp" />
                 </LinearLayout>
 
