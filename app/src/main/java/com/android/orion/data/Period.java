@@ -34,6 +34,7 @@ public class Period {
 	public static final String MIN5 = "min5";
 
 	public static final String[] PERIODS = {MONTH, WEEK, DAY, MIN60, MIN30, MIN15, MIN5};
+	public static final String[] PERIODS_REVERSE = {MIN5, MIN15, MIN30, MIN60, DAY, WEEK, MONTH};
 	private static final Set<String> PERIOD_SET = new HashSet<>(Arrays.asList(PERIODS));
 	private static final Set<String> MINUTE_PERIOD_SET = new HashSet<>(Arrays.asList(MIN60, MIN30, MIN15, MIN5));
 	private static final Map<String, Integer> PERIOD_IN_MINUTES_MAP = new HashMap<String, Integer>() {{

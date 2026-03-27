@@ -41,6 +41,8 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_TREND_COLOR_UP = Config.COLOR_DARK_RED;
 	public static final int THUMBNAIL_TREND_COLOR_DOWN = Config.COLOR_DARK_GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_TARGET = Color.BLACK;
+	public static final int THUMBNAIL_RADA_COLOR_TARGET_DAY = Color.RED;
+	public static final int THUMBNAIL_RADA_COLOR_TARGET_MANUAL = Color.GRAY;
 
 	int mPeriods;
 	Logger Log = Logger.getLogger();
@@ -835,11 +837,18 @@ public class TrendAnalyzer {
 
 		Radar radar;
 		double signal = 0;
-		for (String period : Period.PERIODS) {
+		for (String period : Period.PERIODS_REVERSE) {
 			if (Setting.getPeriod(period)) {
 				radar = mStock.getTargetRadar(period);
 				if (radar != null) {
-					setupRadarPoint(radar, period, THUMBNAIL_RADA_COLOR_TARGET, THUMBNAIL_RADA_COLOR_TARGET);
+					int color = THUMBNAIL_RADA_COLOR_TARGET;
+					if (mStock.hasFlag(Stock.FLAG_MANUAL)) {
+						color = THUMBNAIL_RADA_COLOR_TARGET_MANUAL;
+						if (TextUtils.equals(period, Period.DAY)) {
+							color = THUMBNAIL_RADA_COLOR_TARGET_DAY;
+						}
+					}
+					setupRadarPoint(radar, period, color);
 					signal += radar.signal;
 				}
 			}
@@ -970,7 +979,7 @@ public class TrendAnalyzer {
 				radiusLarge, THUMBNAIL_STROKE_WIDTH));
 	}
 
-	private void setupRadarPoint(Radar radar, String period, int upColor, int downColor) {
+	private void setupRadarPoint(Radar radar, String period, int color) {
 		if (radar == null) {
 			return;
 		}
@@ -985,7 +994,6 @@ public class TrendAnalyzer {
 		double angle = radar.phase;
 		float x = centerX + (float) (radius * Math.cos(angle));
 		float y = centerY + (float) (radius * Math.sin(angle));
-		int color = (radar.direction == StockTrend.DIRECTION_UP) ? upColor : downColor;
 
 		mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
 				x, y, color, THUMBNAIL_SCATTER_SIZE
