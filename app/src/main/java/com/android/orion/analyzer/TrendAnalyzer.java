@@ -53,7 +53,7 @@ public class TrendAnalyzer {
 	ArrayList<CurveThumbnail.LineConfig> mLineConfigList = new ArrayList<>();
 	ArrayList<CurveThumbnail.ScatterConfig> mScatterConfigList = new ArrayList<>();
 	ArrayList<CurveThumbnail.CircleConfig> mCircleConfigList = new ArrayList<>();
-	ArrayList<CurveThumbnail.SectorConfig> mSectorConfigList = new ArrayList<>();  // 新增扇形配置列表
+	ArrayList<CurveThumbnail.SectorConfig> mSectorConfigList = new ArrayList<>();
 	ArrayList<StockData> mStockDataList = new ArrayList<>();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 
@@ -831,22 +831,22 @@ public class TrendAnalyzer {
 		mLineConfigList.clear();
 		mScatterConfigList.clear();
 		mCircleConfigList.clear();
-		mSectorConfigList.clear();  // 清空扇形列表
+		mSectorConfigList.clear();
 
-		setupBaseLines();  // 这会填充 mSectorConfigList 和 mCircleConfigList
+		setupBaseLines();
 
 		Radar radar;
 		double signal = 0;
-		for (String period : Period.PERIODS_REVERSE) {
+		for (String period : Period.PERIODS_R) {
 			if (Setting.getPeriod(period)) {
 				radar = mStock.getTargetRadar(period);
 				if (radar != null) {
 					int color = THUMBNAIL_RADA_COLOR_TARGET;
 					if (mStock.hasFlag(Stock.FLAG_MANUAL)) {
 						color = THUMBNAIL_RADA_COLOR_TARGET_MANUAL;
-						if (TextUtils.equals(period, Period.DAY)) {
-							color = THUMBNAIL_RADA_COLOR_TARGET_DAY;
-						}
+					}
+					if (TextUtils.equals(period, Period.DAY)) {
+						color = THUMBNAIL_RADA_COLOR_TARGET_DAY;
 					}
 					setupRadarPoint(radar, period, color);
 					signal += radar.signal;
@@ -879,13 +879,10 @@ public class TrendAnalyzer {
 			}
 		}
 
-		// 创建坐标轴配置（使用原来的黑色，线宽不变）
-		// 使用 createRadarAxis() 创建从中心向外画的坐标轴，更适合雷达图
 		CurveThumbnail.AxisConfig axisConfig = CurveThumbnail.AxisConfig.createRadarAxis(
 				Color.BLACK, THUMBNAIL_STROKE_WIDTH
 		);
 
-		// 创建包含扇形和坐标轴的缩略图
 		CurveThumbnail thumbnail = new CurveThumbnail(
 				THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, Color.TRANSPARENT,
 				mLineConfigList,      // 折线配置 - 包含径向线
@@ -906,11 +903,10 @@ public class TrendAnalyzer {
 		float radiusSmall = THUMBNAIL_SIZE / 4.5f;  // 小圆半径
 		float radiusLarge = THUMBNAIL_SIZE / 2.5f;  // 大圆半径
 
-		// 定义象限颜色（保持原来的颜色不变）
-		int colorQuadrant1 = Color.RED;    // 第一象限 - 红色
-		int colorQuadrant2 = Color.GREEN;  // 第二象限 - 绿色
-		int colorQuadrant3 = Color.GRAY;   // 第三象限 - 灰色
-		int colorQuadrant4 = Color.MAGENTA;// 第四象限 - 紫色
+		int colorQuadrant1 = Color.RED;
+		int colorQuadrant2 = Color.GREEN;
+		int colorQuadrant3 = Color.LTGRAY;
+		int colorQuadrant4 = Color.MAGENTA;
 
 		if (mStock.hasFlag(Stock.FLAG_TARGET)) {
 			float sweepAngle1 = 0f;
