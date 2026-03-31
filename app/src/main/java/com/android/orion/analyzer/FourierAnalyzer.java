@@ -17,8 +17,8 @@ import java.util.List;
 
 public class FourierAnalyzer {
     private static String mPeriod;
-    private static ArrayList<Double> mDataList = new ArrayList<>();
-    private static ArrayList<Double> mRadarList = new ArrayList<>();
+    private static ArrayList<Double> mPulseList = new ArrayList<>();
+    private static ArrayList<Double> mEchoList = new ArrayList<>();
     private static Radar mRadar;
     private static boolean logMore = false;
     private static int mComponentCount = 32;
@@ -29,8 +29,8 @@ public class FourierAnalyzer {
         return mRadar;
     }
 
-    public static ArrayList<Double> getRadarList() {
-        return new ArrayList<>(mRadarList);
+    public static ArrayList<Double> getEchoList() {
+        return new ArrayList<>(mEchoList);
     }
 
     /**
@@ -43,23 +43,23 @@ public class FourierAnalyzer {
     /**
      * 进行傅立叶变换分析并重建前n个主成分（使用IFFT重建）
      */
-    public static void analyze(String period, ArrayList<Double> dataList) {
-        if (dataList == null || dataList.isEmpty()) {
+    public static void analyze(String period, ArrayList<Double> pulseList) {
+        if (pulseList == null || pulseList.isEmpty()) {
             return;
         }
 
         mPeriod = period;
-        mDataList = dataList;
+        mPulseList = pulseList;
 
-        List<PeriodAmplitude> spectrum = performFourierAnalysis(mDataList);
+        List<PeriodAmplitude> spectrum = performFourierAnalysis(mPulseList);
         if (logMore) {
             printDominantPeriods(spectrum);
         }
 
         // 使用IFFT重建前n个主成分
-        List<Double> reconstructedData = reconstructWithIFFT(mDataList, spectrum, mComponentCount);
-        mRadarList.clear();
-        mRadarList.addAll(reconstructedData);
+        List<Double> reconstructedData = reconstructWithIFFT(mPulseList, spectrum, mComponentCount);
+        mEchoList.clear();
+        mEchoList.addAll(reconstructedData);
     }
 
     /**

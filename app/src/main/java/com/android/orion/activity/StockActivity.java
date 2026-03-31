@@ -41,7 +41,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	double mDividendB = 0.0;
 	double mDividendC = 0.0;
 	CheckBox mCheckBoxTarget;
-	CheckBox mCheckBoxManual;
+	CheckBox mCheckBoxShortWave;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextStockQuota;
@@ -142,7 +142,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 	void initView() {
 		mCheckBoxTarget = findViewById(R.id.checkbox_target);
-		mCheckBoxManual = findViewById(R.id.checkbox_manual);
+		mCheckBoxShortWave = findViewById(R.id.checkbox_short_wave);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockQuota = findViewById(R.id.edittext_stock_quota);
@@ -223,7 +223,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mTextViewDisplayStockCode = findViewById(R.id.textview_display_stock_code);
 
 		mCheckBoxTarget.setOnClickListener(this);
-		mCheckBoxManual.setOnClickListener(this);
+		mCheckBoxShortWave.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockQuota.setOnClickListener(this);
@@ -253,12 +253,11 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 			updateQuotaEditState(isChecked);
 		});
 
-		// 设置Manual CheckBox的监听器
-		mCheckBoxManual.setOnCheckedChangeListener((buttonView, isChecked) -> {
+		mCheckBoxShortWave.setOnCheckedChangeListener((buttonView, isChecked) -> {
 			if (isChecked) {
-				mStock.addFlag(Stock.FLAG_MANUAL);
+				mStock.addFlag(Stock.FLAG_SHORT_WAVE);
 			} else {
-				mStock.removeFlag(Stock.FLAG_MANUAL);
+				mStock.removeFlag(Stock.FLAG_SHORT_WAVE);
 			}
 		});
 
@@ -837,8 +836,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		boolean isTargetChecked = mStock.hasFlag(Stock.FLAG_TARGET);
 		mCheckBoxTarget.setChecked(isTargetChecked);
 
-		boolean isManualChecked = mStock.hasFlag(Stock.FLAG_MANUAL);
-		mCheckBoxManual.setChecked(isManualChecked);
+		mCheckBoxShortWave.setChecked(mStock.hasFlag(Stock.FLAG_SHORT_WAVE));
 
 		// 根据Target状态更新Quota的显示状态
 		updateQuotaEditState(isTargetChecked);
@@ -986,8 +984,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 				// Target复选框状态改变会通过OnCheckedChangeListener处理
 				break;
 
-			case R.id.checkbox_manual:
-				// Manual复选框状态改变会通过OnCheckedChangeListener处理
+			case R.id.checkbox_short_wave:
 				break;
 
 			case R.id.button_quota_minus:
@@ -1132,11 +1129,10 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					mStock.setTrading(0);
 				}
 
-				// 保存Manual标志
-				if (mCheckBoxManual.isChecked()) {
-					mStock.addFlag(Stock.FLAG_MANUAL);
+				if (mCheckBoxShortWave.isChecked()) {
+					mStock.addFlag(Stock.FLAG_SHORT_WAVE);
 				} else {
-					mStock.removeFlag(Stock.FLAG_MANUAL);
+					mStock.removeFlag(Stock.FLAG_SHORT_WAVE);
 				}
 
 				try {

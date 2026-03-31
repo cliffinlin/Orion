@@ -8,7 +8,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,7 +22,6 @@ import androidx.annotation.NonNull;
 import com.android.orion.R;
 import com.android.orion.chart.ChartSyncHelper;
 import com.android.orion.chart.StockDataChart;
-import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
@@ -485,8 +483,8 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 					BarEntry histogramBarEntry = new BarEntry((float) mStockData.getMacd().getHistogram(), index);
 					stockDataChart.mHistogramEntryList.add(histogramBarEntry);
 
-					Entry targetEntry = new Entry((float) mStockData.getMacd().getTarget(), index);
-					stockDataChart.mTargetEntryList.add(targetEntry);
+					Entry echoEntry = new Entry((float) mStockData.getMacd().getEcho(), index);
+					stockDataChart.mEchoEntryList.add(echoEntry);
 				}
 			}
 

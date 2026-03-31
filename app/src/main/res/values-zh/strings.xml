@@ -107,7 +107,6 @@
     <string name="low">Low</string>
     <string name="main_business_income_in_year">MBIY</string>
     <string name="main_business_income">MBI</string>
-    <string name="manual">Manual</string>
     <string name="market_value">MValue</string>
     <string name="match_insert">Match insert</string>
     <string name="match">Match</string>
@@ -190,6 +189,7 @@
     <string name="setting_period_week">Week</string>
     <string name="setting">Setting</string>
     <string name="share">Share</string>
+    <string name="short_wave">Short</string>
     <string name="signal">Signal</string>
     <string name="slope">Slope</string>
     <string name="std">STD</string>

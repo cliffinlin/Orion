@@ -36,6 +36,7 @@ public class DatabaseContract {
 	public static final String COLUMN_THUMBNAIL = "thumbnail";
 	public static final String COLUMN_LEVEL = "level";
 	public static final String COLUMN_TARGET = "target";
+	public static final String COLUMN_ECHO = "echo";
 	public static final String COLUMN_TREND = "trend";
 	public static final String COLUMN_SIGNAL = "signal";
 	public static final String COLUMN_TEE = "tee";
@@ -420,7 +421,7 @@ public class DatabaseContract {
 				COLUMN_PERIOD, COLUMN_DATE, COLUMN_TIME, COLUMN_TEXT,
 				COLUMN_OPEN, COLUMN_TOP, COLUMN_HIGH, COLUMN_LOW, COLUMN_BOTTOM, COLUMN_CLOSE, COLUMN_CHANGE, COLUMN_NET,
 				COLUMN_DIRECTION, COLUMN_VERTEX,
-				COLUMN_DIF, COLUMN_DEA, COLUMN_HISTOGRAM, COLUMN_TARGET,
+				COLUMN_DIF, COLUMN_DEA, COLUMN_HISTOGRAM, COLUMN_ECHO,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -446,7 +447,7 @@ public class DatabaseContract {
 				+ COLUMN_DIF + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DEA + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_HISTOGRAM + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_TARGET + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_ECHO + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME

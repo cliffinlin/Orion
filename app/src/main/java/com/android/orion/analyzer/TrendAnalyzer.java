@@ -42,7 +42,7 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_TREND_COLOR_DOWN = Config.COLOR_DARK_GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_TARGET = Color.BLACK;
 	public static final int THUMBNAIL_RADA_COLOR_TARGET_DAY = Color.RED;
-	public static final int THUMBNAIL_RADA_COLOR_TARGET_MANUAL = Color.GRAY;
+	public static final int THUMBNAIL_RADA_COLOR_SHORT_WAVE = Color.GRAY;
 
 	int mPeriods;
 	Logger Log = Logger.getLogger();
@@ -603,9 +603,6 @@ public class TrendAnalyzer {
 	}
 
 	public void setupStockTarget() {
-		if (mStock.hasFlag(Stock.FLAG_MANUAL)) {
-			return;
-		}
 		StockTrend stockTrend = mStock.getStockTrend(Period.DAY, mStock.getTarget(Period.DAY));
 		if (stockTrend == null) {
 			return;
@@ -839,12 +836,15 @@ public class TrendAnalyzer {
 		double signal = 0;
 		for (String period : Period.PERIODS_R) {
 			if (Setting.getPeriod(period)) {
+				if (mStock.hasFlag(Stock.FLAG_SHORT_WAVE)) {
+					radar = mStock.getShortWaveRadar(period);
+					if (radar != null) {
+						setupRadarPoint(radar, period, THUMBNAIL_RADA_COLOR_SHORT_WAVE);
+					}
+				}
 				radar = mStock.getTargetRadar(period);
 				if (radar != null) {
 					int color = THUMBNAIL_RADA_COLOR_TARGET;
-					if (mStock.hasFlag(Stock.FLAG_MANUAL)) {
-						color = THUMBNAIL_RADA_COLOR_TARGET_MANUAL;
-					}
 					if (TextUtils.equals(period, Period.DAY)) {
 						color = THUMBNAIL_RADA_COLOR_TARGET_DAY;
 					}

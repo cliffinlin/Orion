@@ -9,7 +9,7 @@ public class Macd {
 	private double mDIF;
 	private double mDEA;
 	private double mHistogram;
-	private double mTarget;
+	private double mEcho;
 
 	public Macd() {
 		init();
@@ -19,7 +19,7 @@ public class Macd {
 		mDIF = 0;
 		mDEA = 0;
 		mHistogram = 0;
-		mTarget = 0;
+		mEcho = 0;
 	}
 
 	public ContentValues getContentValues(ContentValues contentValues) {
@@ -27,7 +27,7 @@ public class Macd {
 			contentValues.put(DatabaseContract.COLUMN_DIF, getDIF());
 			contentValues.put(DatabaseContract.COLUMN_DEA, getDEA());
 			contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, getHistogram());
-			contentValues.put(DatabaseContract.COLUMN_TARGET, getTarget());
+			contentValues.put(DatabaseContract.COLUMN_ECHO, getEcho());
 		}
 		return contentValues;
 	}
@@ -39,21 +39,21 @@ public class Macd {
 		setDIF(macd.mDIF);
 		setDEA(macd.mDEA);
 		setHistogram(macd.mHistogram);
-		setTarget(macd.mTarget);
+		setEcho(macd.mEcho);
 	}
 
 	public void set(Cursor cursor) {
 		setDIF(cursor);
 		setDEA(cursor);
 		setHistogram(cursor);
-		setTarget(cursor);
+		setEcho(cursor);
 	}
 
-	public void set(double dif, double dea, double histogram, double target) {
+	public void set(double dif, double dea, double histogram, double echo) {
 		setDIF(dif);
 		setDEA(dea);
 		setHistogram(histogram);
-		setTarget(target);
+		setEcho(echo);
 	}
 
 	public double getDIF() {
@@ -107,20 +107,20 @@ public class Macd {
 				.getColumnIndex(DatabaseContract.COLUMN_HISTOGRAM)));
 	}
 
-	public double getTarget() {
-		return mTarget;
+	public double getEcho() {
+		return mEcho;
 	}
 
-	public void setTarget(double target) {
-		mTarget = target;
+	public void setEcho(double echo) {
+		mEcho = echo;
 	}
 
-	void setTarget(Cursor cursor) {
+	void setEcho(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setTarget(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TARGET)));
+		setEcho(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ECHO)));
 	}
 }

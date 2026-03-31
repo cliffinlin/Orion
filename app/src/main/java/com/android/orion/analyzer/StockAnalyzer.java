@@ -131,13 +131,17 @@ public class StockAnalyzer {
 				return;
 			}
 
+			setupPulseList(StockTrend.LEVEL_DRAW);
+			FourierAnalyzer.analyze(period, mPulseList);
+			mStock.setShortWaveRadar(period, FourierAnalyzer.getRadar());
+
 			setupPulseList(mStock.getTarget(period));
 			FourierAnalyzer.analyze(period, mPulseList);
-			ArrayList<Double> targetList = FourierAnalyzer.getRadarList();
+			ArrayList<Double> echoList = FourierAnalyzer.getEchoList();
 			mStock.setTargetRadar(period, FourierAnalyzer.getRadar());
 
-			if (targetList.size() != size) {
-				Log.d("return, size=" + size + " targetList.size()=" + targetList.size());
+			if (echoList.size() != size) {
+				Log.d("return, size=" + size + " echoList.size()=" + echoList.size());
 				return;
 			}
 
@@ -150,7 +154,7 @@ public class StockAnalyzer {
 				if (macd == null) {
 					continue;
 				}
-				macd.set(difList.get(i), deaList.get(i), histogramList.get(i), targetList.get(i));
+				macd.set(difList.get(i), deaList.get(i), histogramList.get(i), echoList.get(i));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

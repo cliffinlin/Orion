@@ -42,7 +42,7 @@ public class Stock extends DatabaseTable {
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_FAVORITE = 1 << 0;
 	public static final int FLAG_TARGET = 1 << 1;
-	public static final int FLAG_MANUAL = 1 << 2;
+	public static final int FLAG_SHORT_WAVE = 1 << 2;
 
 	public static final double ROI_COEFFICIENT = 10;
 
@@ -1435,6 +1435,14 @@ public class Stock extends DatabaseTable {
 
 	public void setTargetRadar(String period, Radar radar) {
 		getPeriod(period).setTargetRadar(radar);
+	}
+
+	public Radar getShortWaveRadar(String period) {
+		return getPeriod(period).getShortWaveRadar();
+	}
+
+	public void setShortWaveRadar(String period, Radar radar) {
+		getPeriod(period).setShortWaveRadar(radar);
 	}
 
 	public void setupMarketValue() {

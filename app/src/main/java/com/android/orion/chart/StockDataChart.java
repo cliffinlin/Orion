@@ -13,7 +13,6 @@ import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
-import com.github.mikephil.charting.charts.ScatterChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
 import com.github.mikephil.charting.components.YAxis;
@@ -28,8 +27,6 @@ import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.data.ScatterData;
-import com.github.mikephil.charting.data.ScatterDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +48,7 @@ public class StockDataChart {
 	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
-	public ArrayList<Entry> mTargetEntryList = new ArrayList<>();
+	public ArrayList<Entry> mEchoEntryList = new ArrayList<>();
 	public List<Entry>[] mTrendEntryList = new List[StockTrend.LEVELS.length];
 	public List<Entry>[] mChangedEntryList = new List[StockTrend.LEVELS.length];
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
@@ -183,12 +180,12 @@ public class StockDataChart {
 		lineData.addDataSet(deaDataSet);
 
 		if (!Setting.getDisplayCandle()) {
-			LineDataSet targetDataSet = new LineDataSet(mTargetEntryList, "Target");
-			setLineWidth(targetDataSet, mTargetLevel);
-			targetDataSet.setColor(lineColor(mTargetLevel));
-			targetDataSet.setDrawCircles(false);
-			targetDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(targetDataSet);
+			LineDataSet echoDataSet = new LineDataSet(mEchoEntryList, "Echo");
+			setLineWidth(echoDataSet, mTargetLevel);
+			echoDataSet.setColor(lineColor(mTargetLevel));
+			echoDataSet.setDrawCircles(false);
+			echoDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(echoDataSet);
 		}
 
 		mCombinedDataSub.setData(barData);
@@ -462,7 +459,7 @@ public class StockDataChart {
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
-		mTargetEntryList.clear();
+		mEchoEntryList.clear();
 		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			if (mTrendEntryList[i] != null) {
 				mTrendEntryList[i].clear();
