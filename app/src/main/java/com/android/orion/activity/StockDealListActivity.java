@@ -841,7 +841,7 @@ public class StockDealListActivity extends ListActivity implements
 			if (TextUtils.equals(type, StockDeal.TYPE_BUY)) {
 				textColor = net > 0 ? Color.RED : Config.COLOR_DARK_GREEN;
 			} else if (TextUtils.equals(type, StockDeal.TYPE_SELL)) {
-				textColor = net > 0 ? Config.COLOR_DARK_GREEN : Color.RED;
+				textColor = net < 0 ? Color.MAGENTA : Color.CYAN;
 			} else {
 				textColor = Color.BLACK;
 			}

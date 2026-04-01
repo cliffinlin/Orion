@@ -459,7 +459,9 @@ public class StockDeal extends DatabaseTable {
 		mValue = Utility.Round2(mBuy * Math.abs(mVolume));
 	}
 
-	public void setupFee(String rDate, double dividend) {
+	public void setupFee(Stock stock) {
+		String rDate = "";
+		double dividend = 0;
 		double buyStampDuty = 0;
 		double sellStampDuty = 0;
 		double buyTransferFee = 0;
@@ -467,6 +469,11 @@ public class StockDeal extends DatabaseTable {
 		double buyCommissionFee = 0;
 		double sellCommissionFee = 0;
 		double dividendIncomeTax = 0;
+
+		if (stock == null) {
+			mFee = 0;
+			return;
+		}
 
 		if (mPrice == 0 || mBuy == 0 || mVolume == 0) {
 			mFee = 0;
@@ -509,6 +516,8 @@ public class StockDeal extends DatabaseTable {
 			sellCommissionFee = SELL_COMMISSION_FEE_MIN;
 		}
 
+		rDate = stock.getRDate();
+		dividend = stock.getDividend();
 		if (dividend > 0) {
 			Calendar yearCalendar = Utility.getCalendar(Utility.getCurrentDateString(), Utility.CALENDAR_DATE_FORMAT);
 			yearCalendar.add(Calendar.YEAR, -1);
@@ -531,6 +540,9 @@ public class StockDeal extends DatabaseTable {
 				dividendIncomeTax = dividend / 10.0 * Math.abs(mVolume) * DIVIDEND_INCOME_TAX_RATE_10_PERCENT;
 			} else {
 				dividendIncomeTax = dividend / 10.0 * Math.abs(mVolume) * DIVIDEND_INCOME_TAX_RATE_20_PERCENT;
+			}
+			if (stock.hasFlag(Stock.FLAG_TARGET)) {
+				dividendIncomeTax = 0;
 			}
 		}
 
