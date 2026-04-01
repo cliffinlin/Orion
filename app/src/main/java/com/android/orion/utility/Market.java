@@ -3,10 +3,10 @@ package com.android.orion.utility;
 import java.util.Calendar;
 
 public class Market {
-    private static final String FIRST_HALF_START_TIME = "09:30:00";
-    private static final String FIRST_HALF_END_TIME = "11:30:00";
-    private static final String SECOND_HALF_START_TIME = "13:00:00";
-    public static final String SECOND_HALF_END_TIME = "15:00:00";
+    private static final String FIRST_HALF_START_TIME = "09:15:00";
+    private static final String FIRST_HALF_END_TIME = "11:35:00";
+    private static final String SECOND_HALF_START_TIME = "12:55:00";
+    public static final String SECOND_HALF_END_TIME = "15:05:00";
 
     private static final int START_IN_MINUTES = 9 * 60 + 30; //FIRST_HALF_START_TIME
     private static final int LUNCH_TIME_IN_MINUTES = 1 * 60 + 30; //from FIRST_HALF_END_TIME to SECOND_HALF_START_TIME
