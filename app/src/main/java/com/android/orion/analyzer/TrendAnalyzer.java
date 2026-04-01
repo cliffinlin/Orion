@@ -41,8 +41,10 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_TREND_COLOR_UP = Config.COLOR_DARK_RED;
 	public static final int THUMBNAIL_TREND_COLOR_DOWN = Config.COLOR_DARK_GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_TARGET = Color.BLACK;
-	public static final int THUMBNAIL_RADA_COLOR_TARGET_DAY = Color.RED;
 	public static final int THUMBNAIL_RADA_COLOR_SHORT_WAVE = Color.GRAY;
+	public static final int THUMBNAIL_RADA_COLOR_DAY = Color.RED;
+	public static final int THUMBNAIL_RADA_COLOR_WEEK = Color.GREEN;
+	public static final int THUMBNAIL_RADA_COLOR_MONTH = Color.BLUE;
 
 	int mPeriods;
 	Logger Log = Logger.getLogger();
@@ -619,7 +621,7 @@ public class TrendAnalyzer {
 		ArrayList<Integer> levelList = new ArrayList<>();
 		ArrayMap<String, Integer> levelOfPeriods = new ArrayMap<>();
 		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period)) {
+			if (Setting.getPeriod(period) && Period.isMinutePeriod(period)) {
 				counter++;
 				boolean found = false;
 				levelList.clear();
@@ -658,7 +660,7 @@ public class TrendAnalyzer {
 		}
 
 		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period)) {
+			if (Setting.getPeriod(period) && Period.isMinutePeriod(period)) {
 				int i = levelOfPeriods.get(period);
 				stockTrend = mStock.getStockTrend(period, i);
 				if (stockTrend == null) {
@@ -836,7 +838,7 @@ public class TrendAnalyzer {
 		double signal = 0;
 		for (String period : Period.PERIODS_R) {
 			if (Setting.getPeriod(period)) {
-				if (mStock.hasFlag(Stock.FLAG_SHORT_WAVE)) {
+				if (mStock.hasFlag(Stock.FLAG_SHORT_WAVE) && Period.isMinutePeriod(period)) {
 					radar = mStock.getShortWaveRadar(period);
 					if (radar != null) {
 						setupRadarPoint(radar, period, THUMBNAIL_RADA_COLOR_SHORT_WAVE);
@@ -846,7 +848,11 @@ public class TrendAnalyzer {
 				if (radar != null) {
 					int color = THUMBNAIL_RADA_COLOR_TARGET;
 					if (TextUtils.equals(period, Period.DAY)) {
-						color = THUMBNAIL_RADA_COLOR_TARGET_DAY;
+						color = THUMBNAIL_RADA_COLOR_DAY;
+					} else if (TextUtils.equals(period, Period.WEEK)) {
+						color = THUMBNAIL_RADA_COLOR_WEEK;
+					} else if (TextUtils.equals(period, Period.MONTH)) {
+						color = THUMBNAIL_RADA_COLOR_MONTH;
 					}
 					setupRadarPoint(radar, period, color);
 					signal += radar.signal;
