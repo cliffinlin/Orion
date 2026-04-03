@@ -919,32 +919,33 @@ public class TrendAnalyzer {
 			float sweepAngle2 = 0f;
 			float sweepAngle3 = 0f;
 			float sweepAngle4 = 0f;
-			float gauge = 0f;
+			float ratio = Stock.getHoldRatio(mStock.getHold(), mStock.getLocked(), mStock.getQuota());
+			float angle = ratio * 360f / 2f % 90;
 
-			if (mStock.getQuota() > 0) {
-				gauge = (float) mStock.getHold() / (float) mStock.getQuota();
-			}
-			float angle = gauge * 360f / 2f % 90;
-
-			if (gauge > 2f) {
+			if (ratio > 2f) {
 				colorQuadrant4 = Color.CYAN;
 				sweepAngle4 = 90f;
 				sweepAngle1 = 90f;
 				sweepAngle2 = 90f;
 				sweepAngle3 = 90f;
-			} else if (gauge > 1.5f) {
+			} else if (ratio == 2.0f) {
+				sweepAngle4 = 90f;
+				sweepAngle1 = 90f;
+				sweepAngle2 = 90f;
+				sweepAngle3 = 90f;
+			} else if (ratio > 1.5f) {
 				sweepAngle4 = angle;
 				sweepAngle1 = 90f;
 				sweepAngle2 = 90f;
 				sweepAngle3 = 90f;
-			} else if (gauge > 1f) {
+			} else if (ratio > 1f) {
 				sweepAngle1 = angle;
 				sweepAngle2 = 90f;
 				sweepAngle3 = 90f;
-			} else if (gauge > 0.5f) {
+			} else if (ratio > 0.5f) {
 				sweepAngle2 = angle;
 				sweepAngle3 = 90f;
-			} else if (gauge > 0f) {
+			} else if (ratio > 0f) {
 				sweepAngle3 = angle;
 			}
 

@@ -894,35 +894,27 @@ public class StockFavoriteListActivity extends ListActivity implements
             }
 
             try {
-                double hold = 0;
-                double locked = 0;
-                double quota = 0;
+                float hold = 0;
+                float locked = 0;
+                float quota = 0;
 
                 int holdColumnIndex = cursor.getColumnIndex(DatabaseContract.COLUMN_HOLD);
                 int lockedColumnIndex = cursor.getColumnIndex(DatabaseContract.COLUMN_LOCKED);
                 int quotaColumnIndex = cursor.getColumnIndex(DatabaseContract.COLUMN_QUOTA);
 
                 if (holdColumnIndex != -1 && !cursor.isNull(holdColumnIndex)) {
-                    hold = cursor.getDouble(holdColumnIndex);
+                    hold = cursor.getInt(holdColumnIndex);
                 }
 
                 if (lockedColumnIndex != -1 && !cursor.isNull(lockedColumnIndex)) {
-                    locked = cursor.getDouble(lockedColumnIndex);
+                    locked = cursor.getInt(lockedColumnIndex);
                 }
 
                 if (quotaColumnIndex != -1 && !cursor.isNull(quotaColumnIndex)) {
-                    quota = cursor.getDouble(quotaColumnIndex);
+                    quota = cursor.getInt(quotaColumnIndex);
                 }
 
-                float ratio = 0;
-                if (locked > 0) {
-                    ratio = (float) (hold / locked);
-                    if (ratio > 1) {
-                        if (quota - locked > 0) {
-                            ratio = 1.0f + (float) ((hold - locked) / (quota - locked));
-                        }
-                    }
-                }
+                float ratio = Stock.getHoldRatio(hold, locked, quota);
 
                 LinearLayout.LayoutParams holdParams = (LinearLayout.LayoutParams) holdPortion.getLayoutParams();
                 LinearLayout.LayoutParams remainingParams = (LinearLayout.LayoutParams) remainingPortion.getLayoutParams();

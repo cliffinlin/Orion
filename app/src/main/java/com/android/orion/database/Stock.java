@@ -1698,6 +1698,19 @@ public class Stock extends DatabaseTable {
 		return result;
 	}
 
+	public static float getHoldRatio(float hold, float locked, float quota) {
+		float result = 0;
+		if (locked > 0) {
+			result = (float) (hold / locked);
+			if (result > 1) {
+				if (quota - locked > 0) {
+					result = 1.0f + (float) ((hold - locked) / (quota - locked));
+				}
+			}
+		}
+		return result;
+	}
+
 	public String getNameCodeString(String separator) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getName()).append(separator);
