@@ -79,6 +79,7 @@ public class Stock extends DatabaseTable {
 	private double mRoe;
 	private double mPe;
 	private double mPb;
+	private long mLocked;
 	private long mQuota;
 	private long mTrading;
 	private long mHold;
@@ -139,6 +140,7 @@ public class Stock extends DatabaseTable {
 		mPinyin = "";
 
 		mFlag = FLAG_NONE;
+		mLocked = 0;
 		mQuota = 0;
 		mTrading = 0;
 		mHold = 0;
@@ -224,6 +226,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_PE, mPe);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPb);
 
+		contentValues.put(DatabaseContract.COLUMN_LOCKED, mLocked);
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
 		contentValues.put(DatabaseContract.COLUMN_TRADING, mTrading);
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
@@ -293,6 +296,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_TARGET, getTargetString());
+		contentValues.put(DatabaseContract.COLUMN_LOCKED, mLocked);
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
 		contentValues.put(DatabaseContract.COLUMN_TRADING, mTrading);
 		contentValues.put(DatabaseContract.COLUMN_TEE, mTee);
@@ -334,6 +338,7 @@ public class Stock extends DatabaseTable {
 		setRoe(stock.mRoe);
 		setPe(stock.mPe);
 		setPb(stock.mPb);
+		setLocked(stock.mLocked);
 		setQuota(stock.mQuota);
 		setTrading(stock.mTrading);
 		setHold(stock.mHold);
@@ -406,6 +411,7 @@ public class Stock extends DatabaseTable {
 		setRoe(cursor);
 		setPe(cursor);
 		setPb(cursor);
+		setLocked(cursor);
 		setQuota(cursor);
 		setTrading(cursor);
 		setHold(cursor);
@@ -637,6 +643,23 @@ public class Stock extends DatabaseTable {
 
 		setValue(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_VALUE)));
+	}
+
+	public long getLocked() {
+		return mLocked;
+	}
+
+	public void setLocked(long locked) {
+		mLocked = locked;
+	}
+
+	void setLocked(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setLocked(cursor.getLong(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_LOCKED)));
 	}
 
 	public long getQuota() {

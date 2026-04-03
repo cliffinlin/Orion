@@ -41,7 +41,6 @@
                 android:singleLine="true" />
         </LinearLayout>
 
-        <!-- 编辑模式：名称和代码输入 -->
         <LinearLayout
             android:id="@+id/layout_stock_name_code_edit"
             android:layout_width="match_parent"
@@ -50,7 +49,6 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp">
 
-            <!-- 股票名称输入 -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -80,7 +78,6 @@
                     android:padding="8dp" />
             </LinearLayout>
 
-            <!-- 股票代码输入 -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -116,7 +113,6 @@
             android:layout_height="1dip"
             android:background="@drawable/divider_line" />
 
-        <!-- 持仓、分红、收益率统计 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -151,7 +147,6 @@
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
-                <!-- 持仓一致性检查提示 -->
                 <TextView
                     android:id="@+id/textview_hold_consistency_hint"
                     android:layout_width="wrap_content"
@@ -220,7 +215,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- 账户A、B、C显示区域 - 压缩高度 -->
         <LinearLayout
             android:id="@+id/layout_stock_hold_account"
             android:layout_width="match_parent"
@@ -230,7 +224,6 @@
             android:paddingTop="2dp"
             android:paddingBottom="2dp">
 
-            <!-- 账户A - 压缩高度 -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -258,7 +251,6 @@
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
-                <!-- 账户A分红显示 - 更紧凑 -->
                 <TextView
                     android:id="@+id/textview_stock_dividend_a_label"
                     android:layout_width="wrap_content"
@@ -276,7 +268,6 @@
                     android:textSize="11sp" />
             </LinearLayout>
 
-            <!-- 账户B - 压缩高度 -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -304,7 +295,6 @@
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
-                <!-- 账户B分红显示 - 更紧凑 -->
                 <TextView
                     android:id="@+id/textview_stock_dividend_b_label"
                     android:layout_width="wrap_content"
@@ -322,7 +312,6 @@
                     android:textSize="11sp" />
             </LinearLayout>
 
-            <!-- 账户C - 压缩高度 -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -350,7 +339,6 @@
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
-                <!-- 账户C分红显示 - 更紧凑 -->
                 <TextView
                     android:id="@+id/textview_stock_dividend_c_label"
                     android:layout_width="wrap_content"
@@ -369,7 +357,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- 交易设置区域 -->
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dip"
@@ -428,7 +415,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- 交易级别选择器 -->
             <LinearLayout
                 android:id="@+id/layout_target_level_pickers"
                 android:layout_width="match_parent"
@@ -717,7 +703,6 @@
             android:layout_height="1dip"
             android:background="@drawable/divider_line" />
 
-        <!-- 交易和配额设置 - 进一步压缩高度，增加间距避免误触 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -725,7 +710,6 @@
             android:paddingTop="4dp"
             android:paddingBottom="4dp">
 
-            <!-- Quota部分 -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -821,7 +805,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Trading部分 - 新增，增加左右边距避免误触 -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -872,7 +855,6 @@
                             android:visibility="gone"
                             android:padding="0dp" />
 
-                        <!-- Trading数值输入 -->
                         <EditText
                             android:id="@+id/edittext_stock_trading"
                             android:layout_width="80dp"
@@ -918,7 +900,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Tee部分 -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -938,7 +919,6 @@
                     android:textColor="@android:color/black"
                     android:textSize="11sp" />
 
-                <!-- Tee输入框 -->
                 <EditText
                     android:id="@+id/edittext_stock_tee"
                     android:layout_width="80dp"
@@ -960,7 +940,6 @@
             android:layout_height="1dip"
             android:background="@drawable/divider_line" />
 
-        <!-- 按钮区域 -->
         <LinearLayout
             style="?android:buttonBarStyle"
             android:layout_width="match_parent"

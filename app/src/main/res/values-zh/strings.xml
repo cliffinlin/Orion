@@ -102,6 +102,7 @@
     <string name="line">Line</string>
     <string name="list">List</string>
     <string name="load">Load</string>
+    <string name="locked">Locked</string>
     <string name="log_is_off">Log is off</string>
     <string name="log_is_on">Log is on</string>
     <string name="low">Low</string>

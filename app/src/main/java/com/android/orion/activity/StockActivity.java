@@ -90,21 +90,8 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	Button mButtonOk;
 	Button mButtonCancel;
 
-	// 配额加减按钮
-	Button mButtonQuotaMinus;
-	Button mButtonQuotaPlus;
-
-	// Trading加减按钮
-	Button mButtonTradingMinus;
-	Button mButtonTradingPlus;
-
-	// 配额提示文字
 	TextView mTextViewQuotaHint;
-
-	// Trading提示文字
 	TextView mTextViewTradingHint;
-
-	// 持仓一致性检查提示文字
 	TextView mTextViewHoldConsistencyHint;
 
 	LinearLayout mLayoutTargetLevelPickers;
@@ -191,21 +178,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
-		// 初始化配额加减按钮
-		mButtonQuotaMinus = findViewById(R.id.button_quota_minus);
-		mButtonQuotaPlus = findViewById(R.id.button_quota_plus);
-
-		// 初始化Trading加减按钮
-		mButtonTradingMinus = findViewById(R.id.button_trading_minus);
-		mButtonTradingPlus = findViewById(R.id.button_trading_plus);
-
-		// 初始化配额提示TextView
 		mTextViewQuotaHint = findViewById(R.id.textview_quota_hint);
-
-		// 初始化Trading提示TextView
 		mTextViewTradingHint = findViewById(R.id.textview_trading_hint);
 
-		// 初始化持仓一致性检查提示TextView
 		mTextViewHoldConsistencyHint = findViewById(R.id.textview_hold_consistency_hint);
 
 		mLayoutTargetLevelPickers = findViewById(R.id.layout_target_level_pickers);
@@ -240,15 +215,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
-		// 设置配额加减按钮的点击监听
-		mButtonQuotaMinus.setOnClickListener(this);
-		mButtonQuotaPlus.setOnClickListener(this);
-
-		// 设置Trading加减按钮的点击监听
-		mButtonTradingMinus.setOnClickListener(this);
-		mButtonTradingPlus.setOnClickListener(this);
-
-		// 设置Target CheckBox的监听器
 		mCheckBoxTarget.setOnCheckedChangeListener((buttonView, isChecked) -> {
 			updateQuotaEditState(isChecked);
 		});
@@ -483,15 +449,8 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	private void updateQuotaEditState(boolean isTargetChecked) {
 		mIsQuotaEditable = isTargetChecked;
 
-		// 更新配额EditText和加减按钮的状态
 		mEditTextStockQuota.setEnabled(isTargetChecked);
-		mButtonQuotaMinus.setEnabled(isTargetChecked);
-		mButtonQuotaPlus.setEnabled(isTargetChecked);
-
-		// 更新Trading EditText和加减按钮的状态
 		mEditTextStockTrading.setEnabled(isTargetChecked);
-		mButtonTradingMinus.setEnabled(isTargetChecked);
-		mButtonTradingPlus.setEnabled(isTargetChecked);
 
 		// 更新Quota的显示样式
 		if (isTargetChecked) {
@@ -601,139 +560,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 		// 更新分红显示
 		updateDividendViews();
-	}
-
-	/**
-	 * 增加配额值（每次增加100）
-	 */
-	private void increaseQuota() {
-		try {
-			String currentText = mEditTextStockQuota.getText().toString();
-			long currentValue = TextUtils.isEmpty(currentText) ? 0 : Long.parseLong(currentText);
-			long newValue = currentValue + 100;
-
-			// 确保不会出现负数（虽然增加不会，但为了安全）
-			if (newValue < 0) {
-				newValue = 0;
-			}
-
-			mEditTextStockQuota.removeTextChangedListener(mQuotaTextWatcher);
-			mEditTextStockQuota.setText(String.valueOf(newValue));
-			mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
-
-			// 由于是增加100，肯定是100的整数倍，隐藏提示
-			mTextViewQuotaHint.setVisibility(View.GONE);
-		} catch (Exception e) {
-			e.printStackTrace();
-			// 如果解析出错，重置为0
-			mEditTextStockQuota.removeTextChangedListener(mQuotaTextWatcher);
-			mEditTextStockQuota.setText("0");
-			mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
-			mTextViewQuotaHint.setVisibility(View.GONE);
-		}
-	}
-
-	/**
-	 * 减少配额值（每次减少100）
-	 */
-	private void decreaseQuota() {
-		try {
-			String currentText = mEditTextStockQuota.getText().toString();
-			long currentValue = TextUtils.isEmpty(currentText) ? 0 : Long.parseLong(currentText);
-			long newValue = currentValue - 100;
-
-			// 确保不会出现负数
-			if (newValue < 0) {
-				newValue = 0;
-			}
-
-			mEditTextStockQuota.removeTextChangedListener(mQuotaTextWatcher);
-			mEditTextStockQuota.setText(String.valueOf(newValue));
-			mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
-
-			// 由于是减少100，如果原始值是100的整数倍，结果也是100的整数倍
-			// 检查新的值是否是100的整数倍
-			if (newValue % 100 != 0) {
-				mTextViewQuotaHint.setVisibility(View.VISIBLE);
-				mTextViewQuotaHint.setText(String.format(Locale.getDefault(),
-						"配额必须是100的整数倍 (建议: %d)", Math.round(newValue / 100.0) * 100));
-			} else {
-				mTextViewQuotaHint.setVisibility(View.GONE);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			// 如果解析出错，重置为0
-			mEditTextStockQuota.removeTextChangedListener(mQuotaTextWatcher);
-			mEditTextStockQuota.setText("0");
-			mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
-			mTextViewQuotaHint.setVisibility(View.GONE);
-		}
-	}
-
-	/**
-	 * 增加Trading值（每次增加100）
-	 */
-	private void increaseTrading() {
-		try {
-			String currentText = mEditTextStockTrading.getText().toString();
-			long currentValue = TextUtils.isEmpty(currentText) ? 0 : Long.parseLong(currentText);
-			long newValue = currentValue + 100;
-
-			// 确保不会出现负数
-			if (newValue < 0) {
-				newValue = 0;
-			}
-
-			mEditTextStockTrading.removeTextChangedListener(mTradingTextWatcher);
-			mEditTextStockTrading.setText(String.valueOf(newValue));
-			mEditTextStockTrading.addTextChangedListener(mTradingTextWatcher);
-
-			// 由于是增加100，肯定是100的整数倍，隐藏提示
-			mTextViewTradingHint.setVisibility(View.GONE);
-		} catch (Exception e) {
-			e.printStackTrace();
-			// 如果解析出错，重置为0
-			mEditTextStockTrading.removeTextChangedListener(mTradingTextWatcher);
-			mEditTextStockTrading.setText("0");
-			mEditTextStockTrading.addTextChangedListener(mTradingTextWatcher);
-			mTextViewTradingHint.setVisibility(View.GONE);
-		}
-	}
-
-	/**
-	 * 减少Trading值（每次减少100）
-	 */
-	private void decreaseTrading() {
-		try {
-			String currentText = mEditTextStockTrading.getText().toString();
-			long currentValue = TextUtils.isEmpty(currentText) ? 0 : Long.parseLong(currentText);
-			long newValue = currentValue - 100;
-
-			// 确保不会出现负数
-			if (newValue < 0) {
-				newValue = 0;
-			}
-
-			mEditTextStockTrading.removeTextChangedListener(mTradingTextWatcher);
-			mEditTextStockTrading.setText(String.valueOf(newValue));
-			mEditTextStockTrading.addTextChangedListener(mTradingTextWatcher);
-
-			// 检查新的值是否是100的整数倍
-			if (newValue % 100 != 0) {
-				mTextViewTradingHint.setVisibility(View.VISIBLE);
-				mTextViewTradingHint.setText(String.format(Locale.getDefault(),
-						"Trading必须是100的整数倍 (建议: %d)", Math.round(newValue / 100.0) * 100));
-			} else {
-				mTextViewTradingHint.setVisibility(View.GONE);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			// 如果解析出错，重置为0
-			mEditTextStockTrading.removeTextChangedListener(mTradingTextWatcher);
-			mEditTextStockTrading.setText("0");
-			mEditTextStockTrading.addTextChangedListener(mTradingTextWatcher);
-			mTextViewTradingHint.setVisibility(View.GONE);
-		}
 	}
 
 	/**
@@ -981,38 +807,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 				break;
 
 			case R.id.checkbox_target:
-				// Target复选框状态改变会通过OnCheckedChangeListener处理
 				break;
 
 			case R.id.checkbox_short_wave:
-				break;
-
-			case R.id.button_quota_minus:
-				// 点击减号按钮，减少配额100
-				if (mIsQuotaEditable) {
-					decreaseQuota();
-				}
-				break;
-
-			case R.id.button_quota_plus:
-				// 点击加号按钮，增加配额100
-				if (mIsQuotaEditable) {
-					increaseQuota();
-				}
-				break;
-
-			case R.id.button_trading_minus:
-				// 点击减号按钮，减少Trading100
-				if (mIsQuotaEditable) {
-					decreaseTrading();
-				}
-				break;
-
-			case R.id.button_trading_plus:
-				// 点击加号按钮，增加Trading100
-				if (mIsQuotaEditable) {
-					increaseTrading();
-				}
 				break;
 
 			case R.id.imageview_restore_target:
