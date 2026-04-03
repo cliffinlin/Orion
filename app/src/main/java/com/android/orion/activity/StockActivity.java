@@ -587,17 +587,13 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 			mTextViewQuotaHint.setVisibility(View.GONE);
 			mTextViewTradingHint.setVisibility(View.GONE);
 
-			// 如果Target未勾选，确保Locked、配额和Trading为0
 			mEditTextStockLocked.removeTextChangedListener(mLockedTextWatcher);
-			mEditTextStockLocked.setText("0");
 			mEditTextStockLocked.addTextChangedListener(mLockedTextWatcher);
 
 			mEditTextStockQuota.removeTextChangedListener(mQuotaTextWatcher);
-			mEditTextStockQuota.setText("0");
 			mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
 
 			mEditTextStockTrading.removeTextChangedListener(mTradingTextWatcher);
-			mEditTextStockTrading.setText("0");
 			mEditTextStockTrading.addTextChangedListener(mTradingTextWatcher);
 		}
 	}
@@ -994,11 +990,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 							locked = ensureLockedMultipleOf100(locked);
 							mStock.setLocked(locked);
-						} else {
-							mStock.setLocked(0);
 						}
 					} catch (Exception e) {
-						mStock.setLocked(0);
+						e.printStackTrace();
 					}
 
 					// 保存配额值（确保是100的整数倍）
@@ -1019,11 +1013,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 							quota = ensureQuotaMultipleOf100(quota);
 							mStock.setQuota(quota);
-						} else {
-							mStock.setQuota(0);
 						}
 					} catch (Exception e) {
-						mStock.setQuota(0);
+						e.printStackTrace();
 					}
 
 					// 保存Trading值（确保是100的整数倍）
@@ -1044,20 +1036,14 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 							trading = ensureTradingMultipleOf100(trading);
 							mStock.setTrading(trading);
-						} else {
-							mStock.setTrading(0);
 						}
 					} catch (Exception e) {
-						mStock.setTrading(0);
+						e.printStackTrace();
 					}
 				} else {
 					mStock.removeFlag(Stock.FLAG_TARGET);
 					mStock.setBuyProfit(0);
 					mStock.setSellProfit(0);
-					// Target未勾选时，Locked、配额和Trading设置为0
-					mStock.setLocked(0);
-					mStock.setQuota(0);
-					mStock.setTrading(0);
 				}
 
 				if (mCheckBoxShortWave.isChecked()) {
