@@ -91,6 +91,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	Button mButtonOk;
 	Button mButtonCancel;
 
+	TextView mTextViewLockedHint;
 	TextView mTextViewQuotaHint;
 	TextView mTextViewTradingHint;
 	TextView mTextViewHoldConsistencyHint;
@@ -113,6 +114,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	private boolean mIsQuotaEditable = false;
 
 	// TextWatcher引用
+	private TextWatcher mLockedTextWatcher;
 	private TextWatcher mQuotaTextWatcher;
 	private TextWatcher mTradingTextWatcher;
 
@@ -180,6 +182,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
+		mTextViewLockedHint = findViewById(R.id.textview_locked_hint);
 		mTextViewQuotaHint = findViewById(R.id.textview_quota_hint);
 		mTextViewTradingHint = findViewById(R.id.textview_trading_hint);
 
@@ -229,6 +232,25 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 				mStock.removeFlag(Stock.FLAG_SHORT_WAVE);
 			}
 		});
+
+		// 创建并添加Locked EditText的文本变化监听器
+		mLockedTextWatcher = new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// 检查输入是否为100的整数倍
+				validateLockedInput(s);
+			}
+		};
+
+		mEditTextStockLocked.addTextChangedListener(mLockedTextWatcher);
 
 		// 创建并添加配额EditText的文本变化监听器
 		mQuotaTextWatcher = new TextWatcher() {
@@ -379,6 +401,40 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	}
 
 	/**
+	 * 检查Locked输入是否为100的整数倍
+	 */
+	private void validateLockedInput(Editable s) {
+		if (TextUtils.isEmpty(s)) {
+			// 隐藏提示
+			mTextViewLockedHint.setVisibility(View.GONE);
+			return;
+		}
+
+		try {
+			String input = s.toString();
+			long value = Long.parseLong(input);
+
+			// 检查是否为100的整数倍
+			if (value % 100 != 0) {
+				// 显示提示文字，并提示最接近的100的整数倍
+				long nearestMultiple = Math.round(value / 100.0) * 100;
+				if (nearestMultiple < 0) nearestMultiple = 0;
+
+				mTextViewLockedHint.setVisibility(View.VISIBLE);
+				mTextViewLockedHint.setText(String.format(Locale.getDefault(),
+						"Locked必须是100的整数倍 (建议: %d)", nearestMultiple));
+			} else {
+				// 隐藏提示文字
+				mTextViewLockedHint.setVisibility(View.GONE);
+			}
+		} catch (NumberFormatException e) {
+			// 如果不是数字，显示错误提示
+			mTextViewLockedHint.setVisibility(View.VISIBLE);
+			mTextViewLockedHint.setText("请输入有效的数字");
+		}
+	}
+
+	/**
 	 * 检查配额输入是否为100的整数倍
 	 */
 	private void validateQuotaInput(Editable s) {
@@ -452,17 +508,38 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	private void updateQuotaEditState(boolean isTargetChecked) {
 		mIsQuotaEditable = isTargetChecked;
 
+		mEditTextStockLocked.setEnabled(isTargetChecked);
 		mEditTextStockQuota.setEnabled(isTargetChecked);
 		mEditTextStockTrading.setEnabled(isTargetChecked);
 
-		// 更新Quota的显示样式
+		// 更新显示样式
 		if (isTargetChecked) {
 			// Target勾选时，显示正常颜色和背景
+			mEditTextStockLocked.setTextColor(Color.BLACK);
+			mEditTextStockLocked.setBackgroundResource(android.R.drawable.editbox_background_normal);
+
 			mEditTextStockQuota.setTextColor(Color.BLACK);
 			mEditTextStockQuota.setBackgroundResource(android.R.drawable.editbox_background_normal);
 
 			mEditTextStockTrading.setTextColor(Color.BLACK);
 			mEditTextStockTrading.setBackgroundResource(android.R.drawable.editbox_background_normal);
+
+			// 检查当前Locked值是否符合要求
+			try {
+				String lockedText = mEditTextStockLocked.getText().toString();
+				if (!TextUtils.isEmpty(lockedText)) {
+					long locked = Long.parseLong(lockedText);
+					if (locked % 100 != 0) {
+						mTextViewLockedHint.setVisibility(View.VISIBLE);
+						mTextViewLockedHint.setText(String.format(Locale.getDefault(),
+								"Locked必须是100的整数倍 (建议: %d)", Math.round(locked / 100.0) * 100));
+					} else {
+						mTextViewLockedHint.setVisibility(View.GONE);
+					}
+				}
+			} catch (Exception e) {
+				mTextViewLockedHint.setVisibility(View.GONE);
+			}
 
 			// 检查当前配额值是否符合要求
 			try {
@@ -496,6 +573,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 			}
 		} else {
 			// Target未勾选时，显示灰色表示不可编辑
+			mEditTextStockLocked.setTextColor(Color.GRAY);
+			mEditTextStockLocked.setBackgroundResource(android.R.drawable.editbox_background);
+
 			mEditTextStockQuota.setTextColor(Color.GRAY);
 			mEditTextStockQuota.setBackgroundResource(android.R.drawable.editbox_background);
 
@@ -503,10 +583,15 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 			mEditTextStockTrading.setBackgroundResource(android.R.drawable.editbox_background);
 
 			// 隐藏提示文字
+			mTextViewLockedHint.setVisibility(View.GONE);
 			mTextViewQuotaHint.setVisibility(View.GONE);
 			mTextViewTradingHint.setVisibility(View.GONE);
 
-			// 如果Target未勾选，确保配额和Trading为0
+			// 如果Target未勾选，确保Locked、配额和Trading为0
+			mEditTextStockLocked.removeTextChangedListener(mLockedTextWatcher);
+			mEditTextStockLocked.setText("0");
+			mEditTextStockLocked.addTextChangedListener(mLockedTextWatcher);
+
 			mEditTextStockQuota.removeTextChangedListener(mQuotaTextWatcher);
 			mEditTextStockQuota.setText("0");
 			mEditTextStockQuota.addTextChangedListener(mQuotaTextWatcher);
@@ -563,6 +648,19 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 		// 更新分红显示
 		updateDividendViews();
+	}
+
+	/**
+	 * 确保Locked值是100的整数倍
+	 */
+	private long ensureLockedMultipleOf100(long value) {
+		// 如果已经是100的整数倍，直接返回
+		if (value % 100 == 0) {
+			return value;
+		}
+
+		// 如果不是100的整数倍，调整为最接近的100的整数倍
+		return Math.round(value / 100.0) * 100;
 	}
 
 	/**
@@ -673,8 +771,12 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
 
-		// 设置 Locked 的值
-		mEditTextStockLocked.setText(String.valueOf(mStock.getLocked()));
+		// 设置 Locked 的值（确保是100的整数倍）
+		long lockedValue = mStock.getLocked();
+		lockedValue = ensureLockedMultipleOf100(lockedValue);
+		mEditTextStockLocked.removeTextChangedListener(mLockedTextWatcher);
+		mEditTextStockLocked.setText(String.valueOf(lockedValue));
+		mEditTextStockLocked.addTextChangedListener(mLockedTextWatcher);
 
 		// 设置配额的值（确保是100的整数倍）
 		long quotaValue = mStock.getQuota();
@@ -871,21 +973,33 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					}
 				}
 
-				// 保存 Locked 值
-				try {
-					String lockedText = mEditTextStockLocked.getText().toString();
-					if (!TextUtils.isEmpty(lockedText)) {
-						long locked = Long.parseLong(lockedText);
-						mStock.setLocked(locked);
-					} else {
-						mStock.setLocked(0);
-					}
-				} catch (Exception e) {
-					mStock.setLocked(0);
-				}
-
 				if (mCheckBoxTarget.isChecked()) {
 					mStock.addFlag(Stock.FLAG_TARGET);
+
+					// 保存Locked值（确保是100的整数倍）
+					try {
+						String lockedText = mEditTextStockLocked.getText().toString();
+						if (!TextUtils.isEmpty(lockedText)) {
+							long locked = Long.parseLong(lockedText);
+
+							// 检查是否为100的整数倍
+							if (locked % 100 != 0) {
+								// 显示提示并返回，不保存
+								mTextViewLockedHint.setVisibility(View.VISIBLE);
+								mTextViewLockedHint.setText(String.format(Locale.getDefault(),
+										"Locked必须是100的整数倍 (建议: %d)", Math.round(locked / 100.0) * 100));
+								Toast.makeText(this, "请修正Locked值", Toast.LENGTH_SHORT).show();
+								return; // 不保存，返回
+							}
+
+							locked = ensureLockedMultipleOf100(locked);
+							mStock.setLocked(locked);
+						} else {
+							mStock.setLocked(0);
+						}
+					} catch (Exception e) {
+						mStock.setLocked(0);
+					}
 
 					// 保存配额值（确保是100的整数倍）
 					try {
@@ -940,7 +1054,8 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					mStock.removeFlag(Stock.FLAG_TARGET);
 					mStock.setBuyProfit(0);
 					mStock.setSellProfit(0);
-					// Target未勾选时，配额和Trading设置为0
+					// Target未勾选时，Locked、配额和Trading设置为0
+					mStock.setLocked(0);
 					mStock.setQuota(0);
 					mStock.setTrading(0);
 				}
