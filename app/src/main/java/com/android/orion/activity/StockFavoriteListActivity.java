@@ -180,6 +180,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_NET, R.id.net);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_BUY_PROFIT, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_HOLD, R.id.profite);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_LOCKED, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_QUOTA, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SELL_PROFIT, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, R.id.trend);
@@ -421,6 +422,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_NET,
                 DatabaseContract.COLUMN_BUY_PROFIT,
                 DatabaseContract.COLUMN_HOLD,
+                DatabaseContract.COLUMN_LOCKED,
                 DatabaseContract.COLUMN_QUOTA,
                 DatabaseContract.COLUMN_SELL_PROFIT,
                 DatabaseContract.COLUMN_TREND_THUMBNAIL,
@@ -441,6 +443,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                 R.id.price,
                 R.id.net,
                 R.id.buy_profit,
+                R.id.profit_divider_container,
                 R.id.profit_divider_container,
                 R.id.profit_divider_container,
                 R.id.sell_profit,
@@ -892,22 +895,33 @@ public class StockFavoriteListActivity extends ListActivity implements
 
             try {
                 double hold = 0;
+                double locked = 0;
                 double quota = 0;
 
                 int holdColumnIndex = cursor.getColumnIndex(DatabaseContract.COLUMN_HOLD);
+                int lockedColumnIndex = cursor.getColumnIndex(DatabaseContract.COLUMN_LOCKED);
                 int quotaColumnIndex = cursor.getColumnIndex(DatabaseContract.COLUMN_QUOTA);
 
                 if (holdColumnIndex != -1 && !cursor.isNull(holdColumnIndex)) {
                     hold = cursor.getDouble(holdColumnIndex);
                 }
 
+                if (lockedColumnIndex != -1 && !cursor.isNull(lockedColumnIndex)) {
+                    locked = cursor.getDouble(lockedColumnIndex);
+                }
+
                 if (quotaColumnIndex != -1 && !cursor.isNull(quotaColumnIndex)) {
                     quota = cursor.getDouble(quotaColumnIndex);
                 }
 
-                float ratio = 0f;
-                if (quota > 0) {
-                    ratio = (float) (hold / quota);
+                float ratio = 0;
+                if (locked > 0) {
+                    ratio = (float) (hold / locked);
+                    if (ratio > 1) {
+                        if (quota - locked > 0) {
+                            ratio = 1.0f + (float) ((hold - locked) / (quota - locked));
+                        }
+                    }
                 }
 
                 LinearLayout.LayoutParams holdParams = (LinearLayout.LayoutParams) holdPortion.getLayoutParams();
