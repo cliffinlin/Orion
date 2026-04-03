@@ -44,6 +44,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	CheckBox mCheckBoxShortWave;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
+	EditText mEditTextStockLocked;
 	EditText mEditTextStockQuota;
 	EditText mEditTextStockTrading;
 	EditText mEditTextStockTee;
@@ -132,6 +133,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mCheckBoxShortWave = findViewById(R.id.checkbox_short_wave);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
+		mEditTextStockLocked = findViewById(R.id.edittext_stock_locked);
 		mEditTextStockQuota = findViewById(R.id.edittext_stock_quota);
 		mEditTextStockTrading = findViewById(R.id.edittext_stock_trading);
 		mEditTextStockTee = findViewById(R.id.edittext_stock_tee);
@@ -201,6 +203,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mCheckBoxShortWave.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
+		mEditTextStockLocked.setOnClickListener(this);
 		mEditTextStockQuota.setOnClickListener(this);
 		mEditTextStockTrading.setOnClickListener(this);
 		mEditTextStockTee.setOnClickListener(this);
@@ -670,6 +673,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
 
+		// 设置 Locked 的值
+		mEditTextStockLocked.setText(String.valueOf(mStock.getLocked()));
+
 		// 设置配额的值（确保是100的整数倍）
 		long quotaValue = mStock.getQuota();
 		quotaValue = ensureQuotaMultipleOf100(quotaValue);
@@ -863,6 +869,19 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 						// 可以添加一个Toast提示用户检查
 						Toast.makeText(this, "请注意：持仓数量与分账户总和不一致", Toast.LENGTH_SHORT).show();
 					}
+				}
+
+				// 保存 Locked 值
+				try {
+					String lockedText = mEditTextStockLocked.getText().toString();
+					if (!TextUtils.isEmpty(lockedText)) {
+						long locked = Long.parseLong(lockedText);
+						mStock.setLocked(locked);
+					} else {
+						mStock.setLocked(0);
+					}
+				} catch (Exception e) {
+					mStock.setLocked(0);
 				}
 
 				if (mCheckBoxTarget.isChecked()) {
