@@ -65,7 +65,7 @@ public class StockNotificationManager {
 			return;
 		}
 
-		if (stockTrend.getLevel() != stock.getTarget(stockTrend.getPeriod())) {
+		if (stockTrend.getLevel() != stock.getTargetLevel(stockTrend.getPeriod())) {
 			return;
 		}
 

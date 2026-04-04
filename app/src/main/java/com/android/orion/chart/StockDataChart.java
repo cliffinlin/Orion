@@ -64,7 +64,7 @@ public class StockDataChart {
 	public StockDataChart(Stock stock, String period) {
 		mStock = stock;
 		mPeriod = period;
-		mTargetLevel = mStock.getTarget(period);
+		mTargetLevel = mStock.getTargetLevel(period);
 
 		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			if (mTrendEntryList[i] == null) {
@@ -87,7 +87,7 @@ public class StockDataChart {
 		}
 		mStock = stock;
 		mPeriod = period;
-		mTargetLevel = mStock.getTarget(period);
+		mTargetLevel = mStock.getTargetLevel(period);
 		mStockTrendMap = stockTrendMap;
 	}
 

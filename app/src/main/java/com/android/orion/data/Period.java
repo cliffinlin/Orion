@@ -49,6 +49,7 @@ public class Period {
 
 	public String mName = "";
 	public byte[] mThumbnail;
+	public int mShortWaveLevel = StockTrend.LEVEL_NONE;
 	public int mTarget = StockTrend.LEVEL_NONE;
 	public String mTrend = StockTrend.TREND_NONE;
 	public Radar mTargetRadar;
@@ -142,31 +143,39 @@ public class Period {
 				.getColumnIndex(DatabaseContract.COLUMN_PERIOD_THUMBNAIL(mName))));
 	}
 
-	public int getTarget() {
+	public int getShortWaveLevel() {
+		return mShortWaveLevel;
+	}
+
+	public void setShortWaveLevel(int shortWaveLevel) {
+		mShortWaveLevel = shortWaveLevel;
+	}
+
+	public int getTargetLevel() {
 		return mTarget;
 	}
 
-	public void setTarget(int target) {
+	public void setTargetLevel(int target) {
 		mTarget = target;
 	}
 
-	public void setTarget(Cursor cursor) {
+	public void setTargetLevel(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		String targetString = cursor.getString(cursor
+		String targetLevelString = cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_TARGET));
 
-		setTarget(fromTargetString(targetString));
+		setTargetLevel(fromTargetLevelString(targetLevelString));
 	}
 
-	public int fromTargetString(String targetString) {
+	public int fromTargetLevelString(String targetLevelString) {
 		int result = 0;
-		if (TextUtils.isEmpty(targetString) || targetString.length() != PERIODS.length) {
+		if (TextUtils.isEmpty(targetLevelString) || targetLevelString.length() != PERIODS.length) {
 			return result;
 		}
-		return Integer.parseInt(targetString.substring(indexOf(mName), indexOf(mName) + 1));
+		return Integer.parseInt(targetLevelString.substring(indexOf(mName), indexOf(mName) + 1));
 	}
 
 	public String getTrend() {

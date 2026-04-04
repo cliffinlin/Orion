@@ -326,7 +326,7 @@ public class Stock extends DatabaseTable {
 
 		for (String period : Period.PERIODS) {
 			getPeriod(period).setThumbnail(stock.getPeriod(period).getThumbnail());
-			getPeriod(period).setTarget(stock.getPeriod(period).getTarget());
+			getPeriod(period).setTargetLevel(stock.getPeriod(period).getTargetLevel());
 			getPeriod(period).setTrend(stock.getPeriod(period).getTrend());
 		}
 
@@ -399,7 +399,7 @@ public class Stock extends DatabaseTable {
 
 		for (String period : Period.PERIODS) {
 			getPeriod(period).setThumbnail(cursor);
-			getPeriod(period).setTarget(cursor);
+			getPeriod(period).setTargetLevel(cursor);
 			getPeriod(period).setTrend(cursor);
 		}
 
@@ -1430,18 +1430,26 @@ public class Stock extends DatabaseTable {
 		return getPeriod(period).getStockTrendList(level);
 	}
 
-	public void setTarget(String targetString) {
+	public int getShortWaveLevel(String period) {
+		return getPeriod(period).getShortWaveLevel();
+	}
+
+	public void setShortWaveLevel(String period, int shortWaveLevel) {
+		getPeriod(period).setShortWaveLevel(shortWaveLevel);
+	}
+
+	public void setTargetLevel(String targetString) {
 		for (String period : Period.PERIODS) {
-			getPeriod(period).setTarget(getPeriod(period).fromTargetString(targetString));
+			getPeriod(period).setTargetLevel(getPeriod(period).fromTargetLevelString(targetString));
 		}
 	}
 
-	public int getTarget(String period) {
-		return getPeriod(period).getTarget();
+	public int getTargetLevel(String period) {
+		return getPeriod(period).getTargetLevel();
 	}
 
-	public void setTarget(String period, int target) {
-		getPeriod(period).setTarget(target);
+	public void setTargetLevel(String period, int targetLevel) {
+		getPeriod(period).setTargetLevel(targetLevel);
 	}
 
 	public String getTrend(String period) {
@@ -1735,7 +1743,7 @@ public class Stock extends DatabaseTable {
 	public String getTargetString() {
 		StringBuilder builder = new StringBuilder();
 		for (String period : Period.PERIODS) {
-			builder.append(getTarget(period));
+			builder.append(getTargetLevel(period));
 		}
 		return builder.toString();
 	}
