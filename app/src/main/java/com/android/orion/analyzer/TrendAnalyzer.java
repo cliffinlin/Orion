@@ -661,7 +661,7 @@ public class TrendAnalyzer {
 		return levelMap;
 	}
 
-	public ArrayMap<String, Integer> setupStockShortWaveLevel() {
+	public void setupStockShortWaveLevel() {
 		ArrayMap<String, Integer> baseLevelMap = new ArrayMap<>();
 		ArrayMap<String, Integer> levelMap;
 		String basePeriod = Period.DAY;
@@ -695,7 +695,7 @@ public class TrendAnalyzer {
 		}
 
 		if (levelMap == null) {
-			return null;
+			return;
 		}
 
 		for (String period : Period.PERIODS) {
@@ -713,75 +713,33 @@ public class TrendAnalyzer {
 				}
 			}
 		}
-
-		return levelMap;
 	}
 
+
 	public void setupStockTargetLevel() {
-		StockTrend stockTrend = mStock.getStockTrend(Period.DAY, mStock.getTargetLevel(Period.DAY));
-		if (stockTrend == null) {
-			return;
-		}
-		float nextNet = (float) stockTrend.getNextNet();
-		if (nextNet == 0) {
-			return;
-		}
-
-		int counter = 0;
-		int targetOfDay = mStock.getTargetLevel(Period.DAY);
-		int level = 0;
-		float nextNetOfDay = nextNet;
-		ArrayList<Integer> levelList = new ArrayList<>();
-		ArrayMap<String, Integer> levelOfPeriods = new ArrayMap<>();
-		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period) && Period.isMinutePeriod(period)) {
-				counter++;
-				boolean found = false;
-				levelList.clear();
-				for (int i = targetOfDay; i < StockTrend.LEVELS.length; i++) {
-					if (i < level) {
-						continue;
-					}
-					stockTrend = mStock.getStockTrend(period, i);
-					if (stockTrend == null) {
-						continue;
-					}
-					nextNet = (float) stockTrend.getNextNet();
-					if (nextNet == nextNetOfDay) {
-						found = true;
-						levelList.add(i);
-					}
-				}
-				if (found) {
-					if (levelList.size() > 1) {
-						if (levelList.get(1) - level > 1) {
-							level = levelList.get(0);
-						} else {
-							level = levelList.get(1);
-						}
-					} else {
-						level = levelList.get(0);
-					}
-					levelOfPeriods.put(period, level);
-				} else {
-					return;
-				}
-			}
-		}
-		if (levelOfPeriods.isEmpty() || levelOfPeriods.size() != counter) {
+		ArrayMap<String, Integer> baseLevelMap = new ArrayMap<>();
+		ArrayMap<String, Integer> levelMap;
+		String basePeriod = Period.DAY;
+		int baseLevel = mStock.getTargetLevel(Period.DAY);
+		baseLevelMap.put(basePeriod, baseLevel);
+		levelMap = getLevelMap(basePeriod, baseLevel);
+		if (levelMap == null) {
 			return;
 		}
 
 		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period) && Period.isMinutePeriod(period)) {
-				int i = levelOfPeriods.get(period);
-				stockTrend = mStock.getStockTrend(period, i);
-				if (stockTrend == null) {
-					continue;
+			if (Setting.getPeriod(period)) {
+				if (levelMap.containsKey(period)) {
+					Integer levelValue = levelMap.get(period);
+					if (levelValue != null) {
+						mStock.setTargetLevel(period, levelValue);
+					}
+				} else if (baseLevelMap.containsKey(period)) {
+					Integer levelValue = baseLevelMap.get(period);
+					if (levelValue != null) {
+						mStock.setTargetLevel(period, levelValue);
+					}
 				}
-				nextNet = (float) stockTrend.getNextNet();
-				Log.d(period + " " + i + " " + nextNet);
-				mStock.setTargetLevel(period, i);
 			}
 		}
 	}
