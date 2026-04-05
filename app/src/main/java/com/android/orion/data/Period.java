@@ -49,12 +49,12 @@ public class Period {
 
 	public String mName = "";
 	public byte[] mThumbnail;
-	public int mShortWaveLevel = StockTrend.LEVEL_NONE;
-	public int mTarget = StockTrend.LEVEL_NONE;
+	public int mTargetLevel = StockTrend.LEVEL_NONE;
+	public int mShortLevel = StockTrend.LEVEL_NONE;
 	public String mTrend = StockTrend.TREND_NONE;
 	public Radar mTargetRadar;
-	public Radar mShortWaveRadar;
-	public Radar mLongWaveRadar;
+	public Radar mShortRadar;
+	public Radar mLongRadar;
 
 	public ArrayMap<String, StockRadar> mStockRadarMap = new ArrayMap<>();
 	public ArrayList<ArrayList<StockData>> mVertexLists = new ArrayList<>();
@@ -143,20 +143,12 @@ public class Period {
 				.getColumnIndex(DatabaseContract.COLUMN_PERIOD_THUMBNAIL(mName))));
 	}
 
-	public int getShortWaveLevel() {
-		return mShortWaveLevel;
-	}
-
-	public void setShortWaveLevel(int shortWaveLevel) {
-		mShortWaveLevel = shortWaveLevel;
-	}
-
 	public int getTargetLevel() {
-		return mTarget;
+		return mTargetLevel;
 	}
 
 	public void setTargetLevel(int target) {
-		mTarget = target;
+		mTargetLevel = target;
 	}
 
 	public void setTargetLevel(Cursor cursor) {
@@ -164,18 +156,37 @@ public class Period {
 			return;
 		}
 
-		String targetLevelString = cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TARGET));
+		String levelString = cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TARGET_LEVEL));
 
-		setTargetLevel(fromTargetLevelString(targetLevelString));
+		setTargetLevel(fromLevelString(levelString));
 	}
 
-	public int fromTargetLevelString(String targetLevelString) {
+	public int getShortLevel() {
+		return mShortLevel;
+	}
+
+	public void setShortLevel(int shortLevel) {
+		mShortLevel = shortLevel;
+	}
+
+	public void setShortLevel(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		String levelString = cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_SHORT_LEVEL));
+
+		setShortLevel(fromLevelString(levelString));
+	}
+
+	public int fromLevelString(String levelString) {
 		int result = 0;
-		if (TextUtils.isEmpty(targetLevelString) || targetLevelString.length() != PERIODS.length) {
+		if (TextUtils.isEmpty(levelString) || levelString.length() != PERIODS.length) {
 			return result;
 		}
-		return Integer.parseInt(targetLevelString.substring(indexOf(mName), indexOf(mName) + 1));
+		return Integer.parseInt(levelString.substring(indexOf(mName), indexOf(mName) + 1));
 	}
 
 	public String getTrend() {
@@ -213,12 +224,12 @@ public class Period {
 		mTargetRadar = radar;
 	}
 
-	public Radar getShortWaveRadar() {
-		return mShortWaveRadar;
+	public Radar getShortRadar() {
+		return mShortRadar;
 	}
 
-	public void setShortWaveRadar(Radar radar) {
-		mShortWaveRadar = radar;
+	public void setShortRadar(Radar radar) {
+		mShortRadar = radar;
 	}
 
 	public static final String fromColumnName(String columnName) {

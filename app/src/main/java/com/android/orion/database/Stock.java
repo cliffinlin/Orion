@@ -42,7 +42,7 @@ public class Stock extends DatabaseTable {
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_FAVORITE = 1 << 0;
 	public static final int FLAG_TARGET = 1 << 1;
-	public static final int FLAG_SHORT_WAVE = 1 << 2;
+	public static final int FLAG_SHORT = 1 << 2;
 
 	public static final double ROI_COEFFICIENT = 10;
 
@@ -216,7 +216,8 @@ public class Stock extends DatabaseTable {
 		for (String period : Period.PERIODS) {
 			contentValues.put(DatabaseContract.COLUMN_PERIOD_THUMBNAIL(period), getPeriod(period).getThumbnail());
 		}
-		contentValues.put(DatabaseContract.COLUMN_TARGET, getTargetString());
+		contentValues.put(DatabaseContract.COLUMN_TARGET_LEVEL, getTargetLevelString());
+		contentValues.put(DatabaseContract.COLUMN_SHORT_LEVEL, getShortLevelString());
 		contentValues.put(DatabaseContract.COLUMN_TREND, getTrendString());
 
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
@@ -295,7 +296,8 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		contentValues.put(DatabaseContract.COLUMN_TARGET, getTargetString());
+		contentValues.put(DatabaseContract.COLUMN_TARGET_LEVEL, getTargetLevelString());
+		contentValues.put(DatabaseContract.COLUMN_SHORT_LEVEL, getShortLevelString());
 		contentValues.put(DatabaseContract.COLUMN_LOCKED, mLocked);
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
 		contentValues.put(DatabaseContract.COLUMN_TRADING, mTrading);
@@ -327,6 +329,7 @@ public class Stock extends DatabaseTable {
 		for (String period : Period.PERIODS) {
 			getPeriod(period).setThumbnail(stock.getPeriod(period).getThumbnail());
 			getPeriod(period).setTargetLevel(stock.getPeriod(period).getTargetLevel());
+			getPeriod(period).setShortLevel(stock.getPeriod(period).getShortLevel());
 			getPeriod(period).setTrend(stock.getPeriod(period).getTrend());
 		}
 
@@ -400,6 +403,7 @@ public class Stock extends DatabaseTable {
 		for (String period : Period.PERIODS) {
 			getPeriod(period).setThumbnail(cursor);
 			getPeriod(period).setTargetLevel(cursor);
+			getPeriod(period).setShortLevel(cursor);
 			getPeriod(period).setTrend(cursor);
 		}
 
@@ -1430,26 +1434,32 @@ public class Stock extends DatabaseTable {
 		return getPeriod(period).getStockTrendList(level);
 	}
 
-	public int getShortWaveLevel(String period) {
-		return getPeriod(period).getShortWaveLevel();
-	}
-
-	public void setShortWaveLevel(String period, int shortWaveLevel) {
-		getPeriod(period).setShortWaveLevel(shortWaveLevel);
-	}
-
-	public void setTargetLevel(String targetString) {
-		for (String period : Period.PERIODS) {
-			getPeriod(period).setTargetLevel(getPeriod(period).fromTargetLevelString(targetString));
-		}
-	}
-
 	public int getTargetLevel(String period) {
 		return getPeriod(period).getTargetLevel();
 	}
 
 	public void setTargetLevel(String period, int targetLevel) {
 		getPeriod(period).setTargetLevel(targetLevel);
+	}
+
+	public void setTargetLevel(String targetLevelString) {
+		for (String period : Period.PERIODS) {
+			getPeriod(period).setTargetLevel(getPeriod(period).fromLevelString(targetLevelString));
+		}
+	}
+
+	public int getShortLevel(String period) {
+		return getPeriod(period).getShortLevel();
+	}
+
+	public void setShortLevel(String period, int shortLevel) {
+		getPeriod(period).setShortLevel(shortLevel);
+	}
+
+	public void setShortLevel(String shortLevelString) {
+		for (String period : Period.PERIODS) {
+			getPeriod(period).setShortLevel(getPeriod(period).fromLevelString(shortLevelString));
+		}
 	}
 
 	public String getTrend(String period) {
@@ -1468,12 +1478,12 @@ public class Stock extends DatabaseTable {
 		getPeriod(period).setTargetRadar(radar);
 	}
 
-	public Radar getShortWaveRadar(String period) {
-		return getPeriod(period).getShortWaveRadar();
+	public Radar getShortRadar(String period) {
+		return getPeriod(period).getShortRadar();
 	}
 
-	public void setShortWaveRadar(String period, Radar radar) {
-		getPeriod(period).setShortWaveRadar(radar);
+	public void setShortRadar(String period, Radar radar) {
+		getPeriod(period).setShortRadar(radar);
 	}
 
 	public void setupMarketValue() {
@@ -1737,10 +1747,18 @@ public class Stock extends DatabaseTable {
 		return builder.toString();
 	}
 
-	public String getTargetString() {
+	public String getTargetLevelString() {
 		StringBuilder builder = new StringBuilder();
 		for (String period : Period.PERIODS) {
 			builder.append(getTargetLevel(period));
+		}
+		return builder.toString();
+	}
+
+	public String getShortLevelString() {
+		StringBuilder builder = new StringBuilder();
+		for (String period : Period.PERIODS) {
+			builder.append(getShortLevel(period));
 		}
 		return builder.toString();
 	}

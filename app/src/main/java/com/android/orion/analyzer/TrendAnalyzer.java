@@ -41,7 +41,7 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_TREND_COLOR_UP = Config.COLOR_DARK_RED;
 	public static final int THUMBNAIL_TREND_COLOR_DOWN = Config.COLOR_DARK_GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_TARGET = Color.BLACK;
-	public static final int THUMBNAIL_RADA_COLOR_SHORT_WAVE = Color.GRAY;
+	public static final int THUMBNAIL_RADA_COLOR_SHORT = Color.GRAY;
 	public static final int THUMBNAIL_RADA_COLOR_DAY = Color.RED;
 	public static final int THUMBNAIL_RADA_COLOR_WEEK = Color.GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_MONTH = Color.BLUE;
@@ -595,8 +595,8 @@ public class TrendAnalyzer {
 	public void setupThumbnail(Stock stock) {
 		try {
 			setup(stock);
-			setupStockShortWaveLevel();
 			setupStockTargetLevel();
+			setupStockShortLevel();
 			setupPeriodThumbnail();
 			setupTrendThumbnail();
 			setupRadarThumbnail();
@@ -661,7 +661,7 @@ public class TrendAnalyzer {
 		return levelMap;
 	}
 
-	public void setupStockShortWaveLevel() {
+	public void setupStockShortLevel() {
 		ArrayMap<String, Integer> baseLevelMap = new ArrayMap<>();
 		ArrayMap<String, Integer> levelMap;
 		String basePeriod = Period.DAY;
@@ -703,18 +703,17 @@ public class TrendAnalyzer {
 				if (levelMap.containsKey(period)) {
 					Integer levelValue = levelMap.get(period);
 					if (levelValue != null) {
-						mStock.setShortWaveLevel(period, levelValue);
+						mStock.setShortLevel(period, levelValue);
 					}
 				} else if (baseLevelMap.containsKey(period)) {
 					Integer levelValue = baseLevelMap.get(period);
 					if (levelValue != null) {
-						mStock.setShortWaveLevel(period, levelValue);
+						mStock.setShortLevel(period, levelValue);
 					}
 				}
 			}
 		}
 	}
-
 
 	public void setupStockTargetLevel() {
 		ArrayMap<String, Integer> baseLevelMap = new ArrayMap<>();
@@ -909,10 +908,10 @@ public class TrendAnalyzer {
 		double signal = 0;
 		for (String period : Period.PERIODS_R) {
 			if (Setting.getPeriod(period)) {
-				if (mStock.hasFlag(Stock.FLAG_SHORT_WAVE) && Period.isMinutePeriod(period)) {
-					radar = mStock.getShortWaveRadar(period);
+				if (mStock.hasFlag(Stock.FLAG_SHORT) && Period.isMinutePeriod(period)) {
+					radar = mStock.getShortRadar(period);
 					if (radar != null) {
-						setupRadarPoint(radar, period, THUMBNAIL_RADA_COLOR_SHORT_WAVE);
+						setupRadarPoint(radar, period, THUMBNAIL_RADA_COLOR_SHORT);
 					}
 				}
 				radar = mStock.getTargetRadar(period);
