@@ -990,7 +990,7 @@ public class TrendAnalyzer {
 			float sweepAngle2 = 0f;
 			float sweepAngle3 = 0f;
 			float sweepAngle4 = 0f;
-			float ratio = Stock.getHoldRatio(mStock.getHold(), mStock.getLocked(), mStock.getQuota());
+			float ratio = mStock.getHoldRatio();
 			float angle = ratio * 360f / 2f % 90;
 
 			if (ratio > 2f) {

@@ -1706,14 +1706,11 @@ public class Stock extends DatabaseTable {
 		return result;
 	}
 
-	public static float getHoldRatio(float hold, float locked, float quota) {
+	public float getHoldRatio() {
 		float result = 0;
-		if (locked > 0) {
-			result = (float) (hold / locked);
-			if (result > 1) {
-				if (quota - locked > 0) {
-					result = 1.0f + (float) ((hold - locked) / (quota - locked));
-				}
+		if (mLocked > 0) {
+			if (mQuota - mLocked > 0) {
+				result = (mHold - mLocked) / (mQuota - mLocked);
 			}
 		}
 		return result;
