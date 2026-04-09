@@ -51,6 +51,7 @@ public class Period {
 	public byte[] mThumbnail;
 	public int mTargetLevel = StockTrend.LEVEL_NONE;
 	public int mShortLevel = StockTrend.LEVEL_NONE;
+	public int mLongLevel = StockTrend.LEVEL_NONE;
 	public String mTrend = StockTrend.TREND_NONE;
 	public Radar mTargetRadar;
 	public Radar mShortRadar;
@@ -181,6 +182,25 @@ public class Period {
 		setShortLevel(fromLevelString(levelString));
 	}
 
+	public int getLongLevel() {
+		return mLongLevel;
+	}
+
+	public void setLongLevel(int longLevel) {
+		mLongLevel = longLevel;
+	}
+
+	public void setLongLevel(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		String levelString = cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_LONG_LEVEL));
+
+		setLongLevel(fromLevelString(levelString));
+	}
+
 	public int fromLevelString(String levelString) {
 		int result = 0;
 		if (TextUtils.isEmpty(levelString) || levelString.length() != PERIODS.length) {
@@ -230,6 +250,14 @@ public class Period {
 
 	public void setShortRadar(Radar radar) {
 		mShortRadar = radar;
+	}
+
+	public Radar getLongRadar() {
+		return mLongRadar;
+	}
+
+	public void setLongRadar(Radar radar) {
+		mLongRadar = radar;
 	}
 
 	public static final String fromColumnName(String columnName) {

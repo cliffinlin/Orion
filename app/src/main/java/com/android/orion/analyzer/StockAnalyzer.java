@@ -135,11 +135,15 @@ public class StockAnalyzer {
 			FourierAnalyzer.analyze(period, mPulseList);
 			mStock.setShortRadar(period, FourierAnalyzer.getRadar());
 
+			setupPulseList(mStock.getLongLevel(period));
+			FourierAnalyzer.analyze(period, mPulseList);
+			mStock.setLongRadar(period, FourierAnalyzer.getRadar());
+
 			setupPulseList(mStock.getTargetLevel(period));
 			FourierAnalyzer.analyze(period, mPulseList);
-			ArrayList<Double> echoList = FourierAnalyzer.getEchoList();
 			mStock.setTargetRadar(period, FourierAnalyzer.getRadar());
 
+			ArrayList<Double> echoList = FourierAnalyzer.getEchoList();
 			if (echoList.size() != size) {
 				Log.d("return, size=" + size + " echoList.size()=" + echoList.size());
 				return;

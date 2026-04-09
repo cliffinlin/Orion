@@ -42,6 +42,7 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_TREND_COLOR_DOWN = Config.COLOR_DARK_GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_TARGET = Color.BLACK;
 	public static final int THUMBNAIL_RADA_COLOR_SHORT = Color.GRAY;
+	public static final int THUMBNAIL_RADA_COLOR_LONG = Color.BLUE;
 	public static final int THUMBNAIL_RADA_COLOR_DAY = Color.RED;
 	public static final int THUMBNAIL_RADA_COLOR_WEEK = Color.GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_MONTH = Color.BLUE;
@@ -597,6 +598,7 @@ public class TrendAnalyzer {
 			setup(stock);
 			setupStockTargetLevel();
 			setupStockShortLevel();
+			setupStockLongLevel();
 			setupPeriodThumbnail();
 			setupTrendThumbnail();
 			setupRadarThumbnail();
@@ -720,6 +722,9 @@ public class TrendAnalyzer {
 		ArrayMap<String, Integer> levelMap;
 		String basePeriod = Period.DAY;
 		int baseLevel = mStock.getTargetLevel(Period.DAY);
+		if (baseLevel == StockTrend.LEVEL_NONE || baseLevel == StockTrend.LEVEL_TREND_LINE) {
+			return;
+		}
 		baseLevelMap.put(basePeriod, baseLevel);
 		levelMap = getLevelMap(basePeriod, baseLevel);
 		if (levelMap == null) {
@@ -737,6 +742,37 @@ public class TrendAnalyzer {
 					Integer levelValue = baseLevelMap.get(period);
 					if (levelValue != null) {
 						mStock.setTargetLevel(period, levelValue);
+					}
+				}
+			}
+		}
+	}
+
+	public void setupStockLongLevel() {
+		ArrayMap<String, Integer> baseLevelMap = new ArrayMap<>();
+		ArrayMap<String, Integer> levelMap;
+		String basePeriod = Period.DAY;
+		int baseLevel = mStock.getTargetLevel(Period.DAY) + 1;
+		if (baseLevel == StockTrend.LEVEL_NONE || baseLevel == StockTrend.LEVEL_TREND_LINE) {
+			return;
+		}
+		baseLevelMap.put(basePeriod, baseLevel);
+		levelMap = getLevelMap(basePeriod, baseLevel);
+		if (levelMap == null) {
+			return;
+		}
+
+		for (String period : Period.PERIODS) {
+			if (Setting.getPeriod(period)) {
+				if (levelMap.containsKey(period)) {
+					Integer levelValue = levelMap.get(period);
+					if (levelValue != null) {
+						mStock.setLongLevel(period, levelValue);
+					}
+				} else if (baseLevelMap.containsKey(period)) {
+					Integer levelValue = baseLevelMap.get(period);
+					if (levelValue != null) {
+						mStock.setLongLevel(period, levelValue);
 					}
 				}
 			}
@@ -909,9 +945,17 @@ public class TrendAnalyzer {
 		for (String period : Period.PERIODS_R) {
 			if (Setting.getPeriod(period)) {
 				if (mStock.hasFlag(Stock.FLAG_SHORT) && Period.isMinutePeriod(period)) {
-					radar = mStock.getShortRadar(period);
-					if (radar != null) {
-						setupRadarPoint(radar, period, THUMBNAIL_RADA_COLOR_SHORT);
+					if (mStock.hasFlag(Stock.FLAG_SHORT)) {
+						radar = mStock.getShortRadar(period);
+						if (radar != null) {
+							setupRadarPoint(radar, period, THUMBNAIL_RADA_COLOR_SHORT);
+						}
+					}
+					if (mStock.hasFlag(Stock.FLAG_LONG)) {
+						radar = mStock.getLongRadar(period);
+						if (radar != null) {
+							setupRadarPoint(radar, period, THUMBNAIL_RADA_COLOR_LONG);
+						}
 					}
 				}
 				radar = mStock.getTargetRadar(period);
