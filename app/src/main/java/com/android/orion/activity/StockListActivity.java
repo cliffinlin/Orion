@@ -115,6 +115,9 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 			case R.id.action_favorite_hold:
 				handleFavoriteHold();
 				break;
+			case R.id.action_favorite_trading:
+				handleFavoriteTrading();
+				break;
 			case R.id.action_favorite_none:
 				handleFavoriteNone();
 				break;
@@ -138,6 +141,17 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 		try {
 			ArrayList<Stock> stockList = new ArrayList<>();
 			mStockDatabaseManager.getStockList(DatabaseContract.SELECTION_HOLD(), null, stockList);
+			onFavoriteChanged(stockList, true);
+			mRecyclerView.postDelayed(() -> loadStockList(), 100);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void handleFavoriteTrading() {
+		try {
+			ArrayList<Stock> stockList = new ArrayList<>();
+			mStockDatabaseManager.getStockList(DatabaseContract.SELECTION_FLAG(Stock.FLAG_TARGET), null, stockList);
 			onFavoriteChanged(stockList, true);
 			mRecyclerView.postDelayed(() -> loadStockList(), 100);
 		} catch (Exception e) {
