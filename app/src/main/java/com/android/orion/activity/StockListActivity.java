@@ -113,9 +113,11 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 				handleFavoriteAll();
 				break;
 			case R.id.action_favorite_hold:
+				handleFavoriteNone();
 				handleFavoriteHold();
 				break;
 			case R.id.action_favorite_trading:
+				handleFavoriteNone();
 				handleFavoriteTrading();
 				break;
 			case R.id.action_favorite_none:
