@@ -24,10 +24,10 @@ public class StockDeal extends DatabaseTable {
 	public static final double SELL_TRANSFER_FEE_RATE = 0.2 / 10000.0;
 
 	public static final double BUY_COMMISSION_FEE_MIN = 5.0;
-	public static final double BUY_COMMISSION_FEE_RATE = 5.0 / 10000.0;
+	public static final double BUY_COMMISSION_FEE_RATE = 1.0 / 10000.0;
 
 	public static final double SELL_COMMISSION_FEE_MIN = 5.0;
-	public static final double SELL_COMMISSION_FEE_RATE = 5.0 / 10000.0;
+	public static final double SELL_COMMISSION_FEE_RATE = 1.0 / 10000.0;
 
 	public static final double DIVIDEND_INCOME_TAX_RATE_10_PERCENT = 10.0 / 100.0;
 	public static final double DIVIDEND_INCOME_TAX_RATE_20_PERCENT = 20.0 / 100.0;
