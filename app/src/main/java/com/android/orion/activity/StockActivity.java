@@ -42,7 +42,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	double mDividendC = 0.0;
 	CheckBox mCheckBoxTarget;
 	CheckBox mCheckBoxShort;
-	CheckBox mCheckBoxLong;
+	CheckBox mCheckBoxAuto;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextStockLocked;
@@ -134,7 +134,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	void initView() {
 		mCheckBoxTarget = findViewById(R.id.checkbox_target);
 		mCheckBoxShort = findViewById(R.id.checkbox_short);
-		mCheckBoxLong = findViewById(R.id.checkbox_long);
+		mCheckBoxAuto = findViewById(R.id.checkbox_auto);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockLocked = findViewById(R.id.edittext_stock_locked);
@@ -206,7 +206,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 		mCheckBoxTarget.setOnClickListener(this);
 		mCheckBoxShort.setOnClickListener(this);
-		mCheckBoxLong.setOnClickListener(this);
+		mCheckBoxAuto.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockLocked.setOnClickListener(this);
@@ -236,11 +236,11 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 			}
 		});
 
-		mCheckBoxLong.setOnCheckedChangeListener((buttonView, isChecked) -> {
+		mCheckBoxAuto.setOnCheckedChangeListener((buttonView, isChecked) -> {
 			if (isChecked) {
-				mStock.addFlag(Stock.FLAG_LONG);
+				mStock.addFlag(Stock.FLAG_AUTO);
 			} else {
-				mStock.removeFlag(Stock.FLAG_LONG);
+				mStock.removeFlag(Stock.FLAG_AUTO);
 			}
 		});
 
@@ -771,7 +771,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mCheckBoxTarget.setChecked(isTargetChecked);
 
 		mCheckBoxShort.setChecked(mStock.hasFlag(Stock.FLAG_SHORT));
-		mCheckBoxLong.setChecked(mStock.hasFlag(Stock.FLAG_LONG));
+		mCheckBoxAuto.setChecked(mStock.hasFlag(Stock.FLAG_AUTO));
 
 		// 根据Target状态更新Quota的显示状态
 		updateQuotaEditState(isTargetChecked);
@@ -928,7 +928,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 			case R.id.checkbox_short:
 				break;
 
-			case R.id.checkbox_long:
+			case R.id.checkbox_auto:
 				break;
 
 			case R.id.imageview_restore_target:
@@ -1067,10 +1067,10 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					mStock.removeFlag(Stock.FLAG_SHORT);
 				}
 
-				if (mCheckBoxLong.isChecked()) {
-					mStock.addFlag(Stock.FLAG_LONG);
+				if (mCheckBoxAuto.isChecked()) {
+					mStock.addFlag(Stock.FLAG_AUTO);
 				} else {
-					mStock.removeFlag(Stock.FLAG_LONG);
+					mStock.removeFlag(Stock.FLAG_AUTO);
 				}
 
 				try {
