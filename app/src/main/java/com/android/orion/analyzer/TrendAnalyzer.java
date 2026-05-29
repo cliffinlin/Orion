@@ -77,21 +77,26 @@ public class TrendAnalyzer {
 		}
 	}
 
-	void setup(Stock stock, String period, ArrayList<StockData> stockDataList) {
+	void setup(Stock stock, String period) {
 		mStock = stock;
 		mPeriod = period;
-		mStockDataList = stockDataList;
+		mStockDataList = mStock.getStockDataList(period, StockTrend.LEVEL_NONE);
 	}
 
 	void analyzeVertex(int level) {
-		ArrayList<StockData> dataList;
+		ArrayList<StockData> dataList = mStock.getStockDataList(mPeriod, level);
 		ArrayList<StockData> vertexList = mStock.getVertexList(mPeriod, level);
-		if (mStockDataList == null || mStockDataList.size() < StockTrend.VERTEX_SIZE || vertexList == null) {
+		if (dataList == null || vertexList == null) {
 			return;
 		}
 
-		dataList = new ArrayList<>();
-		for (StockData stockData : mStockDataList) {
+		ArrayList<StockData> lowLevelDataList = mStock.getStockDataList(mPeriod, level - 1);
+		if (lowLevelDataList == null || lowLevelDataList.size() < StockTrend.VERTEX_SIZE) {
+			return;
+		}
+
+		dataList.clear();
+		for (StockData stockData : lowLevelDataList) {
 			stockData.getCandle().setTop(stockData.getCandle().getHigh());
 			stockData.getCandle().setBottom(stockData.getCandle().getLow());
 			stockData.setDirection(StockTrend.DIRECTION_NONE);
@@ -134,22 +139,14 @@ public class TrendAnalyzer {
 				}
 
 				direction = current.directionTo(prev);
-				vertex = current.vertexTo(prev, next);
-
-				dataList.get(i).setDirection(direction);
-				dataList.get(i).setVertex(vertex);
-
-				mStockDataList.get(i).setDirection(direction);
-				mStockDataList.get(i).setVertex(vertex);
-				mStockDataList.get(i).getCandle().setTop(dataList.get(i).getCandle().getTop());
-				mStockDataList.get(i).getCandle().setBottom(dataList.get(i).getCandle().getBottom());
-
-				if ((vertex == StockTrend.VERTEX_TOP)
-						|| (vertex == StockTrend.VERTEX_BOTTOM)) {
-					dataList.get(i).setDirection(StockTrend.DIRECTION_NONE);
+				vertex = current.vertexTo(level, prev, next);
+				if ((vertex == StockTrend.getVertexTOP(level))
+						|| (vertex == StockTrend.getVertexBottom(level))) {
+					mStockDataList.get(current.getIndex()).getCandle().setTop(dataList.get(i).getCandle().getTop());
+					mStockDataList.get(current.getIndex()).getCandle().setBottom(dataList.get(i).getCandle().getBottom());
+					mStockDataList.get(current.getIndex()).addVertex(vertex);
+					dataList.get(i).setVertex(vertex);
 					vertexList.add(dataList.get(i));
-
-					mStockDataList.get(i).setDirection(StockTrend.DIRECTION_NONE);
 				}
 
 				if (current.include(next) || current.includedBy(next)) {
@@ -168,7 +165,6 @@ public class TrendAnalyzer {
 				current.set(next);
 				next.init();
 			}
-			extendVertexList(mStockDataList, vertexList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -561,7 +557,7 @@ public class TrendAnalyzer {
 		return true;
 	}
 
-	void vertexListToDataList(ArrayList<StockData> vertexList, ArrayList<StockData> dataList) {
+	void vertexListToDataList(int level, ArrayList<StockData> vertexList, ArrayList<StockData> dataList) {
 		if (vertexList == null || vertexList.size() < StockTrend.VERTEX_SIZE || dataList == null) {
 			return;
 		}
@@ -581,10 +577,10 @@ public class TrendAnalyzer {
 			stockData.merge(StockTrend.DIRECTION_NONE, prev);
 
 			int direction = StockTrend.DIRECTION_NONE;
-			if (current.vertexOf(StockTrend.VERTEX_TOP)) {
-				direction = prev.vertexOf(StockTrend.VERTEX_BOTTOM) ? StockTrend.DIRECTION_UP : StockTrend.DIRECTION_DOWN;
-			} else if (current.vertexOf(StockTrend.VERTEX_BOTTOM)) {
-				direction = prev.vertexOf(StockTrend.VERTEX_TOP) ? StockTrend.DIRECTION_DOWN : StockTrend.DIRECTION_UP;
+			if (current.vertexOf(StockTrend.getVertexTOP(level))) {
+				direction = prev.vertexOf(StockTrend.getVertexBottom(level)) ? StockTrend.DIRECTION_UP : StockTrend.DIRECTION_DOWN;
+			} else if (current.vertexOf(StockTrend.getVertexBottom(level))) {
+				direction = prev.vertexOf(StockTrend.getVertexTOP(level)) ? StockTrend.DIRECTION_DOWN : StockTrend.DIRECTION_UP;
 			}
 			stockData.setDirection(direction);
 			stockData.setupNet();

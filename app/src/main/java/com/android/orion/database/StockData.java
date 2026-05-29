@@ -495,16 +495,16 @@ public class StockData extends DatabaseTable {
 		return (mCandle.getTop() <= stockData.mCandle.getTop()) && (mCandle.getBottom() >= stockData.mCandle.getBottom());
 	}
 
-	public int vertexTo(StockData prev, StockData next) {
+	public int vertexTo(int level, StockData prev, StockData next) {
 		int vertex = StockTrend.VERTEX_NONE;
 		if (prev == null || next == null) {
 			return vertex;
 		}
 
 		if (upTo(prev) && upTo(next)) {
-			vertex = StockTrend.VERTEX_TOP;
+			vertex = StockTrend.getVertexTOP(level);
 		} else if (downTo(prev) && downTo(next)) {
-			vertex = StockTrend.VERTEX_BOTTOM;
+			vertex = StockTrend.getVertexBottom(level);
 		}
 		return vertex;
 	}
