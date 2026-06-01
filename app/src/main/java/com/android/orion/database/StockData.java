@@ -474,11 +474,63 @@ public class StockData extends DatabaseTable {
 		return (mCandle.getTop() > stockData.mCandle.getTop()) && (mCandle.getBottom() > stockData.mCandle.getBottom());
 	}
 
+	public boolean upToLeft(StockData stockData) {
+		boolean result = false;
+		if (stockData == null) {
+			return result;
+		}
+		if (mCandle.getTop() == stockData.mCandle.getTop()) {
+			result = mCandle.getBottom() >= stockData.mCandle.getBottom();
+		} else if (mCandle.getBottom() == stockData.mCandle.getBottom()) {
+			result = mCandle.getTop() >= stockData.mCandle.getTop();
+		}
+		return result;
+	}
+
+	public boolean upToRight(StockData stockData) {
+		boolean result = false;
+		if (stockData == null) {
+			return result;
+		}
+		if (mCandle.getTop() == stockData.mCandle.getTop()) {
+			result = mCandle.getBottom() <= stockData.mCandle.getBottom();
+		} else if (mCandle.getBottom() == stockData.mCandle.getBottom()) {
+			result = mCandle.getTop() <= stockData.mCandle.getTop();
+		}
+		return result;
+	}
+
 	public boolean downTo(StockData stockData) {
 		if (stockData == null) {
 			return false;
 		}
 		return (mCandle.getTop() < stockData.mCandle.getTop()) && (mCandle.getBottom() < stockData.mCandle.getBottom());
+	}
+
+	public boolean downToLeft(StockData stockData) {
+		boolean result = false;
+		if (stockData == null) {
+			return result;
+		}
+		if (mCandle.getTop() == stockData.mCandle.getTop()) {
+			result = mCandle.getBottom() <= stockData.mCandle.getBottom();
+		} else if (mCandle.getBottom() == stockData.mCandle.getBottom()) {
+			result = mCandle.getTop() <= stockData.mCandle.getTop();
+		}
+		return result;
+	}
+
+	public boolean downToRight(StockData stockData) {
+		boolean result = false;
+		if (stockData == null) {
+			return result;
+		}
+		if (mCandle.getTop() == stockData.mCandle.getTop()) {
+			result = mCandle.getBottom() >= stockData.mCandle.getBottom();
+		} else if (mCandle.getBottom() == stockData.mCandle.getBottom()) {
+			result = mCandle.getTop() >= stockData.mCandle.getTop();
+		}
+		return result;
 	}
 
 	public boolean include(StockData stockData) {
@@ -509,6 +561,20 @@ public class StockData extends DatabaseTable {
 		return vertex;
 	}
 
+	public int vertexToExt(int level, StockData prev, StockData next) {
+		int vertex = StockTrend.VERTEX_NONE;
+		if (prev == null || next == null) {
+			return vertex;
+		}
+
+		if (upToLeft(prev) && downToRight(next)) {
+			vertex = StockTrend.getVertexTOP(level);
+		} else if (downToLeft(prev) && upToRight(next)) {
+			vertex = StockTrend.getVertexBottom(level);
+		}
+		return vertex;
+	}
+
 	public int directionTo(StockData stockData) {
 		int result = StockTrend.DIRECTION_NONE;
 		if (stockData == null) {
@@ -517,6 +583,32 @@ public class StockData extends DatabaseTable {
 		if (upTo(stockData)) {
 			result = StockTrend.DIRECTION_UP;
 		} else if (downTo(stockData)) {
+			result = StockTrend.DIRECTION_DOWN;
+		}
+		return result;
+	}
+
+	public int directionToLeft(StockData stockData) {
+		int result = StockTrend.DIRECTION_NONE;
+		if (stockData == null) {
+			return result;
+		}
+		if (upToLeft(stockData)) {
+			result = StockTrend.DIRECTION_UP;
+		} else if (downToLeft(stockData)) {
+			result = StockTrend.DIRECTION_DOWN;
+		}
+		return result;
+	}
+
+	public int directionToRight(StockData stockData) {
+		int result = StockTrend.DIRECTION_NONE;
+		if (stockData == null) {
+			return result;
+		}
+		if (upToRight(stockData)) {
+			result = StockTrend.DIRECTION_UP;
+		} else if (downToRight(stockData)) {
 			result = StockTrend.DIRECTION_DOWN;
 		}
 		return result;
