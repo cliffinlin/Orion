@@ -99,8 +99,10 @@ public class TrendAnalyzer {
 		for (StockData stockData : lowLevelDataList) {
 			stockData.getCandle().setTop(stockData.getCandle().getHigh());
 			stockData.getCandle().setBottom(stockData.getCandle().getLow());
-			stockData.setDirection(StockTrend.DIRECTION_NONE);
-			stockData.setVertex(StockTrend.VERTEX_NONE);
+			if (level == StockTrend.LEVEL_DRAW) {
+				stockData.setDirection(StockTrend.DIRECTION_NONE);
+				stockData.setVertex(StockTrend.VERTEX_NONE);
+			}
 			dataList.add(new StockData(stockData));
 		}
 
@@ -140,13 +142,17 @@ public class TrendAnalyzer {
 
 				direction = current.directionTo(prev);
 				vertex = current.vertexTo(level, prev, next);
+
+				dataList.get(i).setDirection(direction);
 				if ((vertex == StockTrend.getVertexTOP(level))
 						|| (vertex == StockTrend.getVertexBottom(level))) {
+					dataList.get(i).setDirection(StockTrend.DIRECTION_NONE);
+					dataList.get(i).addVertex(vertex);
+					vertexList.add(dataList.get(i));
+
+					mStockDataList.get(current.getIndex()).addVertex(vertex);
 					mStockDataList.get(current.getIndex()).getCandle().setTop(dataList.get(i).getCandle().getTop());
 					mStockDataList.get(current.getIndex()).getCandle().setBottom(dataList.get(i).getCandle().getBottom());
-					mStockDataList.get(current.getIndex()).addVertex(vertex);
-					dataList.get(i).setVertex(vertex);
-					vertexList.add(dataList.get(i));
 				}
 
 				if (current.include(next) || current.includedBy(next)) {
@@ -165,11 +171,13 @@ public class TrendAnalyzer {
 				current.set(next);
 				next.init();
 			}
+			extendVertexList(dataList, vertexList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	void analyzeVertexExt(int level) {
+
+	void analyzeVertexEx(int level) {
 		ArrayList<StockData> dataList = mStock.getStockDataList(mPeriod, level);
 		ArrayList<StockData> vertexList = mStock.getVertexList(mPeriod, level);
 		if (dataList == null || vertexList == null) {
@@ -183,8 +191,12 @@ public class TrendAnalyzer {
 
 		dataList.clear();
 		for (StockData stockData : lowLevelDataList) {
-			stockData.setDirection(StockTrend.DIRECTION_NONE);
-			stockData.setVertex(StockTrend.VERTEX_NONE);
+			stockData.getCandle().setTop(stockData.getCandle().getHigh());
+			stockData.getCandle().setBottom(stockData.getCandle().getLow());
+			if (level == StockTrend.LEVEL_DRAW) {
+				stockData.setDirection(StockTrend.DIRECTION_NONE);
+				stockData.setVertex(StockTrend.VERTEX_NONE);
+			}
 			dataList.add(new StockData(stockData));
 		}
 
@@ -194,28 +206,66 @@ public class TrendAnalyzer {
 		StockData next = new StockData();
 
 		int direction = StockTrend.DIRECTION_NONE;
-		int vertex = StockTrend.VERTEX_NONE;
+		int vertex;
 		try {
 			for (int i = 1; i < dataList.size() - 1; i++) {
-				prev.set(dataList.get(i - 1));
-				current.set(dataList.get(i));
-				next.set(dataList.get(i + 1));
+				if (prev.isEmpty()) {
+					prev.set(dataList.get(i - 1));
+				}
 
-				if (direction == current.directionToLeft(prev) && direction == current.directionToRight(next)) {
+				if (current.isEmpty()) {
+					current.set(dataList.get(i));
+				}
+
+				if (next.isEmpty()) {
+					next.set(dataList.get(i + 1));
+				}
+
+				if (current.include(prev) || current.includedBy(prev)) {
+					prev.merge(direction, current);
+					current.merge(direction, prev);
+
+					dataList.get(i - 1).set(prev);
+					dataList.get(i).set(current);
+
+					prev.set(current);
+					current.init();
+					next.init();
 					continue;
 				}
 
-				direction = current.directionToLeft(prev);
-				vertex = current.vertexToExt(level, prev, next);
+				direction = current.directionTo(prev);
+				vertex = current.vertexTo(level, prev, next);
+
+				dataList.get(i).setDirection(direction);
 				if ((vertex == StockTrend.getVertexTOP(level))
 						|| (vertex == StockTrend.getVertexBottom(level))) {
+					dataList.get(i).setDirection(StockTrend.DIRECTION_NONE);
+					dataList.get(i).addVertex(vertex);
+					vertexList.add(dataList.get(i));
+
+					mStockDataList.get(current.getIndex()).addVertex(vertex);
 					mStockDataList.get(current.getIndex()).getCandle().setTop(dataList.get(i).getCandle().getTop());
 					mStockDataList.get(current.getIndex()).getCandle().setBottom(dataList.get(i).getCandle().getBottom());
-					mStockDataList.get(current.getIndex()).addVertex(vertex);
-					dataList.get(i).setVertex(vertex);
-					vertexList.add(dataList.get(i));
 				}
+
+				if (current.include(next) || current.includedBy(next)) {
+					current.merge(direction, next);
+					next.merge(direction, current);
+
+					dataList.get(i).set(current);
+					dataList.get(i + 1).set(next);
+
+					current.set(next);
+					next.init();
+					continue;
+				}
+
+				prev.set(current);
+				current.set(next);
+				next.init();
 			}
+			extendVertexList(dataList, vertexList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -544,8 +594,6 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		extendVertexList(mStockDataList, vertexList);
-
 		dataList.clear();
 		for (int i = 1; i < vertexList.size(); i++) {
 			StockData prev = vertexList.get(i - 1);
@@ -562,9 +610,9 @@ public class TrendAnalyzer {
 
 			int direction = StockTrend.DIRECTION_NONE;
 			if (current.vertexOf(StockTrend.getVertexTOP(level))) {
-				direction = StockTrend.DIRECTION_UP;
+				direction = prev.vertexOf(StockTrend.getVertexBottom(level)) ? StockTrend.DIRECTION_UP : StockTrend.DIRECTION_DOWN;
 			} else if (current.vertexOf(StockTrend.getVertexBottom(level))) {
-				direction = StockTrend.DIRECTION_DOWN;
+				direction = prev.vertexOf(StockTrend.getVertexTOP(level)) ? StockTrend.DIRECTION_DOWN : StockTrend.DIRECTION_UP;
 			}
 			stockData.setDirection(direction);
 			stockData.setupNet();
