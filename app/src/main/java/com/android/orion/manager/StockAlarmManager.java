@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
@@ -25,9 +26,14 @@ public class StockAlarmManager {
 		if (mAlarmManager == null) {
 			mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 		}
-
+		int flags;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+			flags = PendingIntent.FLAG_IMMUTABLE;
+		} else {
+			flags = 0;
+		}
 		mPendingIntent = PendingIntent.getBroadcast(mContext, 0, new Intent(
-				mContext, DownloadBroadcastReceiver.class), 0);
+				mContext, DownloadBroadcastReceiver.class), flags);
 	}
 
 	public static StockAlarmManager getInstance() {
