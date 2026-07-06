@@ -34,7 +34,10 @@ public class MainApplication extends Application {
 		mInstance = this;
 		Log = Logger.getLogger();
 
-		Utility.createDirectory(Environment.getExternalStorageDirectory() + "/" + Config.APP_NAME);
+		java.io.File appDir = getExternalFilesDir(null);
+		if (appDir != null) {
+			Utility.createDirectory(appDir.getAbsolutePath());
+		}
 		registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
 			@Override
 			public void onActivityCreated(Activity activity, Bundle savedInstanceState) {

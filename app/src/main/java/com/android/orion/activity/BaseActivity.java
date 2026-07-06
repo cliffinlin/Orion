@@ -181,14 +181,16 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 	}
 
 	private void checkPermission() {
-		if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-				!= PackageManager.PERMISSION_GRANTED) {
-			if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission
-					.WRITE_EXTERNAL_STORAGE)) {
-				Toast.makeText(this, "请开通相关权限！", Toast.LENGTH_SHORT).show();
-			}
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+			if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+					!= PackageManager.PERMISSION_GRANTED) {
+				if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission
+						.WRITE_EXTERNAL_STORAGE)) {
+					Toast.makeText(this, "请开通相关权限！", Toast.LENGTH_SHORT).show();
+				}
 
-			ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+				ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+			}
 		}
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

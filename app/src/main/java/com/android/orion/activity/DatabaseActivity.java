@@ -13,13 +13,22 @@ import java.nio.channels.FileChannel;
 
 public class DatabaseActivity extends BaseActivity {
 
+	private String getAppDir() {
+		File appDir = getExternalFilesDir(null);
+		if (appDir != null) {
+			return appDir.getAbsolutePath();
+		}
+		return getFilesDir().getAbsolutePath();
+	}
+
 	String backupDatabase() {
 		String result = "";
 		try {
 			File dbFile = getDatabasePath(DatabaseContract.DATABASE_FILE_NAME);
 			String dbPath = dbFile.getAbsolutePath();
-			Utility.createDirectory(Environment.getExternalStorageDirectory() + "/" + Config.APP_NAME);
-			result = Environment.getExternalStorageDirectory() + "/" + Config.APP_NAME + "/"
+			String appDir = getAppDir();
+			Utility.createDirectory(appDir);
+			result = appDir + "/"
 					+ DatabaseContract.DATABASE_NAME + "_" + Utility.getCurrentDateString() + DatabaseContract.DATABASE_EXT;
 			FileChannel src = new FileInputStream(dbPath).getChannel();
 			FileChannel dst = new FileOutputStream(result).getChannel();
@@ -34,7 +43,8 @@ public class DatabaseActivity extends BaseActivity {
 
 	void restoreDatabase() {
 		try {
-			String backupPath = Environment.getExternalStorageDirectory() + "/" + Config.APP_NAME + "/" + DatabaseContract.DATABASE_FILE_NAME;
+			String appDir = getAppDir();
+			String backupPath = appDir + "/" + DatabaseContract.DATABASE_FILE_NAME;
 			File backupFile = new File(backupPath);
 			if (!backupFile.exists()) {
 				return;
