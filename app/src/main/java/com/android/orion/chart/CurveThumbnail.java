@@ -237,7 +237,7 @@ public class CurveThumbnail extends Drawable {
 			float x = scatterConfig.xValue;
 			float y = height - scatterConfig.yValue;
 			Paint paint = createScatterPaint(scatterConfig.color);
-			result.add(new DrawnScatterPoint(x, y, paint, scatterConfig.radius));
+			result.add(new DrawnScatterPoint(x, y, paint, scatterConfig.radius, scatterConfig.shape));
 		}
 		return result;
 	}
@@ -274,7 +274,7 @@ public class CurveThumbnail extends Drawable {
 			float x = mapToX(scatterConfig.xValue, range.minX, range.maxX);
 			float y = mapToY(scatterConfig.yValue, range.minY, range.maxY);
 			Paint paint = createScatterPaint(scatterConfig.color);
-			result.add(new DrawnScatterPoint(x, y, paint, scatterConfig.radius));
+			result.add(new DrawnScatterPoint(x, y, paint, scatterConfig.radius, scatterConfig.shape));
 		}
 		return result;
 	}
@@ -477,7 +477,30 @@ public class CurveThumbnail extends Drawable {
 
 		// 绘制散点
 		for (DrawnScatterPoint point : drawnScatterPoints) {
-			canvas.drawCircle(point.x, point.y, point.radius, point.paint);
+			switch (point.shape) {
+				case ScatterConfig.SHAPE_TRIANGLE: {
+					Path trianglePath = new Path();
+					float r = point.radius;
+					trianglePath.moveTo(point.x, point.y - r);
+					trianglePath.lineTo(point.x - (float) (r * Math.sqrt(3) / 2), point.y + r / 2f);
+					trianglePath.lineTo(point.x + (float) (r * Math.sqrt(3) / 2), point.y + r / 2f);
+					trianglePath.close();
+					canvas.drawPath(trianglePath, point.paint);
+					break;
+				}
+				case ScatterConfig.SHAPE_SQUARE: {
+					float halfSide = (float) (point.radius / Math.sqrt(2));
+					canvas.drawRect(
+							point.x - halfSide, point.y - halfSide,
+							point.x + halfSide, point.y + halfSide,
+							point.paint
+					);
+					break;
+				}
+				default:
+					canvas.drawCircle(point.x, point.y, point.radius, point.paint);
+					break;
+			}
 		}
 
 		// 绘制圆圈
@@ -609,16 +632,26 @@ public class CurveThumbnail extends Drawable {
 	}
 
 	public static class ScatterConfig {
+		public static final int SHAPE_CIRCLE = 0;
+		public static final int SHAPE_TRIANGLE = 1;
+		public static final int SHAPE_SQUARE = 2;
+
 		public final float xValue;
 		public final float yValue;
 		public final int color;
 		public final float radius;
+		public final int shape;
 
 		public ScatterConfig(float xValue, float yValue, int color, float radius) {
+			this(xValue, yValue, color, radius, SHAPE_CIRCLE);
+		}
+
+		public ScatterConfig(float xValue, float yValue, int color, float radius, int shape) {
 			this.xValue = xValue;
 			this.yValue = yValue;
 			this.color = color;
 			this.radius = radius;
+			this.shape = shape;
 		}
 	}
 
@@ -670,11 +703,13 @@ public class CurveThumbnail extends Drawable {
 		final float y;
 		final Paint paint;
 		final float radius;
-		DrawnScatterPoint(float x, float y, Paint paint, float radius) {
+		final int shape;
+		DrawnScatterPoint(float x, float y, Paint paint, float radius, int shape) {
 			this.x = x;
 			this.y = y;
 			this.paint = paint;
 			this.radius = radius;
+			this.shape = shape;
 		}
 	}
 

@@ -42,8 +42,8 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_TREND_COLOR_DOWN = Config.COLOR_DARK_GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_TARGET = Color.BLACK;
 	public static final int THUMBNAIL_RADA_COLOR_DAY = Color.RED;
-	public static final int THUMBNAIL_RADA_COLOR_WEEK = Color.GREEN;
-	public static final int THUMBNAIL_RADA_COLOR_MONTH = Color.BLUE;
+	public static final int THUMBNAIL_RADA_COLOR_WEEK = Color.RED;
+	public static final int THUMBNAIL_RADA_COLOR_MONTH = Color.RED;
 
 	int mPeriods;
 	Logger Log = Logger.getLogger();
@@ -914,8 +914,15 @@ public class TrendAnalyzer {
 		float x = centerX + (float) (radius * Math.cos(angle));
 		float y = centerY + (float) (radius * Math.sin(angle));
 
+		int shape = CurveThumbnail.ScatterConfig.SHAPE_CIRCLE;
+		if (TextUtils.equals(period, Period.MONTH)) {
+			shape = CurveThumbnail.ScatterConfig.SHAPE_TRIANGLE;
+		} else if (TextUtils.equals(period, Period.WEEK)) {
+			shape = CurveThumbnail.ScatterConfig.SHAPE_SQUARE;
+		}
+
 		mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
-				x, y, color, THUMBNAIL_SCATTER_SIZE
+				x, y, color, THUMBNAIL_SCATTER_SIZE, shape
 		));
 
 		switch (period) {
