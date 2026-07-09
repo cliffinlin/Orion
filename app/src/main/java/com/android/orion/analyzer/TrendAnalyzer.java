@@ -619,7 +619,6 @@ public class TrendAnalyzer {
 			setup(stock);
 			setupStockShortLevel();
 			setupStockTargetLevel();
-			setupPeriodThumbnail();
 			setupTrendThumbnail();
 			setupRadarThumbnail();
 		} catch (Exception e) {
@@ -769,90 +768,6 @@ public class TrendAnalyzer {
 				}
 			}
 		}
-	}
-
-	public void setupPeriodThumbnail() {
-		if (!Setting.getDisplayThumbnail()) {
-			return;
-		}
-
-		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period)) {
-				setupPeriodThumbnail(period);
-			}
-		}
-	}
-
-	public void setupPeriodThumbnail(String period) {
-		mStockDataList = mStock.getStockDataList(period, StockTrend.LEVEL_NONE);
-		if (mStockDataList.isEmpty()) {
-			return;
-		}
-
-		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
-			if (mXValues[i] != null) {
-				mXValues[i].clear();
-			} else {
-				mXValues[i] = new ArrayList<>();
-			}
-			if (mYValues[i] != null) {
-				mYValues[i].clear();
-			} else {
-				mYValues[i] = new ArrayList<>();
-			}
-		}
-
-		mStock.setTrend(period, StockTrend.TREND_NONE);
-		for (int index = 0; index < mStockDataList.size(); index++) {
-			StockData stockData = mStockDataList.get(index);
-			for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
-				if (stockData.vertexOf(StockTrend.getVertexTOP(level))) {
-					mXValues[level].add((float) index);
-					mYValues[level].add((float) stockData.getCandle().getTop());
-					if (mStock.getTargetLevel(period) == level) {
-						mStock.setTrend(period, Symbol.MINUS);
-						if (mStock.getPrice() > stockData.getCandle().getTop()) {
-							mStock.setTrend(period, Symbol.ADD);
-						}
-					}
-				} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
-					mXValues[level].add((float) index);
-					mYValues[level].add((float) stockData.getCandle().getBottom());
-					if (mStock.getTargetLevel(period) == level) {
-						mStock.setTrend(period, Symbol.ADD);
-						if (mStock.getPrice() < stockData.getCandle().getBottom()) {
-							mStock.setTrend(period, Symbol.MINUS);
-						}
-					}
-				}
-			}
-		}
-
-		for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
-			if (mXValues[level] == null || mXValues[level].size() < StockTrend.VERTEX_SIZE) {
-				continue;
-			}
-
-			if (level > StockTrend.LEVEL_DRAW) {
-				int index = mXValues[level].get(mXValues[level].size() - 1).intValue();
-				for (int i = 0; i < mXValues[level - 1].size(); i++) {
-					if (mXValues[level - 1].get(i).intValue() == index) {
-						mXValues[level - 1] = new ArrayList<>(mXValues[level - 1].subList(i, mXValues[level - 1].size()));
-						mYValues[level - 1] = new ArrayList<>(mYValues[level - 1].subList(i, mYValues[level - 1].size()));
-						break;
-					}
-				}
-			}
-		}
-
-		mLineConfigList.clear();
-		for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
-			mLineConfigList.add(new CurveThumbnail.LineConfig(mXValues[level], mYValues[level], THUMBNAIL_STROKE_COLOR, THUMBNAIL_STROKE_WIDTH));
-		}
-
-		CurveThumbnail.CrossMarkerConfig markerConfig =
-				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), TextUtils.equals(mStock.getTrend(period), Symbol.ADD) ? Color.RED : Config.COLOR_DARK_GREEN, THUMBNAIL_MARKER_STROKE_WIDTH, THUMBNAIL_MARKER_SIZE);
-		mStock.setPeriodThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(THUMBNAIL_SIZE, Color.TRANSPARENT, mLineConfigList, markerConfig)));
 	}
 
 	public void setupTrendThumbnail() {
