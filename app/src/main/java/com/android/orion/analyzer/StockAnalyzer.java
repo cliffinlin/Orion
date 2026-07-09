@@ -132,14 +132,6 @@ public class StockAnalyzer {
 				return;
 			}
 
-			setupPulseList(mStock.getShortLevel(period));
-			FourierAnalyzer.analyze(period, mPulseList);
-			mStock.setShortRadar(period, FourierAnalyzer.getRadar());
-
-			setupPulseList(mStock.getLongLevel(period));
-			FourierAnalyzer.analyze(period, mPulseList);
-			mStock.setLongRadar(period, FourierAnalyzer.getRadar());
-
 			setupPulseList(mStock.getTargetLevel(period));
 			FourierAnalyzer.analyze(period, mPulseList);
 			mStock.setTargetRadar(period, FourierAnalyzer.getRadar());

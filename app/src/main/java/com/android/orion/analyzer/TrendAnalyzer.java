@@ -41,7 +41,6 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_TREND_COLOR_UP = Config.COLOR_DARK_RED;
 	public static final int THUMBNAIL_TREND_COLOR_DOWN = Config.COLOR_DARK_GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_TARGET = Color.BLACK;
-	public static final int THUMBNAIL_RADA_COLOR_SHORT = Color.GRAY;
 	public static final int THUMBNAIL_RADA_COLOR_DAY = Color.RED;
 	public static final int THUMBNAIL_RADA_COLOR_WEEK = Color.GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_MONTH = Color.BLUE;
@@ -617,8 +616,6 @@ public class TrendAnalyzer {
 	public void setupThumbnail(Stock stock) {
 		try {
 			setup(stock);
-			setupStockShortLevel();
-			setupStockTargetLevel();
 			setupTrendThumbnail();
 			setupRadarThumbnail();
 		} catch (Exception e) {
@@ -680,94 +677,6 @@ public class TrendAnalyzer {
 			return null;
 		}
 		return levelMap;
-	}
-
-	public void setupStockShortLevel() {
-		ArrayMap<String, Integer> baseLevelMap = new ArrayMap<>();
-		ArrayMap<String, Integer> levelMap;
-		String basePeriod = Period.DAY;
-		int baseLevel = StockTrend.LEVEL_DRAW;
-		baseLevelMap.put(basePeriod, baseLevel);
-		levelMap = getLevelMap(basePeriod, baseLevel);
-		if (levelMap == null) {
-			basePeriod = Period.MIN60;
-			baseLevel = StockTrend.LEVEL_DRAW;
-			baseLevelMap.put(basePeriod, baseLevel);
-			levelMap = getLevelMap(basePeriod, baseLevel);
-			if (levelMap == null) {
-				basePeriod = Period.MIN60;
-				baseLevel = StockTrend.LEVEL_STROKE;
-				baseLevelMap.put(basePeriod, baseLevel);
-				levelMap = getLevelMap(basePeriod, baseLevel);
-				if (levelMap == null) {
-					basePeriod = Period.MIN30;
-					baseLevel = StockTrend.LEVEL_SEGMENT;
-					baseLevelMap.put(basePeriod, baseLevel);
-					levelMap = getLevelMap(basePeriod, baseLevel);
-				}
-			}
-		}
-
-		if (levelMap == null) {
-			basePeriod = Period.DAY;
-			baseLevel = StockTrend.LEVEL_STROKE;
-			baseLevelMap.put(basePeriod, baseLevel);
-			levelMap = getLevelMap(basePeriod, baseLevel);
-		}
-
-		if (levelMap == null) {
-			return;
-		}
-
-		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period)) {
-				if (levelMap.containsKey(period)) {
-					Integer levelValue = levelMap.get(period);
-					if (levelValue != null) {
-						mStock.setShortLevel(period, levelValue);
-					}
-				} else if (baseLevelMap.containsKey(period)) {
-					Integer levelValue = baseLevelMap.get(period);
-					if (levelValue != null) {
-						mStock.setShortLevel(period, levelValue);
-					}
-				}
-			}
-		}
-	}
-
-	public void setupStockTargetLevel() {
-		if (!mStock.hasFlag(Stock.FLAG_AUTO)) {
-			return;
-		}
-		ArrayMap<String, Integer> baseLevelMap = new ArrayMap<>();
-		ArrayMap<String, Integer> levelMap;
-		String basePeriod = Period.DAY;
-		int baseLevel = mStock.getTargetLevel(Period.DAY);
-		if (baseLevel == StockTrend.LEVEL_NONE || baseLevel == StockTrend.LEVEL_TREND_LINE) {
-			return;
-		}
-		baseLevelMap.put(basePeriod, baseLevel);
-		levelMap = getLevelMap(basePeriod, baseLevel);
-		if (levelMap == null) {
-			return;
-		}
-
-		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period)) {
-				if (levelMap.containsKey(period)) {
-					Integer levelValue = levelMap.get(period);
-					if (levelValue != null) {
-						mStock.setTargetLevel(period, levelValue);
-					}
-				} else if (baseLevelMap.containsKey(period)) {
-					Integer levelValue = baseLevelMap.get(period);
-					if (levelValue != null) {
-						mStock.setTargetLevel(period, levelValue);
-					}
-				}
-			}
-		}
 	}
 
 	public void setupTrendThumbnail() {
@@ -851,14 +760,6 @@ public class TrendAnalyzer {
 		double signal = 0;
 		for (String period : Period.PERIODS_R) {
 			if (Setting.getPeriod(period)) {
-				if (mStock.hasFlag(Stock.FLAG_SHORT) && Period.isMinutePeriod(period)) {
-					if (mStock.hasFlag(Stock.FLAG_SHORT)) {
-						radar = mStock.getShortRadar(period);
-						if (radar != null) {
-							setupRadarPoint(radar, period, THUMBNAIL_RADA_COLOR_SHORT);
-						}
-					}
-				}
 				radar = mStock.getTargetRadar(period);
 				if (radar != null) {
 					int color = THUMBNAIL_RADA_COLOR_TARGET;
