@@ -42,8 +42,8 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_TREND_COLOR_DOWN = Config.COLOR_DARK_GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_TARGET = Color.BLACK;
 	public static final int THUMBNAIL_RADA_COLOR_DAY = Color.RED;
-	public static final int THUMBNAIL_RADA_COLOR_WEEK = Color.RED;
-	public static final int THUMBNAIL_RADA_COLOR_MONTH = Color.RED;
+	public static final int THUMBNAIL_RADA_COLOR_WEEK = Color.GREEN;
+	public static final int THUMBNAIL_RADA_COLOR_MONTH = Color.BLUE;
 
 	int mPeriods;
 	Logger Log = Logger.getLogger();

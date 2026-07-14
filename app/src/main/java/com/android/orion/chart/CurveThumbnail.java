@@ -480,7 +480,7 @@ public class CurveThumbnail extends Drawable {
 			switch (point.shape) {
 				case ScatterConfig.SHAPE_TRIANGLE: {
 					Path trianglePath = new Path();
-					float r = point.radius;
+					float r = point.radius * 1.5f;
 					trianglePath.moveTo(point.x, point.y - r);
 					trianglePath.lineTo(point.x - (float) (r * Math.sqrt(3) / 2), point.y + r / 2f);
 					trianglePath.lineTo(point.x + (float) (r * Math.sqrt(3) / 2), point.y + r / 2f);
@@ -489,7 +489,7 @@ public class CurveThumbnail extends Drawable {
 					break;
 				}
 				case ScatterConfig.SHAPE_SQUARE: {
-					float halfSide = (float) (point.radius / Math.sqrt(2));
+					float halfSide = (float) (point.radius * 1.5f / Math.sqrt(2));
 					canvas.drawRect(
 							point.x - halfSide, point.y - halfSide,
 							point.x + halfSide, point.y + halfSide,
