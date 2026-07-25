@@ -24,16 +24,16 @@ public class Config {
 	public static final int COLOR_DIF = Color.YELLOW;
 	public static final int COLOR_DEA = Color.WHITE;
 
-	public static final int DOWNLOAD_HISTORY_LENGTH_UNLIMITED = -1;
-	public static final int DOWNLOAD_HISTORY_LENGTH_NONE = 0;
-	public static final int DOWNLOAD_HISTORY_LENGTH_DEFAULT = 120;
+	public static final int DOWNLOAD_HISTORY_LENGTH_MONTH = 120;
+	public static final int DOWNLOAD_HISTORY_LENGTH_WEEK = 120;
+	public static final int DOWNLOAD_HISTORY_LENGTH_DAY = 120;
 
 	public static final int DOWNLOAD_HISTORY_LENGTH_MIN5 = 242;
 	public static final int DOWNLOAD_HISTORY_LENGTH_MIN15 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_MIN30 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_MIN60 = 192;
 
-	public static final int HISTORY_LENGTH_DAY = DOWNLOAD_HISTORY_LENGTH_DEFAULT;
+	public static final int HISTORY_LENGTH_DAY = DOWNLOAD_HISTORY_LENGTH_DAY;
 	public static final int HISTORY_LENGTH_MIN60 = HISTORY_LENGTH_DAY * 4;
 	public static final int HISTORY_LENGTH_MIN30 = HISTORY_LENGTH_DAY * 8;
 	public static final int HISTORY_LENGTH_MIN15 = HISTORY_LENGTH_DAY * 16;

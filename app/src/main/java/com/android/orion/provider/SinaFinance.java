@@ -75,11 +75,11 @@ public class SinaFinance extends StockDataProvider {
 
 	public int getAvailableHistoryLength(String period) {
 		if (TextUtils.equals(period, Period.MONTH)) {
-			return Config.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
+			return Config.DOWNLOAD_HISTORY_LENGTH_MONTH;
 		} else if (TextUtils.equals(period, Period.WEEK)) {
-			return Config.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
+			return Config.DOWNLOAD_HISTORY_LENGTH_WEEK;
 		} else if (TextUtils.equals(period, Period.DAY)) {
-			return Config.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
+			return Config.DOWNLOAD_HISTORY_LENGTH_DAY;
 		} else if (TextUtils.equals(period, Period.MIN60)) {
 			return Config.DOWNLOAD_HISTORY_LENGTH_MIN60;
 		} else if (TextUtils.equals(period, Period.MIN30)) {
@@ -181,19 +181,6 @@ public class SinaFinance extends StockDataProvider {
 		return urlString;
 	}
 
-	public int getDownloadHistoryLengthDefault(String period) {
-		int result = 0;
-		int availableHistoryLength = getAvailableHistoryLength(period);
-
-		if (availableHistoryLength > 0) {
-			result = availableHistoryLength;
-		} else if (availableHistoryLength == Config.DOWNLOAD_HISTORY_LENGTH_UNLIMITED) {
-			result = Config.DOWNLOAD_HISTORY_LENGTH_DEFAULT;
-		}
-
-		return result;
-	}
-
 	private int getDownloadStockDataLength(StockData stockData) {
 		int result = 0;
 
@@ -204,7 +191,7 @@ public class SinaFinance extends StockDataProvider {
 		Cursor cursor = null;
 		try {
 			String period = stockData.getPeriod();
-			int defaultValue = getDownloadHistoryLengthDefault(period);
+			int defaultValue = getAvailableHistoryLength(period);
 			String selection = DatabaseContract.SELECTION_STOCK_PERIOD(stockData.getSE(), stockData.getCode(), period);
 			String sortOrder = DatabaseContract.ORDER_DATE_TIME_ASC;
 			cursor = mStockDatabaseManager.queryStockData(selection, null,
@@ -785,7 +772,7 @@ public class SinaFinance extends StockDataProvider {
 				return;
 			}
 
-			defaultValue = getDownloadHistoryLengthDefault(stockData
+			defaultValue = getAvailableHistoryLength(stockData
 					.getPeriod());
 			if (TextUtils.isEmpty(stockData.getCreated())
 					|| (defaultValue == jsonArray.size())) {
@@ -820,6 +807,8 @@ public class SinaFinance extends StockDataProvider {
 						}
 					}
 
+					stockData.getMacd().init();
+					stockData.getCandle().init();
 					stockData.getCandle().setOpen(jsonObject.getDouble("open"));
 					stockData.getCandle().setClose(jsonObject.getDouble("close"));
 					stockData.getCandle().setHigh(jsonObject.getDouble("high"));

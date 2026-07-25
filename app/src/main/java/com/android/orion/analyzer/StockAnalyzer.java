@@ -272,13 +272,10 @@ public class StockAnalyzer {
 			for (int i = mStockDataList.size() - 1; i > 0; i--) {
 				StockData current = mStockDataList.get(i);
 				StockData prev = mStockDataList.get(i - 1);
-				if (TextUtils.equals(prev.getMonth(), current.getMonth()) || TextUtils.equals(prev.getWeek(), current.getWeek())) {
-					if (!TextUtils.equals(prev.getDay(), current.getDay())) {
-						mStockDatabaseManager.deleteStockData(prev.getId());
-						foundRepeated = true;
-					}
-				} else {
-					break;
+				if (period.equals(Period.MONTH) && TextUtils.equals(prev.getMonth(), current.getMonth())
+						|| period.equals(Period.WEEK) && TextUtils.equals(prev.getWeek(), current.getWeek())) {
+					mStockDatabaseManager.deleteStockData(prev.getId());
+					foundRepeated = true;
 				}
 			}
 		}
