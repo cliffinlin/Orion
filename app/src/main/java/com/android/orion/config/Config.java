@@ -21,8 +21,8 @@ public class Config {
 	public static final int COLOR_DECREASING = COLOR_DARK_GREEN;
 	public static final int COLOR_INCREASING = COLOR_DARK_RED;
 	public static final int COLOR_HISTOGRAM = Color.RED;
-	public static final int COLOR_DIF = Color.YELLOW;
-	public static final int COLOR_DEA = Color.WHITE;
+	public static final int COLOR_DIF = Color.WHITE;
+	public static final int COLOR_DEA = Color.YELLOW;
 
 	public static final int DOWNLOAD_HISTORY_LENGTH_MONTH = 120;
 	public static final int DOWNLOAD_HISTORY_LENGTH_WEEK = 120;

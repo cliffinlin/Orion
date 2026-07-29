@@ -53,26 +53,26 @@ public class MACDAnalyzer {
                 mSlow = SLOW;
                 mNormal = NORMAL;
                 break;
-            case Period.MIN60:
-                mFast = Constant.MIN60_PER_TRADE_DAY * FAST;
-                mSlow = Constant.MIN60_PER_TRADE_DAY * SLOW;
-                mNormal = Constant.MIN60_PER_TRADE_DAY * NORMAL;
-                break;
-            case Period.MIN30:
-                mFast = Constant.MIN30_PER_TRADE_DAY * FAST;
-                mSlow = Constant.MIN30_PER_TRADE_DAY * SLOW;
-                mNormal = Constant.MIN30_PER_TRADE_DAY * NORMAL;
-                break;
-            case Period.MIN15:
-                mFast = Constant.MIN15_PER_TRADE_DAY * FAST;
-                mSlow = Constant.MIN15_PER_TRADE_DAY * SLOW;
-                mNormal = Constant.MIN15_PER_TRADE_DAY * NORMAL;
-                break;
-            case Period.MIN5:
-                mFast = Constant.MIN5_PER_TRADE_DAY * FAST;
-                mSlow = Constant.MIN5_PER_TRADE_DAY * SLOW;
-                mNormal = Constant.MIN5_PER_TRADE_DAY * NORMAL;
-                break;
+//            case Period.MIN60:
+//                mFast = Constant.MIN60_PER_TRADE_DAY * FAST;
+//                mSlow = Constant.MIN60_PER_TRADE_DAY * SLOW;
+//                mNormal = Constant.MIN60_PER_TRADE_DAY * NORMAL;
+//                break;
+//            case Period.MIN30:
+//                mFast = Constant.MIN30_PER_TRADE_DAY * FAST;
+//                mSlow = Constant.MIN30_PER_TRADE_DAY * SLOW;
+//                mNormal = Constant.MIN30_PER_TRADE_DAY * NORMAL;
+//                break;
+//            case Period.MIN15:
+//                mFast = Constant.MIN15_PER_TRADE_DAY * FAST;
+//                mSlow = Constant.MIN15_PER_TRADE_DAY * SLOW;
+//                mNormal = Constant.MIN15_PER_TRADE_DAY * NORMAL;
+//                break;
+//            case Period.MIN5:
+//                mFast = Constant.MIN5_PER_TRADE_DAY * FAST;
+//                mSlow = Constant.MIN5_PER_TRADE_DAY * SLOW;
+//                mNormal = Constant.MIN5_PER_TRADE_DAY * NORMAL;
+//                break;
         }
         mPriceList.clear();
         mEMAFastList.clear();
