@@ -914,7 +914,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                     quota = cursor.getInt(quotaColumnIndex);
                 }
 
-                float ratio = locked == 0 ? 0 : hold / locked;
+                float ratio = quota == 0 ? 0 : (hold - locked) / quota;
 
                 LinearLayout.LayoutParams holdParams = (LinearLayout.LayoutParams) holdPortion.getLayoutParams();
                 LinearLayout.LayoutParams remainingParams = (LinearLayout.LayoutParams) remainingPortion.getLayoutParams();
@@ -928,11 +928,11 @@ public class StockFavoriteListActivity extends ListActivity implements
 
                 if (ratio > 2.0f) {
                     holdPortion.setBackgroundColor(Color.CYAN);
-                }  else if (ratio > 1.5f) {
+                }  else if (ratio >= 1.5f) {
                     holdPortion.setBackgroundColor(Color.MAGENTA);
-                } else if (ratio > 1.0f) {
+                } else if (ratio >= 1.0f) {
                     holdPortion.setBackgroundColor(Color.RED);
-                } else if (ratio > 0.5f) {
+                } else if (ratio >= 0.5f) {
                     holdPortion.setBackgroundColor(Color.GREEN);
                 } else {
                     holdPortion.setBackgroundColor(Color.GRAY);
