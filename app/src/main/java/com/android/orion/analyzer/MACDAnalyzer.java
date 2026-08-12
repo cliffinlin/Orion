@@ -25,9 +25,9 @@ public class MACDAnalyzer {
 
     static Logger Log = Logger.getLogger();
 
-    private static final int FAST = 10; //12;
-    private static final int SLOW = 20; //26;
-    private static final int NORMAL = 8; //9;
+    private static final int FAST = 12;
+    private static final int SLOW = 26;
+    private static final int NORMAL = 9;
 
     public static ArrayList<Double> getDEAList() {
         return mDEAList;
