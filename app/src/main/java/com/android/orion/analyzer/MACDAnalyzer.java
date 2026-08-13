@@ -12,9 +12,13 @@ import java.util.List;
 
 public class MACDAnalyzer {
 
-    private static int mFast = 0;
-    private static int mSlow = 0;
-    private static int mNormal = 0;
+    private static final int FAST = 12;
+    private static final int SLOW = 26;
+    private static final int NORMAL = 9;
+
+    private static int mFast = FAST;
+    private static int mSlow = SLOW;
+    private static int mNormal = NORMAL;
 
     private static final ArrayList<Double> mPriceList = new ArrayList<>();
     private static final ArrayList<Double> mEMAFastList = new ArrayList<>();
@@ -24,10 +28,6 @@ public class MACDAnalyzer {
     private static final ArrayList<Double> mHistogramList = new ArrayList<>();
 
     static Logger Log = Logger.getLogger();
-
-    private static final int FAST = 12;
-    private static final int SLOW = 26;
-    private static final int NORMAL = 9;
 
     public static ArrayList<Double> getDEAList() {
         return mDEAList;
@@ -44,35 +44,6 @@ public class MACDAnalyzer {
     public static void init(String period, ArrayList<StockData> stockDataList) {
         if (stockDataList == null || stockDataList.isEmpty()) {
             return;
-        }
-        switch (period) {
-            case Period.MONTH:
-            case Period.WEEK:
-            case Period.DAY:
-                mFast = FAST;
-                mSlow = SLOW;
-                mNormal = NORMAL;
-                break;
-//            case Period.MIN60:
-//                mFast = Constant.MIN60_PER_TRADE_DAY * FAST;
-//                mSlow = Constant.MIN60_PER_TRADE_DAY * SLOW;
-//                mNormal = Constant.MIN60_PER_TRADE_DAY * NORMAL;
-//                break;
-//            case Period.MIN30:
-//                mFast = Constant.MIN30_PER_TRADE_DAY * FAST;
-//                mSlow = Constant.MIN30_PER_TRADE_DAY * SLOW;
-//                mNormal = Constant.MIN30_PER_TRADE_DAY * NORMAL;
-//                break;
-//            case Period.MIN15:
-//                mFast = Constant.MIN15_PER_TRADE_DAY * FAST;
-//                mSlow = Constant.MIN15_PER_TRADE_DAY * SLOW;
-//                mNormal = Constant.MIN15_PER_TRADE_DAY * NORMAL;
-//                break;
-//            case Period.MIN5:
-//                mFast = Constant.MIN5_PER_TRADE_DAY * FAST;
-//                mSlow = Constant.MIN5_PER_TRADE_DAY * SLOW;
-//                mNormal = Constant.MIN5_PER_TRADE_DAY * NORMAL;
-//                break;
         }
         mPriceList.clear();
         mEMAFastList.clear();

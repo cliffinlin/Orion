@@ -159,9 +159,23 @@ public class StockDataChart {
 		BarDataSet histogramDataSet = new BarDataSet(mHistogramEntryList,
 				"Histogram");
 		histogramDataSet.setBarSpacePercent(40f);
-		histogramDataSet.setIncreasingColor(Config.COLOR_INCREASING);
-		histogramDataSet.setDecreasingColor(Config.COLOR_DECREASING);
-		histogramDataSet.setColor(Config.COLOR_HISTOGRAM);
+		if (mHistogramEntryList.size() > 1) {
+			for (int i = 1; i < mHistogramEntryList.size(); i++) {
+				if ((mDIFEntryList.get(i).getVal() > mDIFEntryList.get(i-1).getVal()) && (mHistogramEntryList.get(i).getVal() > mHistogramEntryList.get(i-1).getVal())) {
+					histogramDataSet.addColor(Config.COLOR_INCREASING);
+				} else if ((mDIFEntryList.get(i).getVal() < mDIFEntryList.get(i-1).getVal()) && (mHistogramEntryList.get(i).getVal() < mHistogramEntryList.get(i-1).getVal())) {
+					histogramDataSet.addColor(Config.COLOR_DECREASING);
+				} else if ((mDIFEntryList.get(i).getVal() > mDIFEntryList.get(i-1).getVal()) && (mHistogramEntryList.get(i).getVal() < mHistogramEntryList.get(i-1).getVal())) {
+					histogramDataSet.addColor(Color.MAGENTA);
+				} else if ((mDIFEntryList.get(i).getVal() < mDIFEntryList.get(i-1).getVal()) && (mHistogramEntryList.get(i).getVal() > mHistogramEntryList.get(i-1).getVal())) {
+					histogramDataSet.addColor(Color.BLUE);
+				}
+			}
+		} else {
+			histogramDataSet.setIncreasingColor(Config.COLOR_INCREASING);
+			histogramDataSet.setDecreasingColor(Config.COLOR_DECREASING);
+			histogramDataSet.setColor(Config.COLOR_HISTOGRAM);
+		}
 		histogramDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		barData.addDataSet(histogramDataSet);
 
