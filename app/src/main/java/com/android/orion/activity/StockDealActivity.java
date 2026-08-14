@@ -96,7 +96,9 @@ public class StockDealActivity extends DatabaseActivity implements
 					} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_DEAL_EDIT)) {
 						if (StockDeal.isBuyType(mOriginalDealType) && mStockDeal.isSellType()) {
 							mStockDeal.setBuy(0);
-							mStock.setTee(mStock.getTee() + mStockDeal.getProfit());
+							if (mStockDeal.getProfit() > 0) {
+								mStock.setTee(mStock.getTee() + mStockDeal.getProfit());
+							}
 						}
 						mStockDeal.setModified(Utility.getCurrentDateTimeString());
 						mStockDatabaseManager.updateStockDealByID(mStockDeal);
