@@ -623,62 +623,6 @@ public class TrendAnalyzer {
 		}
 	}
 
-	public ArrayMap<String, Integer> getLevelMap(String basePeriod, int baseLevel) {
-		StockTrend stockTrend = mStock.getStockTrend(basePeriod, baseLevel);
-		if (stockTrend == null) {
-			return null;
-		}
-		float baseNextNet = (float) stockTrend.getNextNet();
-		if (baseNextNet == 0) {
-			return null;
-		}
-
-		int counter = 0;
-		int level = 0;
-		float nextNet;
-		ArrayList<Integer> levelList = new ArrayList<>();
-		ArrayMap<String, Integer> levelMap = new ArrayMap<>();
-		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period) && Period.indexOf(period) >= Period.indexOf(basePeriod)) {
-				counter++;
-				boolean found = false;
-				levelList.clear();
-				for (int i = baseLevel; i < StockTrend.LEVELS.length; i++) {
-					if (i < level) {
-						continue;
-					}
-					stockTrend = mStock.getStockTrend(period, i);
-					if (stockTrend == null) {
-						continue;
-					}
-					nextNet = (float) stockTrend.getNextNet();
-					if (nextNet == baseNextNet) {
-						found = true;
-						levelList.add(i);
-					}
-				}
-				if (found) {
-					if (levelList.size() > 1) {
-						if (levelList.get(1) - level > 1) {
-							level = levelList.get(0);
-						} else {
-							level = levelList.get(1);
-						}
-					} else {
-						level = levelList.get(0);
-					}
-					levelMap.put(period, level);
-				} else {
-					return null;
-				}
-			}
-		}
-		if (levelMap.isEmpty() || levelMap.size() != counter) {
-			return null;
-		}
-		return levelMap;
-	}
-
 	public void setupTrendThumbnail() {
 		mLineConfigList.clear();
 
