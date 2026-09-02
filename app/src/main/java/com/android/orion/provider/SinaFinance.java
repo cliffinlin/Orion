@@ -743,7 +743,6 @@ public class SinaFinance extends StockDataProvider {
 		String[] dateTime = null;
 		JSONArray jsonArray = null;
 		ContentValuesList.clear();
-		ArrayList<StockData> stockDataList = new ArrayList<>();
 		ArrayMap<String, StockData> stockDataMap = new ArrayMap<>();
 
 		if (stock == null || stockData == null) {
@@ -820,12 +819,9 @@ public class SinaFinance extends StockDataProvider {
 						stockData.setCreated(Utility.getCurrentDateTimeString());
 						stockData.setModified(Utility.getCurrentDateTimeString());
 						if (Period.isMinutePeriod(stockData.getPeriod())) {
-							if (!stockDataMap.containsKey(stockData.getDateTime())) {
-								stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
-								ContentValuesList.add(stockData.getContentValues());
-							}
+							stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
+							ContentValuesList.add(stockData.getContentValues());
 						} else {
-							stockDataList.add(new StockData(stockData));
 							ContentValuesList.add(stockData.getContentValues());
 						}
 					} else {
