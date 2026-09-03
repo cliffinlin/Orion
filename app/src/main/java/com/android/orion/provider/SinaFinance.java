@@ -819,8 +819,10 @@ public class SinaFinance extends StockDataProvider {
 						stockData.setCreated(Utility.getCurrentDateTimeString());
 						stockData.setModified(Utility.getCurrentDateTimeString());
 						if (Period.isMinutePeriod(stockData.getPeriod())) {
-							stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
-							ContentValuesList.add(stockData.getContentValues());
+							if (!stockDataMap.containsKey(stockData.getDateTime())) {
+								stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
+								ContentValuesList.add(stockData.getContentValues());
+							}
 						} else {
 							ContentValuesList.add(stockData.getContentValues());
 						}
