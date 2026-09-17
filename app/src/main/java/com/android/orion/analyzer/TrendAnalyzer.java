@@ -616,11 +616,75 @@ public class TrendAnalyzer {
 	public void setupThumbnail(Stock stock) {
 		try {
 			setup(stock);
+			setupPeriodThumbnail();
 			setupTrendThumbnail();
 			setupRadarThumbnail();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+
+	public void setupPeriodThumbnail() {
+		if (!Setting.getDisplayThumbnail()) {
+			return;
+		}
+
+		for (String period : Period.PERIODS) {
+			if (Setting.getPeriod(period)) {
+				setupPeriodThumbnail(period);
+			}
+		}
+	}
+
+	public void setupPeriodThumbnail(String period) {
+		mStockDataList = mStock.getStockDataList(period, StockTrend.LEVEL_NONE);
+		if (mStockDataList.isEmpty()) {
+			return;
+		}
+
+		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
+			if (mXValues[i] != null) {
+				mXValues[i].clear();
+			} else {
+				mXValues[i] = new ArrayList<>();
+			}
+			if (mYValues[i] != null) {
+				mYValues[i].clear();
+			} else {
+				mYValues[i] = new ArrayList<>();
+			}
+		}
+
+		for (int index = 0; index < mStockDataList.size(); index++) {
+			StockData stockData = mStockDataList.get(index);
+			for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
+				if (level != StockTrend.LEVEL_DRAW && level != mStock.getTargetLevel(period) && level != mStock.getTargetLevel(period) + 1) {
+					continue;
+				}
+				if (stockData.vertexOf(StockTrend.getVertexTOP(level))) {
+					mXValues[level].add((float) index);
+					mYValues[level].add((float) stockData.getCandle().getTop());
+				} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
+					mXValues[level].add((float) index);
+					mYValues[level].add((float) stockData.getCandle().getBottom());
+				}
+			}
+		}
+
+		mLineConfigList.clear();
+		for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
+			if (level != StockTrend.LEVEL_DRAW && level != mStock.getTargetLevel(period) && level != mStock.getTargetLevel(period) + 1) {
+				continue;
+			}
+			float strokeWidth = THUMBNAIL_STROKE_WIDTH;
+			if (level > StockTrend.LEVEL_DRAW) {
+				strokeWidth = THUMBNAIL_STROKE_WIDTH * 6;
+			}
+			mLineConfigList.add(new CurveThumbnail.LineConfig(mXValues[level], mYValues[level], StockTrend.COLORS[level], strokeWidth));
+		}
+
+		mStock.setPeriodThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(THUMBNAIL_SIZE, Color.TRANSPARENT, mLineConfigList, null)));
 	}
 
 	public void setupTrendThumbnail() {
