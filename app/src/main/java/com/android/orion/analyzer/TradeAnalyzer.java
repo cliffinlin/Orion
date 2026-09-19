@@ -11,6 +11,8 @@ import java.util.ArrayList;
 
 public class TradeAnalyzer {
 	Logger Log = Logger.getLogger();
+	double mProfit;
+	long mHedgeable;
 	Stock mStock;
 	StockDeal mBuyDeal;
 	StockDeal mSellDeal;
@@ -30,12 +32,18 @@ public class TradeAnalyzer {
 		}
 
 		mStock = stock;
-		mStock.setBuyProfit(0);
-		mStock.setSellProfit(0);
-
 		if (!mStock.hasFlag(Stock.FLAG_TARGET)) {
 			return;
 		}
+
+		mProfit = 0;
+		if (mStock.getTee() > 0) {
+			mProfit += mStock.getTee();
+		}
+		mHedgeable = 0;
+
+		mStock.setBuyProfit(0);
+		mStock.setSellProfit(0);
 
 		mStockDealList = mStock.getStockDealList();
 		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
@@ -49,6 +57,9 @@ public class TradeAnalyzer {
 			StockDeal stockDeal = mStockDealList.get(i);
 			if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_BUY)) {
 				mBuyDeal = stockDeal;
+				if (mBuyDeal.getProfit() > 0) {
+					mProfit += mBuyDeal.getProfit();
+				}
 			} else if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_SELL)) {
 				if (mSellDeal == null) {
 					mSellDeal = stockDeal;
@@ -63,6 +74,31 @@ public class TradeAnalyzer {
 		if (mSellDeal != null) {
 			mStock.setSellProfit(mSellDeal.getProfit());
 		}
+
+		for (int i = 0; i < mStockDealList.size(); i++) {
+			if (mProfit <= 0) {
+				break;
+			}
+
+			StockDeal stockDeal = mStockDealList.get(i);
+			if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_BUY)) {
+				double profit = stockDeal.getProfit();
+				long volume = stockDeal.getVolume();
+				if (profit >= 0 || volume <= 0) {
+					continue;
+				}
+
+				profit = Math.abs(profit);
+				if (mProfit >= profit) {
+					mHedgeable += volume;
+					mProfit -= profit;
+				} else {
+					mHedgeable += (mProfit * volume)/profit;
+					mProfit = 0;
+				}
+			}
+		}
+		mStock.setHedgeable(mHedgeable);
 	}
 
 	public String getBuyDealString() {

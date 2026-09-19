@@ -114,6 +114,7 @@ public class Stock extends DatabaseTable {
 	private byte[] mRadarThumbnail;
 	private double mSignal;
 	private double mTee;
+	private long mHedgeable;
 
 	public Stock() {
 		init();
@@ -192,6 +193,7 @@ public class Stock extends DatabaseTable {
 		mSellProfit = 0;
 		mSignal = 0;
 		mTee = 0;
+		mHedgeable = 0;
 	}
 
 	@Override
@@ -264,6 +266,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_RADAR_THUMBNAIL, mRadarThumbnail);
 		contentValues.put(DatabaseContract.COLUMN_SIGNAL, mSignal);
 		contentValues.put(DatabaseContract.COLUMN_TEE, mTee);
+		contentValues.put(DatabaseContract.COLUMN_HEDGEABLE, mHedgeable);
 		return contentValues;
 	}
 
@@ -303,6 +306,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
 		contentValues.put(DatabaseContract.COLUMN_TRADING, mTrading);
 		contentValues.put(DatabaseContract.COLUMN_TEE, mTee);
+		contentValues.put(DatabaseContract.COLUMN_HEDGEABLE, mHedgeable);
 		return contentValues;
 	}
 
@@ -379,6 +383,7 @@ public class Stock extends DatabaseTable {
 		setRadarThumbnail(stock.mRadarThumbnail);
 		setSignal(stock.mSignal);
 		setTee(stock.mTee);
+		setHedgeable(stock.mHedgeable);
 	}
 
 	@Override
@@ -455,6 +460,7 @@ public class Stock extends DatabaseTable {
 		setRadarThumbnail(cursor);
 		setSignal(cursor);
 		setTee(cursor);
+		setHedgeable(cursor);
 	}
 
 	public String getClasses() {
@@ -1372,6 +1378,23 @@ public class Stock extends DatabaseTable {
 
 		setTee(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_TEE)));
+	}
+
+	public long getHedgeable() {
+		return mHedgeable;
+	}
+
+	public void setHedgeable(long hedgeable) {
+		mHedgeable = hedgeable;
+	}
+
+	void setHedgeable(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setHedgeable(cursor.getLong(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_HEDGEABLE)));
 	}
 
 	public void addFlag(int flag) {

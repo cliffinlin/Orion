@@ -692,6 +692,13 @@ public class StockDealListActivity extends ListActivity implements
 
 		setListViewHeightBasedOnChildren(mLeftListView);
 		setListViewHeightBasedOnChildren(mRightListView);
+
+		if (mStock.hasFlag(Stock.FLAG_TARGET)) {
+			long hedgeable = mStock.getHedgeable();
+			if (hedgeable > 0) {
+				Toast.makeText(mContext, getString(R.string.stock_deal_hedgeable) + hedgeable, Toast.LENGTH_LONG).show();
+			}
+		}
 	}
 
 	@Override
