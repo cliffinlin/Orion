@@ -32,6 +32,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
+import com.android.orion.analyzer.TradeAnalyzer;
 import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
@@ -106,6 +107,8 @@ public class StockDealListActivity extends ListActivity implements
 	StockDeal mStockDeal = new StockDeal();
 
 	Stock mStock = new Stock();
+
+	TradeAnalyzer mTradeAnalyzer = TradeAnalyzer.getInstance();
 
 	int mFilterType = FILTER_TYPE_NONE;
 
@@ -694,6 +697,7 @@ public class StockDealListActivity extends ListActivity implements
 		setListViewHeightBasedOnChildren(mRightListView);
 
 		if (mStock.hasFlag(Stock.FLAG_TARGET)) {
+			mTradeAnalyzer.analyzeProfit(mStock);
 			long hedgeable = mStock.getHedgeable();
 			if (hedgeable > 0) {
 				Toast.makeText(mContext, getString(R.string.stock_deal_hedgeable) + hedgeable, Toast.LENGTH_LONG).show();
