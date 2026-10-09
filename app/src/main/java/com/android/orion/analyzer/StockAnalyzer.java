@@ -132,13 +132,10 @@ public class StockAnalyzer {
 				return;
 			}
 
-			for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
-				if (level == mStock.getTargetLevel(period) || level == mStock.getLongLevel(period) + 1) {
-					setupPulseList(level);
-					FourierAnalyzer.analyze(period, mPulseList);
-					mStock.setRadar(period, level, FourierAnalyzer.getRadar());
-				}
-			}
+			int level = mStock.getTargetLevel(period);
+			setupPulseList(level);
+			FourierAnalyzer.analyze(period, mPulseList);
+			mStock.setRadar(period, level, FourierAnalyzer.getRadar());
 
 			ArrayList<Double> echoList = FourierAnalyzer.getEchoList();
 			if (echoList.size() != size) {
@@ -156,6 +153,13 @@ public class StockAnalyzer {
 					continue;
 				}
 				macd.set(difList.get(i), deaList.get(i), histogramList.get(i), echoList.get(i));
+			}
+
+			level = mStock.getTargetLevel(period) + 1;
+			if (level < StockTrend.LEVELS.length) {
+				setupPulseList(level);
+				FourierAnalyzer.analyze(period, mPulseList);
+				mStock.setRadar(period, level, FourierAnalyzer.getRadar());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
