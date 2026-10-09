@@ -54,8 +54,7 @@ public class Period {
 	public int mLongLevel = StockTrend.LEVEL_NONE;
 	public String mTrend = StockTrend.TREND_NONE;
 	public Radar mTargetRadar;
-	public Radar mShortRadar;
-	public Radar mLongRadar;
+	public Radar[] mRadar = new Radar[StockTrend.LEVELS.length];
 
 	public ArrayMap<String, StockRadar> mStockRadarMap = new ArrayMap<>();
 	public ArrayList<ArrayList<StockData>> mVertexLists = new ArrayList<>();
@@ -244,20 +243,12 @@ public class Period {
 		mTargetRadar = radar;
 	}
 
-	public Radar getShortRadar() {
-		return mShortRadar;
+	public Radar getRadar(int level) {
+		return mRadar[level];
 	}
 
-	public void setShortRadar(Radar radar) {
-		mShortRadar = radar;
-	}
-
-	public Radar getLongRadar() {
-		return mLongRadar;
-	}
-
-	public void setLongRadar(Radar radar) {
-		mLongRadar = radar;
+	public void setRadar(int level, Radar radar) {
+		mRadar[level] = radar;
 	}
 
 	public static final String fromColumnName(String columnName) {

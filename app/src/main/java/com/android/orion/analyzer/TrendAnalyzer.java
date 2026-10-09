@@ -768,18 +768,14 @@ public class TrendAnalyzer {
 		double signal = 0;
 		for (String period : Period.PERIODS_R) {
 			if (Setting.getPeriod(period)) {
-				radar = mStock.getTargetRadar(period);
-				if (radar != null) {
-					int color = THUMBNAIL_RADA_COLOR_TARGET;
-					if (TextUtils.equals(period, Period.DAY)) {
-						color = THUMBNAIL_RADA_COLOR_DAY;
-					} else if (TextUtils.equals(period, Period.WEEK)) {
-						color = THUMBNAIL_RADA_COLOR_WEEK;
-					} else if (TextUtils.equals(period, Period.MONTH)) {
-						color = THUMBNAIL_RADA_COLOR_MONTH;
+				for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
+					radar = mStock.getRadar(period, level);
+					if (radar != null) {
+						setupRadarPoint(radar, period, level);
+						if (level == mStock.getTargetLevel(period)) {
+							signal += radar.signal;
+						}
 					}
-					setupRadarPoint(radar, period, color);
-					signal += radar.signal;
 				}
 			}
 		}
@@ -906,7 +902,7 @@ public class TrendAnalyzer {
 				radiusLarge, THUMBNAIL_STROKE_WIDTH));
 	}
 
-	private void setupRadarPoint(Radar radar, String period, int color) {
+	private void setupRadarPoint(Radar radar, String period, int level) {
 		if (radar == null) {
 			return;
 		}
@@ -922,6 +918,20 @@ public class TrendAnalyzer {
 		float x = centerX + (float) (radius * Math.cos(angle));
 		float y = centerY + (float) (radius * Math.sin(angle));
 
+		int color = THUMBNAIL_RADA_COLOR_TARGET;
+		if (TextUtils.equals(period, Period.DAY)) {
+			color = THUMBNAIL_RADA_COLOR_DAY;
+		} else if (TextUtils.equals(period, Period.WEEK)) {
+			color = THUMBNAIL_RADA_COLOR_WEEK;
+		} else if (TextUtils.equals(period, Period.MONTH)) {
+			color = THUMBNAIL_RADA_COLOR_MONTH;
+		}
+
+		radius = THUMBNAIL_SCATTER_SIZE;
+		if (level != mStock.getTargetLevel(period)) {
+			radius = THUMBNAIL_SCATTER_SIZE / 2;
+		}
+
 		int shape = CurveThumbnail.ScatterConfig.SHAPE_CIRCLE;
 		if (TextUtils.equals(period, Period.MONTH)) {
 			shape = CurveThumbnail.ScatterConfig.SHAPE_TRIANGLE;
@@ -930,27 +940,29 @@ public class TrendAnalyzer {
 		}
 
 		mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
-				x, y, color, THUMBNAIL_SCATTER_SIZE, shape
+				x, y, color, radius, shape
 		));
 
-		switch (period) {
-			case Period.DAY:
-				break;
-			case Period.MIN60:
-				addRadialLine(x, y, 0, lineRadius, color, strokeWidth);
-				break;
-			case Period.MIN30:
-				addRadialLine(x, y, 0, -lineRadius, color, strokeWidth);
-				break;
-			case Period.MIN15:
-				addRadialLine(x, y, lineRadius, 0, color, strokeWidth);
-				break;
-			case Period.MIN5:
-				double angleMin5 = Math.toRadians((float) Constant.MIN5 / (float) Constant.MIN60 * 360f);
-				float deltaX = (float) (lineRadius * Math.sin(angleMin5));
-				float deltaY = (float) (lineRadius * Math.cos(angleMin5));
-				addRadialLine(x, y, deltaX, deltaY, color, strokeWidth);
-				break;
+		if (level == mStock.getTargetLevel(period)) {
+			switch (period) {
+				case Period.MIN60:
+					addRadialLine(x, y, 0, lineRadius, color, strokeWidth);
+					break;
+				case Period.MIN30:
+					addRadialLine(x, y, 0, -lineRadius, color, strokeWidth);
+					break;
+				case Period.MIN15:
+					addRadialLine(x, y, lineRadius, 0, color, strokeWidth);
+					break;
+				case Period.MIN5:
+					double angleMin5 = Math.toRadians((float) Constant.MIN5 / (float) Constant.MIN60 * 360f);
+					float deltaX = (float) (lineRadius * Math.sin(angleMin5));
+					float deltaY = (float) (lineRadius * Math.cos(angleMin5));
+					addRadialLine(x, y, deltaX, deltaY, color, strokeWidth);
+					break;
+				default:
+					break;
+			}
 		}
 	}
 

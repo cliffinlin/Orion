@@ -132,9 +132,13 @@ public class StockAnalyzer {
 				return;
 			}
 
-			setupPulseList(mStock.getTargetLevel(period));
-			FourierAnalyzer.analyze(period, mPulseList);
-			mStock.setTargetRadar(period, FourierAnalyzer.getRadar());
+			for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
+				if (level == mStock.getTargetLevel(period) || level == mStock.getLongLevel(period) + 1) {
+					setupPulseList(level);
+					FourierAnalyzer.analyze(period, mPulseList);
+					mStock.setRadar(period, level, FourierAnalyzer.getRadar());
+				}
+			}
 
 			ArrayList<Double> echoList = FourierAnalyzer.getEchoList();
 			if (echoList.size() != size) {

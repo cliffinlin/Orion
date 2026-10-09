@@ -1518,20 +1518,12 @@ public class Stock extends DatabaseTable {
 		getPeriod(period).setTargetRadar(radar);
 	}
 
-	public Radar getShortRadar(String period) {
-		return getPeriod(period).getShortRadar();
+	public Radar getRadar(String period, int level) {
+		return getPeriod(period).getRadar(level);
 	}
 
-	public void setShortRadar(String period, Radar radar) {
-		getPeriod(period).setShortRadar(radar);
-	}
-
-	public Radar getLongRadar(String period) {
-		return getPeriod(period).getLongRadar();
-	}
-
-	public void setLongRadar(String period, Radar radar) {
-		getPeriod(period).setLongRadar(radar);
+	public void setRadar(String period, int level, Radar radar) {
+		getPeriod(period).setRadar(level, radar);
 	}
 
 	public void setupMarketValue() {
