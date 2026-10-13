@@ -883,8 +883,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
-		if (!TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
-			Log.d("return, stock.getClasses()!=" + Stock.CLASS_A);
+		if (TextUtils.equals(stock.getClasses(), Stock.CLASS_I)) {
+			Log.d("return, stock.getClasses() ==" + Stock.CLASS_I);
 			return;
 		}
 

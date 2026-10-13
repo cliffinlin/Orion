@@ -311,7 +311,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 						mStock.setClasses(Stock.CLASS_A);
 						mStock.setSE(Stock.SE_SH);
 					} else {
-						mStock.setClasses(Stock.CLASS_INDEX);
+						mStock.setClasses(Stock.CLASS_I);
 						mStock.setSE(Stock.SE_SH);
 					}
 					mStock.setCode(s.toString());

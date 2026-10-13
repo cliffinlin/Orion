@@ -2,14 +2,12 @@ package com.android.orion.analyzer;
 
 import android.text.TextUtils;
 
-import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockShare;
-import com.android.orion.database.StockTrend;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.constant.Constant;
 import com.android.orion.utility.Logger;
@@ -35,7 +33,7 @@ public class FinancialAnalyzer {
 	public void analyzeFinancial(Stock stock) {
 		String sortOrder = DatabaseContract.ORDER_DATE_DESC;
 
-		if (stock == null || TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
+		if (stock == null || !TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
 			return;
 		}
 
@@ -218,7 +216,7 @@ public class FinancialAnalyzer {
 	}
 
 	public void setupFinancial(Stock stock) {
-		if (stock == null || TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
+		if (stock == null || !TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
 			return;
 		}
 
@@ -250,7 +248,7 @@ public class FinancialAnalyzer {
 	}
 
 	public void setupStockBonus(Stock stock) {
-		if (stock == null || TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
+		if (stock == null || !TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
 			return;
 		}
 
