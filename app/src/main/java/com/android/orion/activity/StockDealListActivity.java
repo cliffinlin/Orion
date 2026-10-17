@@ -702,6 +702,10 @@ public class StockDealListActivity extends ListActivity implements
 			if (hedgeable > 0) {
 				Toast.makeText(mContext, getString(R.string.stock_deal_hedgeable) + hedgeable, Toast.LENGTH_LONG).show();
 			}
+			double tee = mStock.getTee();
+			if (tee > 0) {
+				Toast.makeText(mContext, getString(R.string.stock_deal_tee) + tee, Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 

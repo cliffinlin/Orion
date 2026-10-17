@@ -13,6 +13,7 @@ public class TradeAnalyzer {
 	Logger Log = Logger.getLogger();
 	double mProfit;
 	long mHedgeable;
+	double mTee;
 	Stock mStock;
 	StockDeal mBuyDeal;
 	StockDeal mSellDeal;
@@ -36,20 +37,24 @@ public class TradeAnalyzer {
 			return;
 		}
 
-		mProfit = 0;
-		if (mStock.getTee() > 0) {
-			mProfit += mStock.getTee();
-		}
-		mHedgeable = 0;
-
-		mStock.setBuyProfit(0);
-		mStock.setSellProfit(0);
-
 		mStockDealList = mStock.getStockDealList();
 		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
-		if (mStockDealList == null || mStockDealList.size() == 0) {
+		if (mStockDealList.isEmpty()) {
+			mStock.setBuyProfit(0);
+			mStock.setSellProfit(0);
+			mStock.setHedgeable(0);
+			mStock.setTee(0);
 			return;
 		}
+
+		setStockProfit();
+		setHedgeable();
+		setTee();
+	}
+
+	public void setStockProfit() {
+		mStock.setBuyProfit(0);
+		mStock.setSellProfit(0);
 
 		mBuyDeal = null;
 		mSellDeal = null;
@@ -57,9 +62,6 @@ public class TradeAnalyzer {
 			StockDeal stockDeal = mStockDealList.get(i);
 			if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_BUY)) {
 				mBuyDeal = stockDeal;
-				if (mBuyDeal.getProfit() > 0) {
-					mProfit += mBuyDeal.getProfit();
-				}
 			} else if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_SELL)) {
 				if (mSellDeal == null) {
 					mSellDeal = stockDeal;
@@ -73,6 +75,21 @@ public class TradeAnalyzer {
 
 		if (mSellDeal != null) {
 			mStock.setSellProfit(mSellDeal.getProfit());
+		}
+	}
+	public void setHedgeable() {
+		mProfit = 0;
+		mHedgeable = 0;
+
+		mBuyDeal = null;
+		for (int i = mStockDealList.size() - 1; i >= 0; i--) {
+			StockDeal stockDeal = mStockDealList.get(i);
+			if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_BUY)) {
+				mBuyDeal = stockDeal;
+				if (mBuyDeal.getProfit() > 0) {
+					mProfit += mBuyDeal.getProfit();
+				}
+			}
 		}
 
 		for (int i = 0; i < mStockDealList.size(); i++) {
@@ -93,7 +110,7 @@ public class TradeAnalyzer {
 					mHedgeable += volume;
 					mProfit -= profit;
 				} else {
-					mHedgeable += (mProfit * volume)/profit;
+					mHedgeable = (long) (mHedgeable + (mProfit * volume) / profit);
 					mProfit = 0;
 				}
 			}
@@ -101,6 +118,24 @@ public class TradeAnalyzer {
 		mStock.setHedgeable(mHedgeable);
 	}
 
+	public void setTee() {
+		mProfit = 0;
+		mTee = 0;
+
+		mSellDeal = null;
+		for (int i = mStockDealList.size() - 1; i >= 0; i--) {
+			StockDeal stockDeal = mStockDealList.get(i);
+			if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_SELL)) {
+				mSellDeal = stockDeal;
+				if (mSellDeal.getProfit() < 0) {
+					mProfit += mSellDeal.getProfit();
+				}
+			}
+		}
+
+		mTee = Math.abs(mProfit);
+		mStock.setTee(mTee);
+	}
 	public String getBuyDealString() {
 		return mBuyDeal == null ? "" : mBuyDeal.getString();
 	}
