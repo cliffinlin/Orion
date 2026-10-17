@@ -37,7 +37,9 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_STROKE_COLOR = Color.GRAY;
 	public static final int THUMBNAIL_MARKER_SIZE = 20;
 	public static final int THUMBNAIL_MARKER_STROKE_WIDTH = 5;
-	public static final int THUMBNAIL_SCATTER_SIZE = 10;
+	public static final int THUMBNAIL_SCATTER_SIZE_LOW_LEVEL = 5;
+	public static final int THUMBNAIL_SCATTER_SIZE_TARGET = 10;
+	public static final int THUMBNAIL_SCATTER_SIZE_HIGH_LEVEL = 7;
 	public static final int THUMBNAIL_TREND_COLOR_UP = Config.COLOR_DARK_RED;
 	public static final int THUMBNAIL_TREND_COLOR_DOWN = Config.COLOR_DARK_GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_TARGET = Color.BLACK;
@@ -910,8 +912,8 @@ public class TrendAnalyzer {
 		float centerX = (float) THUMBNAIL_SIZE / 2f;
 		float centerY = (float) THUMBNAIL_SIZE / 2f;
 		float radius;
-		final float lineRadius = THUMBNAIL_SIZE / 5f;
-		final float strokeWidth = 4f * THUMBNAIL_STROKE_WIDTH;
+		float lineRadius = THUMBNAIL_SIZE / 5f;
+		float strokeWidth;
 
 		radius = (float) (THUMBNAIL_SIZE / 2.5f * Math.abs(radar.amplitude));
 		double angle = radar.phase;
@@ -927,9 +929,11 @@ public class TrendAnalyzer {
 			color = THUMBNAIL_RADA_COLOR_MONTH;
 		}
 
-		radius = THUMBNAIL_SCATTER_SIZE;
-		if (level != mStock.getTargetLevel(period)) {
-			radius = THUMBNAIL_SCATTER_SIZE / 2;
+		radius = THUMBNAIL_SCATTER_SIZE_TARGET;
+		if (level == mStock.getTargetLevel(period) - 1) {
+			radius = THUMBNAIL_SCATTER_SIZE_LOW_LEVEL;
+		} else if (level == mStock.getTargetLevel(period) + 1) {
+			radius = THUMBNAIL_SCATTER_SIZE_HIGH_LEVEL;
 		}
 
 		int shape = CurveThumbnail.ScatterConfig.SHAPE_CIRCLE;
@@ -943,26 +947,33 @@ public class TrendAnalyzer {
 				x, y, color, radius, shape
 		));
 
-		if (level == mStock.getTargetLevel(period)) {
-			switch (period) {
-				case Period.MIN60:
-					addRadialLine(x, y, 0, lineRadius, color, strokeWidth);
-					break;
-				case Period.MIN30:
-					addRadialLine(x, y, 0, -lineRadius, color, strokeWidth);
-					break;
-				case Period.MIN15:
-					addRadialLine(x, y, lineRadius, 0, color, strokeWidth);
-					break;
-				case Period.MIN5:
-					double angleMin5 = Math.toRadians((float) Constant.MIN5 / (float) Constant.MIN60 * 360f);
-					float deltaX = (float) (lineRadius * Math.sin(angleMin5));
-					float deltaY = (float) (lineRadius * Math.cos(angleMin5));
-					addRadialLine(x, y, deltaX, deltaY, color, strokeWidth);
-					break;
-				default:
-					break;
-			}
+		lineRadius = THUMBNAIL_SIZE / 5f;
+		strokeWidth = 4f * THUMBNAIL_STROKE_WIDTH;
+		if (level == mStock.getTargetLevel(period) - 1) {
+			lineRadius = THUMBNAIL_SIZE / 8f;
+			strokeWidth = 1f * THUMBNAIL_STROKE_WIDTH;
+		} else if (level == mStock.getTargetLevel(period) + 1) {
+			lineRadius = THUMBNAIL_SIZE / 8f;
+			strokeWidth = 2f * THUMBNAIL_STROKE_WIDTH;
+		}
+		switch (period) {
+			case Period.MIN60:
+				addRadialLine(x, y, 0, lineRadius, color, strokeWidth);
+				break;
+			case Period.MIN30:
+				addRadialLine(x, y, 0, -lineRadius, color, strokeWidth);
+				break;
+			case Period.MIN15:
+				addRadialLine(x, y, lineRadius, 0, color, strokeWidth);
+				break;
+			case Period.MIN5:
+				double angleMin5 = Math.toRadians((float) Constant.MIN5 / (float) Constant.MIN60 * 360f);
+				float deltaX = (float) (lineRadius * Math.sin(angleMin5));
+				float deltaY = (float) (lineRadius * Math.cos(angleMin5));
+				addRadialLine(x, y, deltaX, deltaY, color, strokeWidth);
+				break;
+			default:
+				break;
 		}
 	}
 

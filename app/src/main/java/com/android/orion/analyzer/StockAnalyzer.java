@@ -155,11 +155,12 @@ public class StockAnalyzer {
 				macd.set(difList.get(i), deaList.get(i), histogramList.get(i), echoList.get(i));
 			}
 
-			level = mStock.getTargetLevel(period) + 1;
-			if (level < StockTrend.LEVELS.length) {
-				setupPulseList(level);
-				FourierAnalyzer.analyze(period, mPulseList);
-				mStock.setRadar(period, level, FourierAnalyzer.getRadar());
+			for (level = 0; level < StockTrend.LEVELS.length; level++) {
+				if (level == mStock.getTargetLevel(period) - 1 || level == mStock.getTargetLevel(period) + 1) {
+					setupPulseList(level);
+					FourierAnalyzer.analyze(period, mPulseList);
+					mStock.setRadar(period, level, FourierAnalyzer.getRadar());
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
