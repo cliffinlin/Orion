@@ -116,7 +116,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="3"
+            android:weightSum="4"
             android:paddingTop="6dp"
             android:paddingBottom="6dp">
 
@@ -209,6 +209,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0%"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp">
+
+                <TextView
+                    android:id="@+id/textView_stock_tee_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="2dp"
+                    android:text="Tee"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/textview_stock_tee_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -699,9 +727,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="4"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp">
+            android:weightSum="3"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp">
 
             <!-- Locked 编辑框 -->
             <LinearLayout
@@ -862,41 +890,6 @@
                         android:visibility="gone"
                         android:layout_marginTop="2dp" />
                 </LinearLayout>
-            </LinearLayout>
-
-            <!-- Tee 编辑框 -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:paddingLeft="4dp">
-
-                <TextView
-                    android:id="@+id/textView_stock_tee_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="1dp"
-                    android:text="Tee"
-                    android:textColor="@android:color/black"
-                    android:textSize="11sp" />
-
-                <EditText
-                    android:id="@+id/edittext_stock_tee"
-                    android:layout_width="80dp"
-                    android:layout_height="28dp"
-                    android:gravity="center"
-                    android:text="0"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:inputType="numberDecimal"
-                    android:background="@android:drawable/editbox_background_normal"
-                    android:padding="4dp"
-                    android:layout_marginTop="2dp" />
             </LinearLayout>
         </LinearLayout>
 

@@ -46,7 +46,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	EditText mEditTextStockLocked;
 	EditText mEditTextStockQuota;
 	EditText mEditTextStockTrading;
-	EditText mEditTextStockTee;
+	TextView mTextViewStockTeeValue;
 	TextView mTextViewStockHoldLabel;
 	TextView mTextViewStockHoldValue;
 	TextView mTextViewStockYieldLabel;
@@ -136,7 +136,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockLocked = findViewById(R.id.edittext_stock_locked);
 		mEditTextStockQuota = findViewById(R.id.edittext_stock_quota);
 		mEditTextStockTrading = findViewById(R.id.edittext_stock_trading);
-		mEditTextStockTee = findViewById(R.id.edittext_stock_tee);
+		mTextViewStockTeeValue = findViewById(R.id.textview_stock_tee_value);
 		mTextViewStockHoldLabel = findViewById(R.id.textview_stock_hold_label);
 		mTextViewStockHoldValue = findViewById(R.id.textview_stock_hold_value);
 		mTextViewStockYieldLabel = findViewById(R.id.textview_stock_yield_label);
@@ -206,7 +206,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockLocked.setOnClickListener(this);
 		mEditTextStockQuota.setOnClickListener(this);
 		mEditTextStockTrading.setOnClickListener(this);
-		mEditTextStockTee.setOnClickListener(this);
 		mImageViewRestoreTarget.setOnClickListener(this);
 		mImageViewMonthTarget.setOnClickListener(this);
 		mImageViewWeekTarget.setOnClickListener(this);
@@ -775,7 +774,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockTrading.setText(String.valueOf(tradingValue));
 		mEditTextStockTrading.addTextChangedListener(mTradingTextWatcher);
 
-		mEditTextStockTee.setText(String.format(Locale.getDefault(), "%.2f", mStock.getTee()));
+		mTextViewStockTeeValue.setText(String.format(Locale.getDefault(), "%.2f", mStock.getTee()));
 
 		mTextViewStockHoldValue.setText(String.valueOf(mStock.getHold()));
 
