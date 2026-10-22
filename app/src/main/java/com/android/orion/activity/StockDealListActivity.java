@@ -704,7 +704,11 @@ public class StockDealListActivity extends ListActivity implements
 			}
 			double tee = mStock.getTee();
 			if (tee > 0) {
-				Toast.makeText(mContext, getString(R.string.stock_deal_tee) + tee, Toast.LENGTH_LONG).show();
+				long share = 0;
+				if (mStock.getPrice() > 0) {
+					share = (long) (tee/mStock.getPrice());
+				}
+				Toast.makeText(mContext, getString(R.string.stock_deal_tee) + tee + " share:" + share, Toast.LENGTH_LONG).show();
 			}
 		}
 	}

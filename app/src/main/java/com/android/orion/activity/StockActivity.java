@@ -1029,18 +1029,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					mStock.setSellProfit(0);
 				}
 
-//				try {
-//					String teeText = mEditTextStockTee.getText().toString();
-//					if (!TextUtils.isEmpty(teeText)) {
-//						double tee = Double.parseDouble(teeText);
-//						mStock.setTee(tee);
-//					} else {
-//						mStock.setTee(0.0);
-//					}
-//				} catch (Exception e) {
-//					mStock.setTee(0.0);
-//				}
-
 				String name = mEditTextStockName.getText().toString();
 				String code = mEditTextStockCode.getText().toString();
 

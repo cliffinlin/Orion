@@ -66,8 +66,6 @@ public class StockDealActivity extends DatabaseActivity implements
 	String mBuyDate = "";
 	String mSellDate = "";
 
-	String mOriginalDealType = "";
-
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
 		@Override
@@ -82,7 +80,6 @@ public class StockDealActivity extends DatabaseActivity implements
 					} else {
 						mSellDate = mStockDeal.getDate();
 					}
-					mOriginalDealType = mStockDeal.getType();
 					mStock.setSE(mStockDeal.getSE());
 					mStock.setCode(mStockDeal.getCode());
 					mStockDatabaseManager.getStock(mStock);
@@ -94,12 +91,6 @@ public class StockDealActivity extends DatabaseActivity implements
 						mStockDeal.setCreated(Utility.getCurrentDateTimeString());
 						mStockDatabaseManager.insertStockDeal(mStockDeal);
 					} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_DEAL_EDIT)) {
-						if (StockDeal.isBuyType(mOriginalDealType) && mStockDeal.isSellType()) {
-							mStockDeal.setBuy(0);
-//							if (mStockDeal.getProfit() > 0) {
-//								mStock.setTee(mStock.getTee() + mStockDeal.getProfit());
-//							}
-						}
 						mStockDeal.setModified(Utility.getCurrentDateTimeString());
 						mStockDatabaseManager.updateStockDealByID(mStockDeal);
 					}
@@ -120,7 +111,6 @@ public class StockDealActivity extends DatabaseActivity implements
 					mStockDeal.setBuy(mStock.getPrice());
 					mStockDeal.setVolume(mStock.getTrading());
 					mStockDeal.setDate(Utility.getCurrentDateString());
-					mOriginalDealType = mStockDeal.getType();
 					updateView();
 					break;
 
@@ -328,6 +318,13 @@ public class StockDealActivity extends DatabaseActivity implements
 				break;
 			}
 		}
+		if (TextUtils.equals(mAction, Constant.ACTION_STOCK_DEAL_EDIT)) {
+			mRadioDealBuy.setEnabled(false);
+			mRadioDealSell.setEnabled(false);
+		} else {
+			mRadioDealBuy.setEnabled(true);
+			mRadioDealSell.setEnabled(true);
+		}
 		if (mStockDeal.isBuyType()) {
 			mRadioDealBuy.setChecked(true);
 			mEditTextBuyPrice.setEnabled(true);
@@ -393,14 +390,15 @@ public class StockDealActivity extends DatabaseActivity implements
 			mRadioDealBuy.setChecked(false);
 			mStockDeal.setType(StockDeal.TYPE_SELL);
 
-			mEditTextBuyPrice.setEnabled(false);
-
 			mEditTextSellPrice.setEnabled(true);
 			if (mStockDeal.getSell() != 0) {
 				mEditTextSellPrice.setText(String.valueOf(mStockDeal.getSell()));
 			} else {
 				mEditTextSellPrice.setText(String.valueOf(mStock.getPrice()));
 			}
+
+			mEditTextBuyPrice.setEnabled(false);
+			mEditTextBuyPrice.setText("");
 
 			if (!TextUtils.isEmpty(mSellDate)) {
 				mEditTextDealDate.setText(mSellDate);
