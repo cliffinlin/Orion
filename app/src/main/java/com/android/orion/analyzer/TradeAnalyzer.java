@@ -92,6 +92,10 @@ public class TradeAnalyzer {
 			}
 		}
 
+		if (mProfit > 0) {
+			mStock.setBuyProfit(mBuyDeal.getProfit());
+		}
+
 		for (int i = 0; i < mStockDealList.size(); i++) {
 			if (mProfit <= 0) {
 				break;
@@ -133,6 +137,7 @@ public class TradeAnalyzer {
 			}
 		}
 
+		mStock.setSellProfit(mProfit);
 		mTee = Math.abs(mProfit);
 		mStock.setTee(mTee);
 	}

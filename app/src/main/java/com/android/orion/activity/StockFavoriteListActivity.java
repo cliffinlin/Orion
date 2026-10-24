@@ -1038,7 +1038,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                     if (Utility.hasFlag(flagValue, Stock.FLAG_TARGET)) {
                         double profit = cursor.getDouble(columnIndex);
                         textView.setText(String.valueOf(profit));
-                        textView.setTextColor(profit < 0 ? Color.GREEN : Color.GRAY);
+                        textView.setTextColor(profit < 0 ? Color.MAGENTA : Color.GRAY);
                     } else {
                         textView.setText("");
                     }
