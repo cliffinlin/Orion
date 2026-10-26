@@ -774,7 +774,7 @@ public class TrendAnalyzer {
 					radar = mStock.getRadar(period, level);
 					if (radar != null) {
 						setupRadarPoint(radar, period, level);
-						if (level == mStock.getTargetLevel(period)) {
+						if (level == mStock.getTargetLevel(period) || level == mStock.getTargetLevel(period) - 1 || level == mStock.getTargetLevel(period) + 1) {
 							signal += radar.signal;
 						}
 					}

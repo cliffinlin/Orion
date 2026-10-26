@@ -116,9 +116,9 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 				handleFavoriteNone();
 				handleFavoriteHold();
 				break;
-			case R.id.action_favorite_trading:
+			case R.id.action_favorite_target:
 				handleFavoriteNone();
-				handleFavoriteTrading();
+				handleFavoriteTarget();
 				break;
 			case R.id.action_favorite_none:
 				handleFavoriteNone();
@@ -150,7 +150,7 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 		}
 	}
 
-	private void handleFavoriteTrading() {
+	private void handleFavoriteTarget() {
 		try {
 			ArrayList<Stock> stockList = new ArrayList<>();
 			mStockDatabaseManager.getStockList(DatabaseContract.SELECTION_FLAG(Stock.FLAG_TARGET), null, stockList);

@@ -47,9 +47,9 @@
         android:title="@string/favorite_hold"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_favorite_trading"
+        android:id="@+id/action_favorite_target"
         android:orderInCategory="100"
-        android:title="@string/favorite_trading"
+        android:title="@string/favorite_target"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_favorite_none"

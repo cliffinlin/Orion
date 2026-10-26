@@ -914,7 +914,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                     quota = cursor.getInt(quotaColumnIndex);
                 }
 
-                float ratio = locked == 0 ? 0 : hold / locked;
+                float ratio = quota == 0 ? 0 : hold / quota;
 
                 LinearLayout.LayoutParams holdParams = (LinearLayout.LayoutParams) holdPortion.getLayoutParams();
                 LinearLayout.LayoutParams remainingParams = (LinearLayout.LayoutParams) remainingPortion.getLayoutParams();
