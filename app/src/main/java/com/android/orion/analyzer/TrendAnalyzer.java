@@ -39,7 +39,7 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_MARKER_STROKE_WIDTH = 5;
 	public static final int THUMBNAIL_SCATTER_SIZE_LOW_LEVEL = 5;
 	public static final int THUMBNAIL_SCATTER_SIZE_TARGET = 10;
-	public static final int THUMBNAIL_SCATTER_SIZE_HIGH_LEVEL = 7;
+	public static final int THUMBNAIL_SCATTER_SIZE_HIGH_LEVEL = 5;
 	public static final int THUMBNAIL_TREND_COLOR_UP = Config.COLOR_DARK_RED;
 	public static final int THUMBNAIL_TREND_COLOR_DOWN = Config.COLOR_DARK_GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_TARGET = Color.BLACK;
@@ -774,9 +774,7 @@ public class TrendAnalyzer {
 					radar = mStock.getRadar(period, level);
 					if (radar != null) {
 						setupRadarPoint(radar, period, level);
-						if (level == mStock.getTargetLevel(period) || level == mStock.getTargetLevel(period) - 1 || level == mStock.getTargetLevel(period) + 1) {
-							signal += radar.signal;
-						}
+						signal += radar.signal;
 					}
 				}
 			}
@@ -912,7 +910,7 @@ public class TrendAnalyzer {
 		float centerX = (float) THUMBNAIL_SIZE / 2f;
 		float centerY = (float) THUMBNAIL_SIZE / 2f;
 		float radius;
-		float lineRadius = THUMBNAIL_SIZE / 5f;
+		float lineRadius;
 		float strokeWidth;
 
 		radius = (float) (THUMBNAIL_SIZE / 2.5f * Math.abs(radar.amplitude));
@@ -930,9 +928,9 @@ public class TrendAnalyzer {
 		}
 
 		radius = THUMBNAIL_SCATTER_SIZE_TARGET;
-		if (level == mStock.getTargetLevel(period) - 1) {
+		if (level < mStock.getTargetLevel(period)) {
 			radius = THUMBNAIL_SCATTER_SIZE_LOW_LEVEL;
-		} else if (level == mStock.getTargetLevel(period) + 1) {
+		} else if (level > mStock.getTargetLevel(period)) {
 			radius = THUMBNAIL_SCATTER_SIZE_HIGH_LEVEL;
 		}
 
@@ -949,10 +947,10 @@ public class TrendAnalyzer {
 
 		lineRadius = THUMBNAIL_SIZE / 5f;
 		strokeWidth = 4f * THUMBNAIL_STROKE_WIDTH;
-		if (level == mStock.getTargetLevel(period) - 1) {
+		if (level < mStock.getTargetLevel(period)) {
 			lineRadius = THUMBNAIL_SIZE / 8f;
 			strokeWidth = 1f * THUMBNAIL_STROKE_WIDTH;
-		} else if (level == mStock.getTargetLevel(period) + 1) {
+		} else if (level > mStock.getTargetLevel(period)) {
 			lineRadius = THUMBNAIL_SIZE / 8f;
 			strokeWidth = 2f * THUMBNAIL_STROKE_WIDTH;
 		}

@@ -156,7 +156,7 @@ public class StockAnalyzer {
 			}
 
 			for (level = 0; level < StockTrend.LEVELS.length; level++) {
-				if (level == mStock.getTargetLevel(period) - 1 || level == mStock.getTargetLevel(period) + 1) {
+				if (level != mStock.getTargetLevel(period)) {
 					setupPulseList(level);
 					FourierAnalyzer.analyze(period, mPulseList);
 					mStock.setRadar(period, level, FourierAnalyzer.getRadar());
