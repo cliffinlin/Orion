@@ -109,7 +109,9 @@ public class Stock extends DatabaseTable {
 	private double mDividendRatioInYear;
 	private String mRDate;
 	private String mStatus;
+	private long mBuyVolume;
 	private double mBuyProfit;
+	private long mSellVolume;
 	private double mSellProfit;
 	private byte[] mTrendThumbnail;
 	private byte[] mRadarThumbnail;
@@ -190,7 +192,9 @@ public class Stock extends DatabaseTable {
 		mDividendRatioInYear = 0;
 		mRDate = "";
 		mStatus = "";
+		mBuyVolume = 0;
 		mBuyProfit = 0;
+		mSellVolume = 0;
 		mSellProfit = 0;
 		mSignal = 0;
 		mTee = 0;
@@ -372,7 +376,9 @@ public class Stock extends DatabaseTable {
 		setDividendRatioInYear(stock.mDividendRatioInYear);
 		setRDate(stock.mRDate);
 		setStatus(stock.mStatus);
+		setBuyVolume(stock.mBuyVolume);
 		setBuyProfit(stock.mBuyProfit);
+		setSellVolume(stock.mSellVolume);
 		setSellProfit(stock.mSellProfit);
 		setTrendThumbnail(stock.mTrendThumbnail);
 		setRadarThumbnail(stock.mRadarThumbnail);
@@ -1265,6 +1271,14 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_STATUS)));
 	}
 
+	public long getBuyVolume() {
+		return mBuyVolume;
+	}
+
+	public void setBuyVolume(long buyVolume) {
+		mBuyVolume = buyVolume;
+	}
+
 	public double getBuyProfit() {
 		return mBuyProfit;
 	}
@@ -1280,6 +1294,14 @@ public class Stock extends DatabaseTable {
 
 		setBuyProfit(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_BUY_PROFIT)));
+	}
+
+	public long getSellVolume() {
+		return mSellVolume;
+	}
+
+	public void setSellVolume(long sellVolume) {
+		mSellVolume = sellVolume;
 	}
 
 	public double getSellProfit() {

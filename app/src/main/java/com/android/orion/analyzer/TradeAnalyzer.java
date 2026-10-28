@@ -83,17 +83,19 @@ public class TradeAnalyzer {
 		mProfit = 0;
 		mHedgeable = 0;
 
-		long hold = 0;
+		long buyVolume = 0;
 		for (int i = 0; i < mStockDealList.size(); i++) {
 			StockDeal stockDeal = mStockDealList.get(i);
 			if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_BUY)) {
-				hold += stockDeal.getVolume();
-				if (hold > (mStock.getHold() - mStock.getLocked())) {
+				if (buyVolume > (mStock.getHold() - mStock.getLocked())) {
 					break;
 				}
+				buyVolume += stockDeal.getVolume();
 				mProfit += stockDeal.getProfit();
 			}
 		}
+
+		mStock.setBuyVolume(buyVolume);
 		if (mProfit > 0) {
 			mStock.setBuyProfit(mProfit);
 		}
@@ -128,13 +130,16 @@ public class TradeAnalyzer {
 		mProfit = 0;
 		mTee = 0;
 
+		long sellVolume = 0;
 		for (int i = 0; i < mStockDealList.size(); i++) {
 			StockDeal stockDeal = mStockDealList.get(i);
 			if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_SELL)) {
+				sellVolume += stockDeal.getVolume();
 				mProfit += stockDeal.getProfit();
 			}
 		}
 
+		mStock.setSellVolume(sellVolume);
 		if (mProfit < 0) {
 			mStock.setSellProfit(mProfit);
 		}
