@@ -43,6 +43,8 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_TREND_COLOR_UP = Config.COLOR_DARK_RED;
 	public static final int THUMBNAIL_TREND_COLOR_DOWN = Config.COLOR_DARK_GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_TARGET = Color.BLACK;
+	public static final int THUMBNAIL_RADA_COLOR_TARGET_LOW_LEVEL = Color.GRAY;
+	public static final int THUMBNAIL_RADA_COLOR_TARGET_HIGH_LEVEL = Color.BLACK;
 	public static final int THUMBNAIL_RADA_COLOR_DAY = Color.RED;
 	public static final int THUMBNAIL_RADA_COLOR_WEEK = Color.GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_MONTH = Color.BLUE;
@@ -919,6 +921,12 @@ public class TrendAnalyzer {
 		float y = centerY + (float) (radius * Math.sin(angle));
 
 		int color = THUMBNAIL_RADA_COLOR_TARGET;
+		if (level < mStock.getTargetLevel(period)) {
+			color = THUMBNAIL_RADA_COLOR_TARGET_LOW_LEVEL;
+		} else if (level > mStock.getTargetLevel(period)) {
+			color = THUMBNAIL_RADA_COLOR_TARGET_HIGH_LEVEL;
+		}
+
 		if (TextUtils.equals(period, Period.DAY)) {
 			color = THUMBNAIL_RADA_COLOR_DAY;
 		} else if (TextUtils.equals(period, Period.WEEK)) {
@@ -945,33 +953,28 @@ public class TrendAnalyzer {
 				x, y, color, radius, shape
 		));
 
-		lineRadius = THUMBNAIL_SIZE / 5f;
-		strokeWidth = 4f * THUMBNAIL_STROKE_WIDTH;
-		if (level < mStock.getTargetLevel(period)) {
-			lineRadius = THUMBNAIL_SIZE / 8f;
-			strokeWidth = 1f * THUMBNAIL_STROKE_WIDTH;
-		} else if (level > mStock.getTargetLevel(period)) {
-			lineRadius = THUMBNAIL_SIZE / 8f;
-			strokeWidth = 2f * THUMBNAIL_STROKE_WIDTH;
-		}
-		switch (period) {
-			case Period.MIN60:
-				addRadialLine(x, y, 0, lineRadius, color, strokeWidth);
-				break;
-			case Period.MIN30:
-				addRadialLine(x, y, 0, -lineRadius, color, strokeWidth);
-				break;
-			case Period.MIN15:
-				addRadialLine(x, y, lineRadius, 0, color, strokeWidth);
-				break;
-			case Period.MIN5:
-				double angleMin5 = Math.toRadians((float) Constant.MIN5 / (float) Constant.MIN60 * 360f);
-				float deltaX = (float) (lineRadius * Math.sin(angleMin5));
-				float deltaY = (float) (lineRadius * Math.cos(angleMin5));
-				addRadialLine(x, y, deltaX, deltaY, color, strokeWidth);
-				break;
-			default:
-				break;
+		if (level == mStock.getTargetLevel(period)) {
+			lineRadius = THUMBNAIL_SIZE / 5f;
+			strokeWidth = 4f * THUMBNAIL_STROKE_WIDTH;
+			switch (period) {
+				case Period.MIN60:
+					addRadialLine(x, y, 0, lineRadius, color, strokeWidth);
+					break;
+				case Period.MIN30:
+					addRadialLine(x, y, 0, -lineRadius, color, strokeWidth);
+					break;
+				case Period.MIN15:
+					addRadialLine(x, y, lineRadius, 0, color, strokeWidth);
+					break;
+				case Period.MIN5:
+					double angleMin5 = Math.toRadians((float) Constant.MIN5 / (float) Constant.MIN60 * 360f);
+					float deltaX = (float) (lineRadius * Math.sin(angleMin5));
+					float deltaY = (float) (lineRadius * Math.cos(angleMin5));
+					addRadialLine(x, y, deltaX, deltaY, color, strokeWidth);
+					break;
+				default:
+					break;
+			}
 		}
 	}
 
