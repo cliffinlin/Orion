@@ -87,11 +87,12 @@ public class TradeAnalyzer {
 		for (int i = 0; i < mStockDealList.size(); i++) {
 			StockDeal stockDeal = mStockDealList.get(i);
 			if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_BUY)) {
-				if (buyVolume > (mStock.getHold() - mStock.getLocked())) {
+				if (buyVolume < (mStock.getHold() - mStock.getLocked())) {
+					buyVolume += stockDeal.getVolume();
+					mProfit += stockDeal.getProfit();
+				} else {
 					break;
 				}
-				buyVolume += stockDeal.getVolume();
-				mProfit += stockDeal.getProfit();
 			}
 		}
 

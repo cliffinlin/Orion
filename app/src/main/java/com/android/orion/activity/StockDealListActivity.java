@@ -700,7 +700,7 @@ public class StockDealListActivity extends ListActivity implements
 			mTradeAnalyzer.analyzeProfit(mStock);
 			long hedgeable = mStock.getHedgeable();
 			if (hedgeable > 0) {
-				Toast.makeText(mContext, getString(R.string.stock_deal_buy_hedgeable, mStock.getBuyVolume(), (long)mStock.getProfit(), hedgeable), Toast.LENGTH_LONG).show();
+				Toast.makeText(mContext, getString(R.string.stock_deal_buy_hedgeable, mStock.getBuyVolume(), (long)mStock.getBuyProfit(), hedgeable), Toast.LENGTH_LONG).show();
 			}
 			double tee = mStock.getTee();
 			if (tee < 0) {
