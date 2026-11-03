@@ -949,11 +949,10 @@ public class TrendAnalyzer {
 			shape = CurveThumbnail.ScatterConfig.SHAPE_SQUARE;
 		}
 
-		mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
-				x, y, color, radius, shape
-		));
-
 		if (level == mStock.getTargetLevel(period)) {
+			mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
+					x, y, color, radius, shape
+			));
 			lineRadius = THUMBNAIL_SIZE / 5f;
 			strokeWidth = 4f * THUMBNAIL_STROKE_WIDTH;
 			switch (period) {

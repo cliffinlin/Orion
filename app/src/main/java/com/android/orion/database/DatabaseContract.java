@@ -33,19 +33,26 @@ public class DatabaseContract {
 	public static final String COLUMN_VOLUME = "volume";
 	public static final String COLUMN_VALUE = "value";
 	public static final String COLUMN_TEXT = "text";
-	public static final String COLUMN_THUMBNAIL = "thumbnail";
+	public static final String COLUMN_TARGET = "target";
+	public static final String COLUMN_SHORT = "short";
+	public static final String COLUMN_LONG = "long";
 	public static final String COLUMN_LEVEL = "level";
-	public static final String COLUMN_TARGET_LEVEL = "target_level";
-	public static final String COLUMN_SHORT_LEVEL = "short_level";
-	public static final String COLUMN_LONG_LEVEL = "long_level";
+	public static final String COLUMN_TARGET_LEVEL = COLUMN_TARGET + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_SHORT_LEVEL = COLUMN_SHORT + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_LONG_LEVEL = COLUMN_LONG + "_" + COLUMN_LEVEL;
 	public static final String COLUMN_ECHO = "echo";
 	public static final String COLUMN_TREND = "trend";
+	public static final String COLUMN_RADAR = "radar";
+	public static final String COLUMN_THUMBNAIL = "thumbnail";
+	public static final String COLUMN_TREND_THUMBNAIL = COLUMN_TREND + "_" + COLUMN_THUMBNAIL;
+	public static final String COLUMN_RADAR_THUMBNAIL = COLUMN_RADAR + "_" + COLUMN_THUMBNAIL;
+	public static final String COLUMN_SHORT_TREND_THUMBNAIL = COLUMN_SHORT + "_" + COLUMN_TREND + "_" + COLUMN_THUMBNAIL;
+	public static final String COLUMN_SHORT_RADAR_THUMBNAIL = COLUMN_SHORT + "_" + COLUMN_RADAR + "_" + COLUMN_THUMBNAIL;
+	public static final String COLUMN_LONG_TREND_THUMBNAIL = COLUMN_LONG + "_" + COLUMN_TREND + "_" + COLUMN_THUMBNAIL;
+	public static final String COLUMN_LONG_RADAR_THUMBNAIL = COLUMN_LONG + "_" + COLUMN_RADAR + "_" + COLUMN_THUMBNAIL;
 	public static final String COLUMN_SIGNAL = "signal";
 	public static final String COLUMN_TEE = "tee";
 	public static final String COLUMN_HEDGEABLE = "hedgeable";
-
-	public static final String COLUMN_TREND_THUMBNAIL = COLUMN_TREND_THUMBNAIL();
-	public static final String COLUMN_RADAR_THUMBNAIL = COLUMN_RADAR_THUMBNAIL();
 
 	public static final String COLUMN_MONTH = Period.MONTH;
 	public static final String COLUMN_WEEK = Period.WEEK;
@@ -63,15 +70,6 @@ public class DatabaseContract {
 	public static final String COLUMN_MIN15_THUMBNAIL = COLUMN_PERIOD_THUMBNAIL(Period.MIN15);
 	public static final String COLUMN_MIN5_THUMBNAIL = COLUMN_PERIOD_THUMBNAIL(Period.MIN5);
 
-	public static final String COLUMN_WEIGHT = "weight";
-	public static final String COLUMN_BIAS = "bias";
-	public static final String COLUMN_ERROR = "error";
-	public static final String COLUMN_DELTA = "delta";
-	public static final String COLUMN_TIMES = "times";
-	public static final String COLUMN_X_MIN = "x_min";
-	public static final String COLUMN_X_MAX = "x_max";
-	public static final String COLUMN_Y_MIN = "y_min";
-	public static final String COLUMN_Y_MAX = "y_max";
 	public static final String COLUMN_STATUS = "status";
 	public static final String COLUMN_BUY = "buy";
 	public static final String COLUMN_SELL = "sell";
@@ -117,7 +115,6 @@ public class DatabaseContract {
 	public static final String COLUMN_DIF = "dif";
 	public static final String COLUMN_DEA = "dea";
 	public static final String COLUMN_HISTOGRAM = "histogram";
-	public static final String COLUMN_RADAR = "radar";
 	public static final String COLUMN_ACCOUNT = "account";
 
 	public static final String COLUMN_BUY_PROFIT = "buy_profit";
@@ -169,14 +166,6 @@ public class DatabaseContract {
 	// To prevent someone from accidentally instantiating the contract class,
 	// give it an empty constructor.
 	private DatabaseContract() {
-	}
-
-	public static final String COLUMN_TREND_THUMBNAIL() {
-		return COLUMN_TREND + "_" + COLUMN_THUMBNAIL;
-	}
-
-	public static final String COLUMN_RADAR_THUMBNAIL() {
-		return COLUMN_RADAR + "_" + COLUMN_THUMBNAIL;
 	}
 
 	public static final String COLUMN_PERIOD_THUMBNAIL(String period) {
@@ -319,7 +308,10 @@ public class DatabaseContract {
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_CLASSES, COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_PINYIN,
 				COLUMN_PRICE, COLUMN_CHANGE, COLUMN_NET, COLUMN_VOLUME, COLUMN_VALUE,
-				COLUMN_BUY_PROFIT, COLUMN_SELL_PROFIT, COLUMN_TREND_THUMBNAIL, COLUMN_RADAR_THUMBNAIL,
+				COLUMN_BUY_PROFIT, COLUMN_SELL_PROFIT,
+				COLUMN_TREND_THUMBNAIL, COLUMN_RADAR_THUMBNAIL,
+				COLUMN_SHORT_TREND_THUMBNAIL,COLUMN_SHORT_RADAR_THUMBNAIL,
+				COLUMN_LONG_TREND_THUMBNAIL,COLUMN_LONG_RADAR_THUMBNAIL,
 				COLUMN_MONTH_THUMBNAIL, COLUMN_WEEK_THUMBNAIL, COLUMN_DAY_THUMBNAIL, COLUMN_MIN60_THUMBNAIL, COLUMN_MIN30_THUMBNAIL, COLUMN_MIN15_THUMBNAIL, COLUMN_MIN5_THUMBNAIL,
 				COLUMN_TARGET_LEVEL, COLUMN_SHORT_LEVEL, COLUMN_LONG_LEVEL, COLUMN_TREND, COLUMN_SIGNAL, COLUMN_TEE, COLUMN_HEDGEABLE,
 				COLUMN_FLAG,
@@ -358,6 +350,10 @@ public class DatabaseContract {
 				+ COLUMN_SELL_PROFIT + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_TREND_THUMBNAIL + BLOB_TYPE + COMMA_SEP
 				+ COLUMN_RADAR_THUMBNAIL + BLOB_TYPE + COMMA_SEP
+				+ COLUMN_SHORT_TREND_THUMBNAIL + BLOB_TYPE + COMMA_SEP
+				+ COLUMN_SHORT_RADAR_THUMBNAIL + BLOB_TYPE + COMMA_SEP
+				+ COLUMN_LONG_TREND_THUMBNAIL + BLOB_TYPE + COMMA_SEP
+				+ COLUMN_LONG_RADAR_THUMBNAIL + BLOB_TYPE + COMMA_SEP
 				+ COLUMN_MONTH_THUMBNAIL + BLOB_TYPE + COMMA_SEP
 				+ COLUMN_WEEK_THUMBNAIL + BLOB_TYPE + COMMA_SEP
 				+ COLUMN_DAY_THUMBNAIL + BLOB_TYPE + COMMA_SEP
