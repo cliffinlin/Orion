@@ -225,8 +225,8 @@ public class Stock extends DatabaseTable {
 		for (String period : Period.PERIODS) {
 			contentValues.put(DatabaseContract.COLUMN_PERIOD_THUMBNAIL(period), getPeriod(period).getThumbnail());
 		}
-		contentValues.put(DatabaseContract.COLUMN_TARGET_LEVEL, getTargetLevelString());
 		contentValues.put(DatabaseContract.COLUMN_SHORT_LEVEL, getShortLevelString());
+		contentValues.put(DatabaseContract.COLUMN_MEDIUM_LEVEL, getMediumLevelString());
 		contentValues.put(DatabaseContract.COLUMN_LONG_LEVEL, getLongLevelString());
 		contentValues.put(DatabaseContract.COLUMN_TREND, getTrendString());
 
@@ -307,8 +307,8 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		contentValues.put(DatabaseContract.COLUMN_TARGET_LEVEL, getTargetLevelString());
 		contentValues.put(DatabaseContract.COLUMN_SHORT_LEVEL, getShortLevelString());
+		contentValues.put(DatabaseContract.COLUMN_MEDIUM_LEVEL, getMediumLevelString());
 		contentValues.put(DatabaseContract.COLUMN_LONG_LEVEL, getLongLevelString());
 		contentValues.put(DatabaseContract.COLUMN_LOCKED, mLocked);
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
@@ -341,8 +341,8 @@ public class Stock extends DatabaseTable {
 
 		for (String period : Period.PERIODS) {
 			getPeriod(period).setThumbnail(stock.getPeriod(period).getThumbnail());
-			getPeriod(period).setTargetLevel(stock.getPeriod(period).getTargetLevel());
 			getPeriod(period).setShortLevel(stock.getPeriod(period).getShortLevel());
+			getPeriod(period).setMediumLevel(stock.getPeriod(period).getMediumLevel());
 			getPeriod(period).setLongLevel(stock.getPeriod(period).getLongLevel());
 			getPeriod(period).setTrend(stock.getPeriod(period).getTrend());
 		}
@@ -419,8 +419,8 @@ public class Stock extends DatabaseTable {
 
 		for (String period : Period.PERIODS) {
 			getPeriod(period).setThumbnail(cursor);
-			getPeriod(period).setTargetLevel(cursor);
 			getPeriod(period).setShortLevel(cursor);
+			getPeriod(period).setMediumLevel(cursor);
 			getPeriod(period).setLongLevel(cursor);
 			getPeriod(period).setTrend(cursor);
 		}
@@ -1487,16 +1487,27 @@ public class Stock extends DatabaseTable {
 	}
 
 	public int getTargetLevel(String period) {
-		return getPeriod(period).getTargetLevel();
+		if (hasFlag(FLAG_SHORT)) {
+			return getShortLevel(period);
+		} else if (hasFlag(FLAG_MEDIUM)) {
+			return getMediumLevel(period);
+		} else if (hasFlag(FLAG_LONG)) {
+			return getLongLevel(period);
+		} else {
+			//__TEST__CASE__
+			addFlag(FLAG_MEDIUM);
+			return getMediumLevel(period);
+			//__TEST__CASE__
+		}
 	}
 
-	public void setTargetLevel(String period, int targetLevel) {
-		getPeriod(period).setTargetLevel(targetLevel);
-	}
-
-	public void setTargetLevel(String targetLevelString) {
-		for (String period : Period.PERIODS) {
-			getPeriod(period).setTargetLevel(getPeriod(period).fromLevelString(targetLevelString));
+	public void setTargetLevel(String period, int level) {
+		if (hasFlag(FLAG_SHORT)) {
+			setShortLevel(period, level);
+		} else if (hasFlag(FLAG_MEDIUM)) {
+			setMediumLevel(period, level);
+		} else if (hasFlag(FLAG_LONG)) {
+			setLongLevel(period, level);
 		}
 	}
 
@@ -1504,13 +1515,27 @@ public class Stock extends DatabaseTable {
 		return getPeriod(period).getShortLevel();
 	}
 
-	public void setShortLevel(String period, int shortLevel) {
-		getPeriod(period).setShortLevel(shortLevel);
+	public void setShortLevel(String period, int level) {
+		getPeriod(period).setShortLevel(level);
 	}
 
-	public void setShortLevel(String shortLevelString) {
+	public void setShortLevel(String levelString) {
 		for (String period : Period.PERIODS) {
-			getPeriod(period).setShortLevel(getPeriod(period).fromLevelString(shortLevelString));
+			getPeriod(period).setShortLevel(getPeriod(period).fromLevelString(levelString));
+		}
+	}
+
+	public int getMediumLevel(String period) {
+		return getPeriod(period).getMediumLevel();
+	}
+
+	public void setMediumLevel(String period, int level) {
+		getPeriod(period).setMediumLevel(level);
+	}
+
+	public void setMediumLevel(String levelString) {
+		for (String period : Period.PERIODS) {
+			getPeriod(period).setMediumLevel(getPeriod(period).fromLevelString(levelString));
 		}
 	}
 
@@ -1518,13 +1543,13 @@ public class Stock extends DatabaseTable {
 		return getPeriod(period).getLongLevel();
 	}
 
-	public void setLongLevel(String period, int longLevel) {
-		getPeriod(period).setLongLevel(longLevel);
+	public void setLongLevel(String period, int level) {
+		getPeriod(period).setLongLevel(level);
 	}
 
-	public void setLongLevel(String longLevelString) {
+	public void setLongLevel(String levelString) {
 		for (String period : Period.PERIODS) {
-			getPeriod(period).setLongLevel(getPeriod(period).fromLevelString(longLevelString));
+			getPeriod(period).setLongLevel(getPeriod(period).fromLevelString(levelString));
 		}
 	}
 
@@ -1805,18 +1830,18 @@ public class Stock extends DatabaseTable {
 		return builder.toString();
 	}
 
-	public String getTargetLevelString() {
-		StringBuilder builder = new StringBuilder();
-		for (String period : Period.PERIODS) {
-			builder.append(getTargetLevel(period));
-		}
-		return builder.toString();
-	}
-
 	public String getShortLevelString() {
 		StringBuilder builder = new StringBuilder();
 		for (String period : Period.PERIODS) {
 			builder.append(getShortLevel(period));
+		}
+		return builder.toString();
+	}
+
+	public String getMediumLevelString() {
+		StringBuilder builder = new StringBuilder();
+		for (String period : Period.PERIODS) {
+			builder.append(getMediumLevel(period));
 		}
 		return builder.toString();
 	}

@@ -49,8 +49,8 @@ public class Period {
 
 	public String mName = "";
 	public byte[] mThumbnail;
-	public int mTargetLevel = StockTrend.LEVEL_NONE;
 	public int mShortLevel = StockTrend.LEVEL_NONE;
+	public int mMediumLevel = StockTrend.LEVEL_NONE;
 	public int mLongLevel = StockTrend.LEVEL_NONE;
 	public String mTrend = StockTrend.TREND_NONE;
 	public Radar[] mRadar = new Radar[StockTrend.LEVELS.length];
@@ -142,31 +142,12 @@ public class Period {
 				.getColumnIndex(DatabaseContract.COLUMN_PERIOD_THUMBNAIL(mName))));
 	}
 
-	public int getTargetLevel() {
-		return mTargetLevel;
-	}
-
-	public void setTargetLevel(int target) {
-		mTargetLevel = target;
-	}
-
-	public void setTargetLevel(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		String levelString = cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TARGET_LEVEL));
-
-		setTargetLevel(fromLevelString(levelString));
-	}
-
 	public int getShortLevel() {
 		return mShortLevel;
 	}
 
-	public void setShortLevel(int shortLevel) {
-		mShortLevel = shortLevel;
+	public void setShortLevel(int level) {
+		mShortLevel = level;
 	}
 
 	public void setShortLevel(Cursor cursor) {
@@ -180,12 +161,31 @@ public class Period {
 		setShortLevel(fromLevelString(levelString));
 	}
 
+	public int getMediumLevel() {
+		return mMediumLevel;
+	}
+
+	public void setMediumLevel(int level) {
+		mMediumLevel = level;
+	}
+
+	public void setMediumLevel(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		String levelString = cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_MEDIUM_LEVEL));
+
+		setMediumLevel(fromLevelString(levelString));
+	}
+
 	public int getLongLevel() {
 		return mLongLevel;
 	}
 
-	public void setLongLevel(int longLevel) {
-		mLongLevel = longLevel;
+	public void setLongLevel(int level) {
+		mLongLevel = level;
 	}
 
 	public void setLongLevel(Cursor cursor) {

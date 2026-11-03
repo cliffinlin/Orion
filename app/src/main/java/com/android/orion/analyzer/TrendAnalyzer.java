@@ -2,7 +2,6 @@ package com.android.orion.analyzer;
 
 import android.graphics.Color;
 import android.text.TextUtils;
-import android.util.ArrayMap;
 
 import com.android.orion.chart.CurveThumbnail;
 import com.android.orion.config.Config;
@@ -17,15 +16,12 @@ import com.android.orion.manager.StockNotificationManager;
 import com.android.orion.constant.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
-import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class TrendAnalyzer {
 	public static final int THUMBNAIL_SIZE = 160;

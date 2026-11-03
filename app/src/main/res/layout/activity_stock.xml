@@ -418,37 +418,38 @@
                         android:text="@string/target"
                         android:textSize="14sp" />
 
-                    <CheckBox
-                        android:id="@+id/checkbox_short"
+                    <RadioGroup
+                        android:id="@+id/radiogroup_wave"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:text="@string/short_wave"
-                        android:textSize="14sp" />
+                        android:orientation="horizontal">
 
-                    <CheckBox
-                        android:id="@+id/checkbox_long"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:text="@string/long_wave"
-                        android:textSize="14sp" />
+                        <RadioButton
+                            android:id="@+id/radio_short"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/short_wave"
+                            android:textSize="14sp" />
+
+                        <RadioButton
+                            android:id="@+id/radio_medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:text="@string/medium_wave"
+                            android:textSize="14sp" />
+
+                        <RadioButton
+                            android:id="@+id/radio_long"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:text="@string/long_wave"
+                            android:textSize="14sp" />
+                    </RadioGroup>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="end">
-
-                    <ImageView
-                        android:id="@+id/imageview_restore_target"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:src="@drawable/ic_restore"
-                        android:padding="3dp" />
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -476,7 +477,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <com.android.orion.widget.TargetLevelPicker
+                    <com.android.orion.widget.LevelPicker
                         android:id="@+id/target_level_picker_month"
                         android:layout_width="72dp"
                         android:layout_height="54dp" />
@@ -515,7 +516,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <com.android.orion.widget.TargetLevelPicker
+                    <com.android.orion.widget.LevelPicker
                         android:id="@+id/target_level_picker_week"
                         android:layout_width="72dp"
                         android:layout_height="54dp" />
@@ -554,7 +555,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <com.android.orion.widget.TargetLevelPicker
+                    <com.android.orion.widget.LevelPicker
                         android:id="@+id/target_level_picker_day"
                         android:layout_width="72dp"
                         android:layout_height="54dp" />
@@ -593,7 +594,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <com.android.orion.widget.TargetLevelPicker
+                    <com.android.orion.widget.LevelPicker
                         android:id="@+id/target_level_picker_min60"
                         android:layout_width="72dp"
                         android:layout_height="54dp" />
@@ -632,7 +633,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <com.android.orion.widget.TargetLevelPicker
+                    <com.android.orion.widget.LevelPicker
                         android:id="@+id/target_level_picker_min30"
                         android:layout_width="72dp"
                         android:layout_height="54dp" />
@@ -671,7 +672,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <com.android.orion.widget.TargetLevelPicker
+                    <com.android.orion.widget.LevelPicker
                         android:id="@+id/target_level_picker_min15"
                         android:layout_width="72dp"
                         android:layout_height="54dp" />
@@ -710,7 +711,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <com.android.orion.widget.TargetLevelPicker
+                    <com.android.orion.widget.LevelPicker
                         android:id="@+id/target_level_picker_min5"
                         android:layout_width="72dp"
                         android:layout_height="54dp" />

@@ -18,9 +18,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TargetLevelPicker extends NumberPicker {
+public class LevelPicker extends NumberPicker {
 
-    private static final String TAG = "TargetLevelPicker";
+    private static final String TAG = "LevelPicker";
     private static final int MSG_PLAY_SOUND = 1;
 
     private MediaPlayer mediaPlayer;
@@ -51,17 +51,17 @@ public class TargetLevelPicker extends NumberPicker {
         }
     }
 
-    public TargetLevelPicker(Context context) {
+    public LevelPicker(Context context) {
         super(context);
         init();
     }
 
-    public TargetLevelPicker(Context context, AttributeSet attrs) {
+    public LevelPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public TargetLevelPicker(Context context, AttributeSet attrs, int defStyleAttr) {
+    public LevelPicker(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
