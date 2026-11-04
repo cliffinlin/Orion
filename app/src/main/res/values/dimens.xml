@@ -8,6 +8,8 @@
     <dimen name="favorite_list_item_layout_width">50dp</dimen>
     <dimen name="favorite_list_item_layout_height">50dp</dimen>
     <dimen name="favorite_list_item_header_layout_height">40dp</dimen>
+    <!-- Uniform header text size for the favorite list right title row -->
+    <dimen name="favorite_list_header_term_text_size">15sp</dimen>
 
     <!-- Stock List Item Dimensions -->
     <dimen name="stock_list_item_height">50dp</dimen>

@@ -419,7 +419,7 @@
                         android:textSize="14sp" />
 
                     <RadioGroup
-                        android:id="@+id/radiogroup_wave"
+                        android:id="@+id/radiogroup_term"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -429,7 +429,7 @@
                             android:id="@+id/radio_short"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/short_wave"
+                            android:text="@string/short_term"
                             android:textSize="14sp" />
 
                         <RadioButton
@@ -437,7 +437,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
-                            android:text="@string/medium_wave"
+                            android:text="@string/medium_term"
                             android:textSize="14sp" />
 
                         <RadioButton
@@ -445,7 +445,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
-                            android:text="@string/long_wave"
+                            android:text="@string/long_term"
                             android:textSize="14sp" />
                     </RadioGroup>
                 </LinearLayout>

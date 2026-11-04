@@ -46,7 +46,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	RadioButton mRadioShort;
 	RadioButton mRadioMedium;
 	RadioButton mRadioLong;
-	RadioGroup mRadioGroupWave;
+	RadioGroup mRadioGroupTerm;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextStockLocked;
@@ -139,7 +139,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mRadioShort = findViewById(R.id.radio_short);
 		mRadioMedium = findViewById(R.id.radio_medium);
 		mRadioLong = findViewById(R.id.radio_long);
-		mRadioGroupWave = findViewById(R.id.radiogroup_wave);
+		mRadioGroupTerm = findViewById(R.id.radiogroup_term);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockLocked = findViewById(R.id.edittext_stock_locked);
@@ -228,7 +228,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 			updateQuotaEditState(isChecked);
 		});
 
-		mRadioGroupWave.setOnCheckedChangeListener((group, checkedId) -> {
+		mRadioGroupTerm.setOnCheckedChangeListener((group, checkedId) -> {
 			if (checkedId == R.id.radio_short) {
 				mStock.removeFlag(Stock.FLAG_MEDIUM);
 				mStock.removeFlag(Stock.FLAG_LONG);
@@ -781,14 +781,14 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		boolean isMedium = mStock.hasFlag(Stock.FLAG_MEDIUM);
 		boolean isLong = mStock.hasFlag(Stock.FLAG_LONG);
 		if (isShort) {
-			mRadioGroupWave.check(R.id.radio_short);
+			mRadioGroupTerm.check(R.id.radio_short);
 		} else if (isMedium) {
-			mRadioGroupWave.check(R.id.radio_medium);
+			mRadioGroupTerm.check(R.id.radio_medium);
 		} else if (isLong) {
-			mRadioGroupWave.check(R.id.radio_long);
+			mRadioGroupTerm.check(R.id.radio_long);
 		} else {
 			// 缺省选中medium；check会触发OnCheckedChangeListener，自动补齐FLAG_MEDIUM
-			mRadioGroupWave.check(R.id.radio_medium);
+			mRadioGroupTerm.check(R.id.radio_medium);
 		}
 
 		// 根据Target状态更新Quota的显示状态

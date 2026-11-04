@@ -116,8 +116,12 @@ public class Stock extends DatabaseTable {
 	private double mBuyProfit;
 	private long mSellVolume;
 	private double mSellProfit;
-	private byte[] mTrendThumbnail;
-	private byte[] mRadarThumbnail;
+	private byte[] mShortTrendThumbnail;
+	private byte[] mShortRadarThumbnail;
+	private byte[] mMediumTrendThumbnail;
+	private byte[] mMediumRadarThumbnail;
+	private byte[] mLongTrendThumbnail;
+	private byte[] mLongRadarThumbnail;
 	private double mSignal;
 	private double mTee;
 	private long mHedgeable;
@@ -270,8 +274,12 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
 		contentValues.put(DatabaseContract.COLUMN_BUY_PROFIT, mBuyProfit);
 		contentValues.put(DatabaseContract.COLUMN_SELL_PROFIT, mSellProfit);
-		contentValues.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, mTrendThumbnail);
-		contentValues.put(DatabaseContract.COLUMN_RADAR_THUMBNAIL, mRadarThumbnail);
+		contentValues.put(DatabaseContract.COLUMN_SHORT_TREND_THUMBNAIL, mShortTrendThumbnail);
+		contentValues.put(DatabaseContract.COLUMN_SHORT_RADAR_THUMBNAIL, mShortRadarThumbnail);
+		contentValues.put(DatabaseContract.COLUMN_MEDIUM_TREND_THUMBNAIL, mMediumTrendThumbnail);
+		contentValues.put(DatabaseContract.COLUMN_MEDIUM_RADAR_THUMBNAIL, mMediumRadarThumbnail);
+		contentValues.put(DatabaseContract.COLUMN_LONG_TREND_THUMBNAIL, mLongTrendThumbnail);
+		contentValues.put(DatabaseContract.COLUMN_LONG_RADAR_THUMBNAIL, mLongRadarThumbnail);
 		contentValues.put(DatabaseContract.COLUMN_SIGNAL, mSignal);
 		contentValues.put(DatabaseContract.COLUMN_TEE, mTee);
 		contentValues.put(DatabaseContract.COLUMN_HEDGEABLE, mHedgeable);
@@ -389,8 +397,12 @@ public class Stock extends DatabaseTable {
 		setBuyProfit(stock.mBuyProfit);
 		setSellVolume(stock.mSellVolume);
 		setSellProfit(stock.mSellProfit);
-		setTrendThumbnail(stock.mTrendThumbnail);
-		setRadarThumbnail(stock.mRadarThumbnail);
+		setShortTrendThumbnail(stock.mShortTrendThumbnail);
+		setShortRadarThumbnail(stock.mShortRadarThumbnail);
+		setMediumTrendThumbnail(stock.mMediumTrendThumbnail);
+		setMediumRadarThumbnail(stock.mMediumRadarThumbnail);
+		setLongTrendThumbnail(stock.mLongTrendThumbnail);
+		setLongRadarThumbnail(stock.mLongRadarThumbnail);
 		setSignal(stock.mSignal);
 		setTee(stock.mTee);
 		setHedgeable(stock.mHedgeable);
@@ -466,8 +478,12 @@ public class Stock extends DatabaseTable {
 		setStatus(cursor);
 		setBuyProfit(cursor);
 		setSellProfit(cursor);
-		setTrendThumbnail(cursor);
-		setRadarThumbnail(cursor);
+		setShortTrendThumbnail(cursor);
+		setShortRadarThumbnail(cursor);
+		setMediumTrendThumbnail(cursor);
+		setMediumRadarThumbnail(cursor);
+		setLongTrendThumbnail(cursor);
+		setLongRadarThumbnail(cursor);
 		setSignal(cursor);
 		setTee(cursor);
 		setHedgeable(cursor);
@@ -1332,36 +1348,120 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_SELL_PROFIT)));
 	}
 
-	public byte[] getTrendThumbnail() {
-		return mTrendThumbnail;
+	public void setTrendThumbnail(byte[] trendThumbnail, int flag) {
+		if (flag == FLAG_SHORT) {
+			setShortTrendThumbnail(trendThumbnail);
+		} else if (flag == FLAG_MEDIUM) {
+			setMediumTrendThumbnail(trendThumbnail);
+		} else if (flag == FLAG_LONG) {
+			setLongTrendThumbnail(trendThumbnail);
+		}
 	}
 
-	public void setTrendThumbnail(byte[] trendThumbnail) {
-		mTrendThumbnail = trendThumbnail;
+	public void setRadarThumbnail(byte[] radarThumbnail, int flag) {
+		if (flag == FLAG_SHORT) {
+			setShortRadarThumbnail(radarThumbnail);
+		} else if (flag == FLAG_MEDIUM) {
+			setMediumRadarThumbnail(radarThumbnail);
+		} else if (flag == FLAG_LONG) {
+			setLongRadarThumbnail(radarThumbnail);
+		}
 	}
 
-	public void setTrendThumbnail(Cursor cursor) {
+	public byte[] getShortTrendThumbnail() {
+		return mShortTrendThumbnail;
+	}
+
+	public void setShortTrendThumbnail(byte[] trendThumbnail) {
+		mShortTrendThumbnail = trendThumbnail;
+	}
+
+	public void setShortTrendThumbnail(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
-		setTrendThumbnail(cursor.getBlob(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TREND_THUMBNAIL)));
+		setShortTrendThumbnail(cursor.getBlob(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_SHORT_TREND_THUMBNAIL)));
 	}
 
-	public byte[] getRadarThumbnail() {
-		return mRadarThumbnail;
+	public byte[] getShortRadarThumbnail() {
+		return mShortRadarThumbnail;
 	}
 
-	public void setRadarThumbnail(byte[] radarThumbnail) {
-		mRadarThumbnail = radarThumbnail;
+	public void setShortRadarThumbnail(byte[] radarThumbnail) {
+		mShortRadarThumbnail = radarThumbnail;
 	}
 
-	public void setRadarThumbnail(Cursor cursor) {
+	public void setShortRadarThumbnail(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
-		setRadarThumbnail(cursor.getBlob(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_RADAR_THUMBNAIL)));
+		setShortRadarThumbnail(cursor.getBlob(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_SHORT_RADAR_THUMBNAIL)));
+	}
+
+	public byte[] getMediumTrendThumbnail() {
+		return mMediumTrendThumbnail;
+	}
+
+	public void setMediumTrendThumbnail(byte[] trendThumbnail) {
+		mMediumTrendThumbnail = trendThumbnail;
+	}
+
+	public void setMediumTrendThumbnail(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+		setMediumTrendThumbnail(cursor.getBlob(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_MEDIUM_TREND_THUMBNAIL)));
+	}
+
+	public byte[] getMediumRadarThumbnail() {
+		return mMediumRadarThumbnail;
+	}
+
+	public void setMediumRadarThumbnail(byte[] radarThumbnail) {
+		mMediumRadarThumbnail = radarThumbnail;
+	}
+
+	public void setMediumRadarThumbnail(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+		setMediumRadarThumbnail(cursor.getBlob(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_MEDIUM_RADAR_THUMBNAIL)));
+	}
+
+	public byte[] getLongTrendThumbnail() {
+		return mLongTrendThumbnail;
+	}
+
+	public void setLongTrendThumbnail(byte[] trendThumbnail) {
+		mLongTrendThumbnail = trendThumbnail;
+	}
+
+	public void setLongTrendThumbnail(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+		setLongTrendThumbnail(cursor.getBlob(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_LONG_TREND_THUMBNAIL)));
+	}
+
+	public byte[] getLongRadarThumbnail() {
+		return mLongRadarThumbnail;
+	}
+
+	public void setLongRadarThumbnail(byte[] radarThumbnail) {
+		mLongRadarThumbnail = radarThumbnail;
+	}
+
+	public void setLongRadarThumbnail(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+		setLongRadarThumbnail(cursor.getBlob(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_LONG_RADAR_THUMBNAIL)));
 	}
 
 	public byte[] getPeriodThumbnail(String period) {
@@ -1498,6 +1598,18 @@ public class Stock extends DatabaseTable {
 			addFlag(FLAG_MEDIUM);
 			return getMediumLevel(period);
 			//__TEST__CASE__
+		}
+	}
+
+	public int getTargetLevel(String period, int flag) {
+		if (flag == FLAG_SHORT) {
+			return getShortLevel(period);
+		} else if (flag == FLAG_MEDIUM) {
+			return getMediumLevel(period);
+		} else if (flag == FLAG_LONG) {
+			return getLongLevel(period);
+		} else {
+			return StockTrend.LEVEL_NONE;
 		}
 	}
 

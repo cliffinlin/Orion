@@ -183,8 +183,12 @@ public class StockFavoriteListActivity extends ListActivity implements
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_LOCKED, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_QUOTA, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SELL_PROFIT, R.id.profite);
-        mColumnToViewIdMap.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, R.id.trend);
-        mColumnToViewIdMap.put(DatabaseContract.COLUMN_RADAR_THUMBNAIL, R.id.radar);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_SHORT_TREND_THUMBNAIL, R.id.short_trend);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_SHORT_RADAR_THUMBNAIL, R.id.short_radar);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_MEDIUM_TREND_THUMBNAIL, R.id.medium_trend);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_MEDIUM_RADAR_THUMBNAIL, R.id.medium_radar);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_LONG_TREND_THUMBNAIL, R.id.long_trend);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_LONG_RADAR_THUMBNAIL, R.id.long_radar);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SIGNAL, R.id.signal);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_MONTH_THUMBNAIL, R.id.period_month);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_WEEK_THUMBNAIL, R.id.period_week);
@@ -207,7 +211,11 @@ public class StockFavoriteListActivity extends ListActivity implements
         }
 
         int[] headerViewIds = {
-                R.id.stock_name_code, R.id.price, R.id.net, R.id.profite, R.id.trend, R.id.radar, R.id.signal,
+                R.id.stock_name_code, R.id.price, R.id.net, R.id.profite,
+                R.id.short_trend, R.id.short_radar,
+                R.id.medium_trend, R.id.medium_radar,
+                R.id.long_trend, R.id.long_radar,
+                R.id.signal,
                 R.id.period_month, R.id.period_week,
                 R.id.period_day, R.id.period_min60, R.id.period_min30, R.id.period_min15, R.id.period_min5,
                 R.id.flag, R.id.modified
@@ -425,8 +433,12 @@ public class StockFavoriteListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_LOCKED,
                 DatabaseContract.COLUMN_QUOTA,
                 DatabaseContract.COLUMN_SELL_PROFIT,
-                DatabaseContract.COLUMN_TREND_THUMBNAIL,
-                DatabaseContract.COLUMN_RADAR_THUMBNAIL,
+                DatabaseContract.COLUMN_SHORT_TREND_THUMBNAIL,
+                DatabaseContract.COLUMN_SHORT_RADAR_THUMBNAIL,
+                DatabaseContract.COLUMN_MEDIUM_TREND_THUMBNAIL,
+                DatabaseContract.COLUMN_MEDIUM_RADAR_THUMBNAIL,
+                DatabaseContract.COLUMN_LONG_TREND_THUMBNAIL,
+                DatabaseContract.COLUMN_LONG_RADAR_THUMBNAIL,
                 DatabaseContract.COLUMN_SIGNAL,
                 DatabaseContract.COLUMN_MONTH_THUMBNAIL,
                 DatabaseContract.COLUMN_WEEK_THUMBNAIL,
@@ -447,8 +459,12 @@ public class StockFavoriteListActivity extends ListActivity implements
                 R.id.profit_divider_container,
                 R.id.profit_divider_container,
                 R.id.sell_profit,
-                R.id.trend,
-                R.id.radar,
+                R.id.short_trend,
+                R.id.short_radar,
+                R.id.medium_trend,
+                R.id.medium_radar,
+                R.id.long_trend,
+                R.id.long_radar,
                 R.id.signal,
                 R.id.month,
                 R.id.week,
@@ -859,8 +875,12 @@ public class StockFavoriteListActivity extends ListActivity implements
             }
 
             if (DatabaseContract.isPeriodThumbnailColumn(columnName) ||
-                    DatabaseContract.COLUMN_TREND_THUMBNAIL.equals(columnName) ||
-                    DatabaseContract.COLUMN_RADAR_THUMBNAIL.equals(columnName)) {
+                    DatabaseContract.COLUMN_SHORT_TREND_THUMBNAIL.equals(columnName) ||
+                    DatabaseContract.COLUMN_SHORT_RADAR_THUMBNAIL.equals(columnName) ||
+                    DatabaseContract.COLUMN_MEDIUM_TREND_THUMBNAIL.equals(columnName) ||
+                    DatabaseContract.COLUMN_MEDIUM_RADAR_THUMBNAIL.equals(columnName) ||
+                    DatabaseContract.COLUMN_LONG_TREND_THUMBNAIL.equals(columnName) ||
+                    DatabaseContract.COLUMN_LONG_RADAR_THUMBNAIL.equals(columnName)) {
                 return handleBlobColumn(view, cursor, columnIndex, columnName);
             }
 

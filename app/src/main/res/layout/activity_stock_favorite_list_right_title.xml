@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:baselineAligned="false"
     android:orientation="horizontal">
 
     <TextView
@@ -32,22 +33,64 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/trend"
+        android:id="@+id/short_trend"
         android:layout_width="@dimen/favorite_list_item_layout_width"
         android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/trend"
-        android:textSize="18sp" />
+        android:maxLines="1"
+        android:text="@string/short_term"
+        android:textSize="@dimen/favorite_list_header_term_text_size" />
 
     <TextView
-        android:id="@+id/radar"
+        android:id="@+id/short_radar"
         android:layout_width="@dimen/favorite_list_item_layout_width"
         android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/radar"
-        android:textSize="18sp" />
+        android:maxLines="1"
+        android:text="@string/short_term"
+        android:textSize="@dimen/favorite_list_header_term_text_size" />
+
+    <TextView
+        android:id="@+id/medium_trend"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="@string/medium_term"
+        android:textSize="@dimen/favorite_list_header_term_text_size" />
+
+    <TextView
+        android:id="@+id/medium_radar"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="@string/medium_term"
+        android:textSize="@dimen/favorite_list_header_term_text_size" />
+
+    <TextView
+        android:id="@+id/long_trend"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="@string/long_term"
+        android:textSize="@dimen/favorite_list_header_term_text_size" />
+
+    <TextView
+        android:id="@+id/long_radar"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="@string/long_term"
+        android:textSize="@dimen/favorite_list_header_term_text_size" />
 
     <TextView
         android:id="@+id/signal"

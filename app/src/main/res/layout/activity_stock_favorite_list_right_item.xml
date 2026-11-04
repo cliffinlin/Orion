@@ -65,14 +65,42 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/trend"
+        android:id="@+id/short_trend"
         android:layout_width="@dimen/favorite_list_item_layout_width"
         android:layout_height="@dimen/favorite_list_item_layout_height"
         android:layout_weight="1"
         android:scaleType="centerInside" />
 
     <ImageView
-        android:id="@+id/radar"
+        android:id="@+id/short_radar"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_layout_height"
+        android:layout_weight="1"
+        android:scaleType="centerInside" />
+
+    <ImageView
+        android:id="@+id/medium_trend"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_layout_height"
+        android:layout_weight="1"
+        android:scaleType="centerInside" />
+
+    <ImageView
+        android:id="@+id/medium_radar"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_layout_height"
+        android:layout_weight="1"
+        android:scaleType="centerInside" />
+
+    <ImageView
+        android:id="@+id/long_trend"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_layout_height"
+        android:layout_weight="1"
+        android:scaleType="centerInside" />
+
+    <ImageView
+        android:id="@+id/long_radar"
         android:layout_width="@dimen/favorite_list_item_layout_width"
         android:layout_height="@dimen/favorite_list_item_layout_height"
         android:layout_weight="1"
