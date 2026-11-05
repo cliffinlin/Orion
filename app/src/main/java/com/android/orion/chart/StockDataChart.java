@@ -274,7 +274,7 @@ public class StockDataChart {
 
 	public boolean displayTrend(int level) {
 		boolean result = false;
-		if (level == mTargetLevel || level == mTargetLevel + 1) {
+		if (level == mTargetLevel || level == mTargetLevel - 1 || level == mTargetLevel + 1) {
 			result = true;
 		}
 		return result;

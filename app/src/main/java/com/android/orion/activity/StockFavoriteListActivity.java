@@ -65,6 +65,7 @@ public class StockFavoriteListActivity extends ListActivity implements
     private int mColumnIndexPrice = -1;
     private int mColumnIndexNet = -1;
     private int mColumnIndexSignal = -1;
+    private int mColumnIndexId = -1;
 
     private final Map<Integer, TextView> mHeaderTextViews = new HashMap<>();
     private final Map<String, Integer> mColumnToViewIdMap = new HashMap<>();
@@ -712,6 +713,7 @@ public class StockFavoriteListActivity extends ListActivity implements
     private void cacheColumnIndices(Cursor cursor) {
         if (cursor != null && !cursor.isClosed()) {
             try {
+                mColumnIndexId = cursor.getColumnIndex(DatabaseContract.COLUMN_ID);
                 mColumnIndexCode = cursor.getColumnIndex(DatabaseContract.COLUMN_CODE);
                 mColumnIndexName = cursor.getColumnIndex(DatabaseContract.COLUMN_NAME);
                 mColumnIndexFlag = cursor.getColumnIndex(DatabaseContract.COLUMN_FLAG);
@@ -798,10 +800,64 @@ public class StockFavoriteListActivity extends ListActivity implements
         startActivity(intent);
     }
 
+    private void onBandCellClick(long stockId, int bandFlag) {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - mLastClickTime < CLICK_INTERVAL) {
+            return;
+        }
+        mLastClickTime = currentTime;
+
+        if (stockId <= DatabaseContract.INVALID_ID) {
+            return;
+        }
+
+        mStock.setId(stockId);
+        mStockDatabaseManager.getStockById(mStock);
+
+        if (bandFlag == Stock.FLAG_SHORT) {
+            mStock.removeFlag(Stock.FLAG_MEDIUM);
+            mStock.removeFlag(Stock.FLAG_LONG);
+            mStock.addFlag(Stock.FLAG_SHORT);
+        } else if (bandFlag == Stock.FLAG_MEDIUM) {
+            mStock.removeFlag(Stock.FLAG_SHORT);
+            mStock.removeFlag(Stock.FLAG_LONG);
+            mStock.addFlag(Stock.FLAG_MEDIUM);
+        } else if (bandFlag == Stock.FLAG_LONG) {
+            mStock.removeFlag(Stock.FLAG_SHORT);
+            mStock.removeFlag(Stock.FLAG_MEDIUM);
+            mStock.addFlag(Stock.FLAG_LONG);
+        }
+        mStockDatabaseManager.updateStockFlag(mStock);
+        mBackgroundHandler.downloadStockData(mStock);
+
+        Intent intent = new Intent(this, StockFavoriteChartListActivity.class);
+        intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER, mSortOrder);
+        intent.putExtra(Constant.EXTRA_STOCK_ID, stockId);
+        startActivity(intent);
+    }
+
+    private int getBandFlagFromColumn(String columnName) {
+        if (DatabaseContract.COLUMN_SHORT_TREND_THUMBNAIL.equals(columnName)
+                || DatabaseContract.COLUMN_SHORT_RADAR_THUMBNAIL.equals(columnName)) {
+            return Stock.FLAG_SHORT;
+        } else if (DatabaseContract.COLUMN_MEDIUM_TREND_THUMBNAIL.equals(columnName)
+                || DatabaseContract.COLUMN_MEDIUM_RADAR_THUMBNAIL.equals(columnName)) {
+            return Stock.FLAG_MEDIUM;
+        } else if (DatabaseContract.COLUMN_LONG_TREND_THUMBNAIL.equals(columnName)
+                || DatabaseContract.COLUMN_LONG_RADAR_THUMBNAIL.equals(columnName)) {
+            return Stock.FLAG_LONG;
+        }
+        return Stock.FLAG_NONE;
+    }
+
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        startActivity(new Intent(this, StockListActivity.class));
+        openStockListByLongPress();
         return true;
+    }
+
+    private void openStockListByLongPress() {
+        startActivity(new Intent(this, StockListActivity.class));
     }
 
     private void setTextColorByValue(TextView textView, double value) {
@@ -979,6 +1035,23 @@ public class StockFavoriteListActivity extends ListActivity implements
                 view.setVisibility(Setting.getPeriod(period) && Setting.getDisplayThumbnail() ? View.VISIBLE : View.GONE);
             } else {
                 view.setVisibility(View.VISIBLE);
+                int bandFlag = getBandFlagFromColumn(columnName);
+                if (bandFlag != Stock.FLAG_NONE) {
+                    final long stockId = mColumnIndexId != -1 ? cursor.getLong(mColumnIndexId) : DatabaseContract.INVALID_ID;
+                    final int flag = bandFlag;
+                    view.setClickable(true);
+                    view.setLongClickable(true);
+                    view.setOnClickListener(v -> onBandCellClick(stockId, flag));
+                    view.setOnLongClickListener(v -> {
+                        openStockListByLongPress();
+                        return true;
+                    });
+                } else {
+                    view.setClickable(false);
+                    view.setLongClickable(false);
+                    view.setOnClickListener(null);
+                    view.setOnLongClickListener(null);
+                }
             }
 
             if (view instanceof ImageView) {
