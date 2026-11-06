@@ -616,13 +616,13 @@ public class TrendAnalyzer {
 	public void setupThumbnail(Stock stock) {
 		try {
 			setup(stock);
-			setupPeriodThumbnail();
 			setupTrendThumbnail(Stock.FLAG_SHORT);
 			setupTrendThumbnail(Stock.FLAG_MEDIUM);
 			setupTrendThumbnail(Stock.FLAG_LONG);
 			setupRadarThumbnail(Stock.FLAG_SHORT);
 			setupRadarThumbnail(Stock.FLAG_MEDIUM);
 			setupRadarThumbnail(Stock.FLAG_LONG);
+			setupPeriodThumbnail();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -636,7 +636,7 @@ public class TrendAnalyzer {
 
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
-				setupPeriodThumbnail(period);
+				setupRadarThumbnail(period);
 			}
 		}
 	}
@@ -838,6 +838,43 @@ public class TrendAnalyzer {
 		mStock.setRadarThumbnail(thumbnailBytes, flag);
 	}
 
+	public void setupRadarThumbnail(String period) {
+		mLineConfigList.clear();
+		mScatterConfigList.clear();
+		mCircleConfigList.clear();
+		mSectorConfigList.clear();
+
+		int color = Color.BLACK;
+		float strokeWidth = THUMBNAIL_STROKE_WIDTH;
+
+		setupBaseLines(color, strokeWidth);
+
+		Radar radar;
+		if (Setting.getPeriod(period)) {
+			for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
+				radar = mStock.getRadar(period, level);
+				if (radar != null) {
+					setupRadarPoint(radar, level);
+				}
+			}
+		}
+
+		CurveThumbnail.AxisConfig axisConfig = CurveThumbnail.AxisConfig.createRadarAxis(
+				color, strokeWidth
+		);
+
+		CurveThumbnail thumbnail = new CurveThumbnail(
+				THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, Color.TRANSPARENT,
+				mLineConfigList,      // 折线配置 - 包含径向线
+				mScatterConfigList,   // 散点配置 - 雷达点
+				mCircleConfigList,    // 圆圈配置 - 同心圆
+				mSectorConfigList,    // 扇形配置 - 象限
+				null,                 // 十字标记 - 不需要
+				axisConfig            // 坐标轴配置 - 新的横纵轴
+		);
+		mStock.setPeriodThumbnail(period, Utility.thumbnailToBytes(thumbnail));
+	}
+
 	private void setupBaseLines(int color, float strokeWidth) {
 		float centerX = (float) THUMBNAIL_SIZE / 2f;
 		float centerY = (float) THUMBNAIL_SIZE / 2f;
@@ -915,6 +952,29 @@ public class TrendAnalyzer {
 		mCircleConfigList.add(new CurveThumbnail.CircleConfig(
 				centerX, centerY, color,
 				radiusLarge, strokeWidth));
+	}
+
+	private void setupRadarPoint(Radar radar, int level) {
+		if (radar == null) {
+			return;
+		}
+
+		float centerX = (float) THUMBNAIL_SIZE / 2f;
+		float centerY = (float) THUMBNAIL_SIZE / 2f;
+		float radius;
+
+		radius = (float) (THUMBNAIL_SIZE / 2.5f * Math.abs(radar.amplitude));
+		double angle = radar.phase;
+		float x = centerX + (float) (radius * Math.cos(angle));
+		float y = centerY + (float) (radius * Math.sin(angle));
+
+        int color = StockTrend.COLORS[level];
+		radius = THUMBNAIL_SCATTER_SIZE_TARGET;
+		int shape = CurveThumbnail.ScatterConfig.SHAPE_CIRCLE;
+
+		mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
+				x, y, color, radius, shape
+		));
 	}
 
 	private void setupRadarPoint(Radar radar, String period, int level, int flag) {
