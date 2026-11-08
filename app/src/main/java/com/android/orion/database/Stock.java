@@ -1623,6 +1623,16 @@ public class Stock extends DatabaseTable {
 		}
 	}
 
+	public void setTargetLevel(String period, int level, int flag) {
+		if (flag == FLAG_SHORT) {
+			setShortLevel(period, level);
+		} else if (flag == FLAG_MEDIUM) {
+			setMediumLevel(period, level);
+		} else if (flag == FLAG_LONG) {
+			setLongLevel(period, level);
+		}
+	}
+
 	public int getShortLevel(String period) {
 		return getPeriod(period).getShortLevel();
 	}

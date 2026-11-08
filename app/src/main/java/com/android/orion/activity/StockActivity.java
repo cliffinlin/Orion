@@ -246,7 +246,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 				mStock.removeFlag(Stock.FLAG_MEDIUM);
 				mStock.removeFlag(Stock.FLAG_LONG);
 			}
-			// 波段切换后，getTargetLevel()的取值来源随之改变，需立即刷新level组
 			refreshLevelViews();
 		});
 
