@@ -2,7 +2,6 @@ package com.android.orion.analyzer;
 
 import android.graphics.Color;
 import android.text.TextUtils;
-import android.util.ArrayMap;
 
 import com.android.orion.chart.CurveThumbnail;
 import com.android.orion.config.Config;
@@ -45,10 +44,6 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_RADA_COLOR_DAY = Color.RED;
 	public static final int THUMBNAIL_RADA_COLOR_WEEK = Color.GREEN;
 	public static final int THUMBNAIL_RADA_COLOR_MONTH = Color.BLUE;
-	public static final int FIRST_QUADRANT = 1;
-	public static final int SECOND_QUADRANT = 2;
-	public static final int THIRD_QUADRANT = 3;
-	public static final int FOURTH_QUADRANT = 4;
 
 	int mPeriods;
 	Logger Log = Logger.getLogger();
@@ -621,7 +616,6 @@ public class TrendAnalyzer {
 	public void setupThumbnail(Stock stock) {
 		try {
 			setup(stock);
-//			setupStockTargetLevelByPhase(Stock.FLAG_SHORT);
 			setupTrendThumbnail(Stock.FLAG_SHORT);
 			setupTrendThumbnail(Stock.FLAG_MEDIUM);
 			setupTrendThumbnail(Stock.FLAG_LONG);
@@ -634,86 +628,6 @@ public class TrendAnalyzer {
 		}
 	}
 
-	int inQuadrant(double phaseDegrees) {
-		int quadrant = FIRST_QUADRANT;
-		if (phaseDegrees >= 0 && phaseDegrees < 90) {
-			quadrant = FIRST_QUADRANT;
-		} else if (phaseDegrees >= 90 && phaseDegrees < 180) {
-			quadrant = SECOND_QUADRANT;
-		} else if (phaseDegrees >= 180 && phaseDegrees < 270) {
-			quadrant = THIRD_QUADRANT;
-		} else if (phaseDegrees >= 270 && phaseDegrees < 0) {
-			quadrant = FOURTH_QUADRANT;
-		}
-		return quadrant;
-	}
-
-	public ArrayMap<String, Integer> getLevelMap(String basePeriod, int baseLevel) {
-		if (TextUtils.equals(basePeriod, Period.MONTH) || TextUtils.equals(basePeriod, Period.WEEK)) {
-			return null;
-		}
-		if (baseLevel == StockTrend.LEVEL_NONE || baseLevel == StockTrend.LEVEL_TREND_LINE) {
-			return null;
-		}
-		Radar radar = mStock.getRadar(basePeriod, baseLevel);
-		if (radar == null) {
-			return null;
-		}
-
-		double basePhaseDegrees = radar.phaseDegrees;
-		int baseQuadrant = inQuadrant(basePhaseDegrees);
-		int min_level = baseLevel;
-		ArrayMap<String, Integer> levelMap = new ArrayMap<>();
-		levelMap.put(basePeriod, baseLevel);
-		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period) && Period.indexOf(period) > Period.indexOf(basePeriod)) {
-				int level = baseLevel;
-				boolean found = false;
-				double delt = 360;
-				for (int i = baseLevel; i < StockTrend.LEVELS.length; i++) {
-					radar = mStock.getRadar(period, i);
-					if (radar == null) {
-						continue;
-					}
-					if (inQuadrant(radar.phaseDegrees) == baseQuadrant) {
-//						found = true;
-//						level = i;
-						if (i >= min_level && Math.abs(radar.phaseDegrees - basePhaseDegrees) < delt) {
-							delt = Math.abs(radar.phaseDegrees - basePhaseDegrees);
-							found = true;
-							level = i;
-							min_level = i;
-						}
-					}
-				}
-				if (found) {
-					levelMap.put(period, level);
-				} else {
-					levelMap.put(basePeriod, baseLevel);
-				}
-			}
-		}
-		return levelMap;
-	}
-
-	public void setupStockTargetLevelByPhase(int flag) {
-		ArrayMap<String, Integer> levelMap;
-		levelMap = getLevelMap(Period.DAY,  mStock.getTargetLevel(Period.DAY, flag));
-		if (levelMap == null) {
-			return;
-		}
-
-		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period)) {
-				if (levelMap.containsKey(period)) {
-					Integer levelValue = levelMap.get(period);
-					if (levelValue != null) {
-						mStock.setTargetLevel(period, levelValue, flag);
-					}
-				}
-			}
-		}
-	}
 
 	public void setupPeriodThumbnail() {
 		if (!Setting.getDisplayThumbnail()) {
