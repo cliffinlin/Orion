@@ -186,8 +186,8 @@ public class StockFavoriteListActivity extends ListActivity implements
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SELL_PROFIT, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SHORT_TREND_THUMBNAIL, R.id.short_trend);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SHORT_RADAR_THUMBNAIL, R.id.short_radar);
-        mColumnToViewIdMap.put(DatabaseContract.COLUMN_MEDIUM_TREND_THUMBNAIL, R.id.medium_trend);
-        mColumnToViewIdMap.put(DatabaseContract.COLUMN_MEDIUM_RADAR_THUMBNAIL, R.id.medium_radar);
+//        mColumnToViewIdMap.put(DatabaseContract.COLUMN_MEDIUM_TREND_THUMBNAIL, R.id.medium_trend);
+//        mColumnToViewIdMap.put(DatabaseContract.COLUMN_MEDIUM_RADAR_THUMBNAIL, R.id.medium_radar);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_LONG_TREND_THUMBNAIL, R.id.long_trend);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_LONG_RADAR_THUMBNAIL, R.id.long_radar);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SIGNAL, R.id.signal);
@@ -214,7 +214,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         int[] headerViewIds = {
                 R.id.stock_name_code, R.id.price, R.id.net, R.id.profite,
                 R.id.short_trend, R.id.short_radar,
-                R.id.medium_trend, R.id.medium_radar,
+//                R.id.medium_trend, R.id.medium_radar,
                 R.id.long_trend, R.id.long_radar,
                 R.id.signal,
                 R.id.period_month, R.id.period_week,
@@ -436,8 +436,8 @@ public class StockFavoriteListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_SELL_PROFIT,
                 DatabaseContract.COLUMN_SHORT_TREND_THUMBNAIL,
                 DatabaseContract.COLUMN_SHORT_RADAR_THUMBNAIL,
-                DatabaseContract.COLUMN_MEDIUM_TREND_THUMBNAIL,
-                DatabaseContract.COLUMN_MEDIUM_RADAR_THUMBNAIL,
+//                DatabaseContract.COLUMN_MEDIUM_TREND_THUMBNAIL,
+//                DatabaseContract.COLUMN_MEDIUM_RADAR_THUMBNAIL,
                 DatabaseContract.COLUMN_LONG_TREND_THUMBNAIL,
                 DatabaseContract.COLUMN_LONG_RADAR_THUMBNAIL,
                 DatabaseContract.COLUMN_SIGNAL,
@@ -462,8 +462,8 @@ public class StockFavoriteListActivity extends ListActivity implements
                 R.id.sell_profit,
                 R.id.short_trend,
                 R.id.short_radar,
-                R.id.medium_trend,
-                R.id.medium_radar,
+//                R.id.medium_trend,
+//                R.id.medium_radar,
                 R.id.long_trend,
                 R.id.long_radar,
                 R.id.signal,

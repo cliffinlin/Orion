@@ -138,6 +138,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mCheckBoxTarget = findViewById(R.id.checkbox_target);
 		mRadioShort = findViewById(R.id.radio_short);
 		mRadioMedium = findViewById(R.id.radio_medium);
+		mRadioMedium.setVisibility(View.GONE);
 		mRadioLong = findViewById(R.id.radio_long);
 		mRadioGroupTerm = findViewById(R.id.radiogroup_term);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
@@ -786,8 +787,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		} else if (isLong) {
 			mRadioGroupTerm.check(R.id.radio_long);
 		} else {
-			// 缺省选中medium；check会触发OnCheckedChangeListener，自动补齐FLAG_MEDIUM
-			mRadioGroupTerm.check(R.id.radio_medium);
+			mRadioGroupTerm.check(R.id.radio_long);
 		}
 
 		// 根据Target状态更新Quota的显示状态

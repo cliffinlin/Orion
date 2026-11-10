@@ -83,6 +83,7 @@
         android:layout_width="@dimen/favorite_list_item_layout_width"
         android:layout_height="@dimen/favorite_list_item_layout_height"
         android:layout_weight="1"
+        android:visibility="gone"
         android:scaleType="centerInside" />
 
     <ImageView
@@ -90,6 +91,7 @@
         android:layout_width="@dimen/favorite_list_item_layout_width"
         android:layout_height="@dimen/favorite_list_item_layout_height"
         android:layout_weight="1"
+        android:visibility="gone"
         android:scaleType="centerInside" />
 
     <ImageView

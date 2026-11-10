@@ -640,7 +640,9 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			} else {
 				mStockDatabaseManager.getTDXDataContentList(stock, period, contentList);
 			}
-			exportTDXDataFile(stock, period, contentList);
+			//__TEST_CASE__
+//			exportTDXDataFile(stock, period, contentList);//__TEST_CASE__
+			//__TEST_CASE__
 		}
 	}
 

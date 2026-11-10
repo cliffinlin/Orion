@@ -282,7 +282,7 @@ public class StorageActivity extends DatabaseActivity {
 						} else if (parseType == XML_PARSE_TYPE_STOCK_TRADE) {
 							//__TEST_CASE__
 							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_TARGET_LEVEL)) {
-								stock.setMediumLevel(parser.nextText());//__TEST_CASE__
+								stock.setLongLevel(parser.nextText());//__TEST_CASE__
 							}
 							//__TEST_CASE__
 							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_SHORT_LEVEL)) {

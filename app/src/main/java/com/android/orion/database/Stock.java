@@ -1594,10 +1594,8 @@ public class Stock extends DatabaseTable {
 		} else if (hasFlag(FLAG_LONG)) {
 			return getLongLevel(period);
 		} else {
-			//__TEST_CASE__
-			addFlag(FLAG_MEDIUM);
-			return getMediumLevel(period);
-			//__TEST_CASE__
+			addFlag(FLAG_LONG);
+			return getLongLevel(period);
 		}
 	}
 
