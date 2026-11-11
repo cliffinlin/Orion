@@ -1030,11 +1030,29 @@ public class StockFavoriteListActivity extends ListActivity implements
         }
 
         private boolean handleBlobColumn(View view, Cursor cursor, int columnIndex, String columnName) {
+            int flagValue = 0;
+            if (mColumnIndexFlag != -1 && !cursor.isNull(mColumnIndexFlag)) {
+                flagValue = cursor.getInt(mColumnIndexFlag);
+            }
+
+            if (!Utility.hasFlag(flagValue, Stock.FLAG_TARGET)) {
+                view.setVisibility(View.INVISIBLE);
+                view.setClickable(false);
+                view.setLongClickable(false);
+                view.setOnClickListener(null);
+                view.setOnLongClickListener(null);
+                if (view instanceof ImageView) {
+                    ((ImageView) view).setImageDrawable(null);
+                }
+                return true;
+            }
+
             if (DatabaseContract.isPeriodThumbnailColumn(columnName)) {
                 String period = Period.fromColumnName(columnName);
                 view.setVisibility(Setting.getPeriod(period) && Setting.getDisplayThumbnail() ? View.VISIBLE : View.GONE);
             } else {
                 view.setVisibility(View.VISIBLE);
+
                 int bandFlag = getBandFlagFromColumn(columnName);
                 if (bandFlag != Stock.FLAG_NONE) {
                     final long stockId = mColumnIndexId != -1 ? cursor.getLong(mColumnIndexId) : DatabaseContract.INVALID_ID;
@@ -1105,11 +1123,23 @@ public class StockFavoriteListActivity extends ListActivity implements
                         net = cursor.getDouble(mColumnIndexNet);
                     }
                     setTextColorByValue(textView, net);
-                } else if (DatabaseContract.COLUMN_NET.equals(columnName) ||
-                        DatabaseContract.COLUMN_SIGNAL.equals(columnName)) {
+                } else if (DatabaseContract.COLUMN_NET.equals(columnName)) {
                     double value = cursor.getDouble(columnIndex);
                     textView.setText(String.valueOf(value));
                     setTextColorByValue(textView, value);
+                } else if (DatabaseContract.COLUMN_SIGNAL.equals(columnName)) {
+                    int flagValue = 0;
+                    if (mColumnIndexFlag != -1 && !cursor.isNull(mColumnIndexFlag)) {
+                        flagValue = cursor.getInt(mColumnIndexFlag);
+                    }
+                    if (Utility.hasFlag(flagValue, Stock.FLAG_TARGET)) {
+                        double value = cursor.getDouble(columnIndex);
+                        textView.setText(String.valueOf(value));
+                        setTextColorByValue(textView, value);
+                    } else {
+                        textView.setText("");
+                    }
+                    return true;
                 } else if (DatabaseContract.COLUMN_BUY_PROFIT.equals(columnName)) {
                     int flagValue = 0;
                     if (mColumnIndexFlag != -1 && !cursor.isNull(mColumnIndexFlag)) {
