@@ -138,7 +138,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mCheckBoxTarget = findViewById(R.id.checkbox_target);
 		mRadioShort = findViewById(R.id.radio_short);
 		mRadioMedium = findViewById(R.id.radio_medium);
-		mRadioMedium.setVisibility(View.GONE);
 		mRadioLong = findViewById(R.id.radio_long);
 		mRadioGroupTerm = findViewById(R.id.radiogroup_term);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);

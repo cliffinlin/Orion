@@ -186,8 +186,8 @@ public class StockFavoriteListActivity extends ListActivity implements
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SELL_PROFIT, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SHORT_TREND_THUMBNAIL, R.id.short_trend);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SHORT_RADAR_THUMBNAIL, R.id.short_radar);
-//        mColumnToViewIdMap.put(DatabaseContract.COLUMN_MEDIUM_TREND_THUMBNAIL, R.id.medium_trend);
-//        mColumnToViewIdMap.put(DatabaseContract.COLUMN_MEDIUM_RADAR_THUMBNAIL, R.id.medium_radar);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_MEDIUM_TREND_THUMBNAIL, R.id.medium_trend);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_MEDIUM_RADAR_THUMBNAIL, R.id.medium_radar);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_LONG_TREND_THUMBNAIL, R.id.long_trend);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_LONG_RADAR_THUMBNAIL, R.id.long_radar);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SIGNAL, R.id.signal);
@@ -214,7 +214,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         int[] headerViewIds = {
                 R.id.stock_name_code, R.id.price, R.id.net, R.id.profite,
                 R.id.short_trend, R.id.short_radar,
-//                R.id.medium_trend, R.id.medium_radar,
+                R.id.medium_trend, R.id.medium_radar,
                 R.id.long_trend, R.id.long_radar,
                 R.id.signal,
                 R.id.period_month, R.id.period_week,
@@ -436,8 +436,8 @@ public class StockFavoriteListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_SELL_PROFIT,
                 DatabaseContract.COLUMN_SHORT_TREND_THUMBNAIL,
                 DatabaseContract.COLUMN_SHORT_RADAR_THUMBNAIL,
-//                DatabaseContract.COLUMN_MEDIUM_TREND_THUMBNAIL,
-//                DatabaseContract.COLUMN_MEDIUM_RADAR_THUMBNAIL,
+                DatabaseContract.COLUMN_MEDIUM_TREND_THUMBNAIL,
+                DatabaseContract.COLUMN_MEDIUM_RADAR_THUMBNAIL,
                 DatabaseContract.COLUMN_LONG_TREND_THUMBNAIL,
                 DatabaseContract.COLUMN_LONG_RADAR_THUMBNAIL,
                 DatabaseContract.COLUMN_SIGNAL,
@@ -462,8 +462,8 @@ public class StockFavoriteListActivity extends ListActivity implements
                 R.id.sell_profit,
                 R.id.short_trend,
                 R.id.short_radar,
-//                R.id.medium_trend,
-//                R.id.medium_radar,
+                R.id.medium_trend,
+                R.id.medium_radar,
                 R.id.long_trend,
                 R.id.long_radar,
                 R.id.signal,
@@ -1030,29 +1030,11 @@ public class StockFavoriteListActivity extends ListActivity implements
         }
 
         private boolean handleBlobColumn(View view, Cursor cursor, int columnIndex, String columnName) {
-            int flagValue = 0;
-            if (mColumnIndexFlag != -1 && !cursor.isNull(mColumnIndexFlag)) {
-                flagValue = cursor.getInt(mColumnIndexFlag);
-            }
-
-            if (!Utility.hasFlag(flagValue, Stock.FLAG_TARGET)) {
-                view.setVisibility(View.INVISIBLE);
-                view.setClickable(false);
-                view.setLongClickable(false);
-                view.setOnClickListener(null);
-                view.setOnLongClickListener(null);
-                if (view instanceof ImageView) {
-                    ((ImageView) view).setImageDrawable(null);
-                }
-                return true;
-            }
-
             if (DatabaseContract.isPeriodThumbnailColumn(columnName)) {
                 String period = Period.fromColumnName(columnName);
                 view.setVisibility(Setting.getPeriod(period) && Setting.getDisplayThumbnail() ? View.VISIBLE : View.GONE);
             } else {
                 view.setVisibility(View.VISIBLE);
-
                 int bandFlag = getBandFlagFromColumn(columnName);
                 if (bandFlag != Stock.FLAG_NONE) {
                     final long stockId = mColumnIndexId != -1 ? cursor.getLong(mColumnIndexId) : DatabaseContract.INVALID_ID;
@@ -1123,23 +1105,11 @@ public class StockFavoriteListActivity extends ListActivity implements
                         net = cursor.getDouble(mColumnIndexNet);
                     }
                     setTextColorByValue(textView, net);
-                } else if (DatabaseContract.COLUMN_NET.equals(columnName)) {
+                } else if (DatabaseContract.COLUMN_NET.equals(columnName) ||
+                        DatabaseContract.COLUMN_SIGNAL.equals(columnName)) {
                     double value = cursor.getDouble(columnIndex);
                     textView.setText(String.valueOf(value));
                     setTextColorByValue(textView, value);
-                } else if (DatabaseContract.COLUMN_SIGNAL.equals(columnName)) {
-                    int flagValue = 0;
-                    if (mColumnIndexFlag != -1 && !cursor.isNull(mColumnIndexFlag)) {
-                        flagValue = cursor.getInt(mColumnIndexFlag);
-                    }
-                    if (Utility.hasFlag(flagValue, Stock.FLAG_TARGET)) {
-                        double value = cursor.getDouble(columnIndex);
-                        textView.setText(String.valueOf(value));
-                        setTextColorByValue(textView, value);
-                    } else {
-                        textView.setText("");
-                    }
-                    return true;
                 } else if (DatabaseContract.COLUMN_BUY_PROFIT.equals(columnName)) {
                     int flagValue = 0;
                     if (mColumnIndexFlag != -1 && !cursor.isNull(mColumnIndexFlag)) {
