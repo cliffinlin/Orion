@@ -943,6 +943,14 @@ public class StockFavoriteListActivity extends ListActivity implements
             return handleTextColumns(view, cursor, columnIndex, columnName);
         }
 
+        private boolean hasFlagTarget(Cursor cursor) {
+            int flagValue = 0;
+            if (mColumnIndexFlag != -1 && cursor != null && !cursor.isClosed() && !cursor.isNull(mColumnIndexFlag)) {
+                flagValue = cursor.getInt(mColumnIndexFlag);
+            }
+            return Utility.hasFlag(flagValue, Stock.FLAG_TARGET);
+        }
+
         private boolean handleProfitDividerContainer(View view, Cursor cursor) {
             if (!(view instanceof LinearLayout)) {
                 return false;
@@ -950,12 +958,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
             LinearLayout container = (LinearLayout) view;
 
-            int flagValue = 0;
-            if (mColumnIndexFlag != -1 && !cursor.isNull(mColumnIndexFlag)) {
-                flagValue = cursor.getInt(mColumnIndexFlag);
-            }
-
-            if (Utility.hasFlag(flagValue, Stock.FLAG_TARGET)) {
+            if (hasFlagTarget(cursor)) {
                 view.setVisibility(View.VISIBLE);
             } else {
                 view.setVisibility(View.GONE);
@@ -1111,11 +1114,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                     textView.setText(String.valueOf(value));
                     setTextColorByValue(textView, value);
                 } else if (DatabaseContract.COLUMN_BUY_PROFIT.equals(columnName)) {
-                    int flagValue = 0;
-                    if (mColumnIndexFlag != -1 && !cursor.isNull(mColumnIndexFlag)) {
-                        flagValue = cursor.getInt(mColumnIndexFlag);
-                    }
-                    if (Utility.hasFlag(flagValue, Stock.FLAG_TARGET)) {
+                    if (hasFlagTarget(cursor)) {
                         double profit = cursor.getDouble(columnIndex);
                         textView.setText(String.valueOf(profit));
                         textView.setTextColor(profit > 0 ? Color.RED : Color.GRAY);
@@ -1124,11 +1123,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                     }
                     return true;
                 } else if (DatabaseContract.COLUMN_SELL_PROFIT.equals(columnName)) {
-                    int flagValue = 0;
-                    if (mColumnIndexFlag != -1 && !cursor.isNull(mColumnIndexFlag)) {
-                        flagValue = cursor.getInt(mColumnIndexFlag);
-                    }
-                    if (Utility.hasFlag(flagValue, Stock.FLAG_TARGET)) {
+                    if (hasFlagTarget(cursor)) {
                         double profit = cursor.getDouble(columnIndex);
                         textView.setText(String.valueOf(profit));
                         textView.setTextColor(profit < 0 ? Color.MAGENTA : Color.GRAY);
