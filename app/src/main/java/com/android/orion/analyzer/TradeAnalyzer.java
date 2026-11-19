@@ -80,6 +80,7 @@ public class TradeAnalyzer {
 		}
 	}
 	public void setHedgeable() {
+		mStock.setHedgeable(0);
 		mProfit = 0;
 		mHedgeable = 0;
 
@@ -128,6 +129,7 @@ public class TradeAnalyzer {
 	}
 
 	public void setTee() {
+		mStock.setTee(0);
 		mProfit = 0;
 		mTee = 0;
 
@@ -143,9 +145,9 @@ public class TradeAnalyzer {
 		mStock.setSellVolume(sellVolume);
 		if (mProfit < 0) {
 			mStock.setSellProfit(mProfit);
+			mTee = mProfit;
+			mStock.setTee(mTee);
 		}
-		mTee = mProfit;
-		mStock.setTee(mTee);
 	}
 	public String getBuyDealString() {
 		return mBuyDeal == null ? "" : mBuyDeal.getString();
