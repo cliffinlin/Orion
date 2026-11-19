@@ -916,12 +916,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 			interval = System.currentTimeMillis() - Setting.getDownloadStockDataTimeMillis(stock);
 			if (Market.isTradingHours() || (interval > Config.downloadStockDataInterval)) {
-				//__TEST_CASE__
-//				if (QQFinance.getInstance().downloadStockDataHistory(stock) == RESULT_FAILED) {
-//					StockService.getInstance().onDisconnected();
-//					return;
-//				}
-				//__TEST_CASE__
 				if (downloadStockDataHistory(stock) == RESULT_FAILED) {
 					StockService.getInstance().onDisconnected();
 					return;
