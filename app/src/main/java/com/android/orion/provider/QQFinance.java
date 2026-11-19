@@ -34,9 +34,11 @@ public class QQFinance extends StockDataProvider {
 	public static final String QQ_FINANCE_URL_REAL_TIME = "http://qt.gtimg.cn/q=";
 	// 简要信息（s_ 前缀）
 	public static final String QQ_FINANCE_URL_SIMPLE = "http://qt.gtimg.cn/q=s_";
-	// 历史 K 线，param 格式：代码,周期,开始日期,结束日期,数量,复权类型
+	// 历史 K 线（日/周/月），param=代码,周期,开始日期,结束日期,数量,复权类型
 	// 复权类型留空 = 不复权（qfq = 前复权，hfq = 后复权）
 	public static final String QQ_FINANCE_URL_KLINE = "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?";
+	// 分钟 K 线，param=代码,周期,开始日期,结束日期,数量（该接口不涉及复权）
+	public static final String QQ_FINANCE_URL_MKLINE = "https://proxy.finance.qq.com/ifzqgtimg/appstock/app/kline/mkline?";
 
 	ArrayList<ContentValues> mContentValuesList = new ArrayList<>();
 
@@ -73,13 +75,19 @@ public class QQFinance extends StockDataProvider {
 		if (stock == null || stockData == null) return "";
 
 		String symbol = stock.getSE() + stock.getCode();
-		String periodType = convertPeriodToQQType(stockData.getPeriod());
+		String period = stockData.getPeriod();
+		String periodType = convertPeriodToQQType(period);
 		if (TextUtils.isEmpty(periodType)) return "";
 
-		// param=代码,周期,开始日期,结束日期,数量,复权类型
-		// 复权类型留空表示不复权
-		String param = symbol + "," + periodType + ",,," + len + ",";
+		if (Period.isMinutePeriod(period)) {
+			// 分钟线：param=代码,周期,开始日期,结束日期,数量
+			String param = symbol + "," + periodType + ",,," + len;
+			return QQ_FINANCE_URL_MKLINE + "param=" + param;
+		}
 
+		// 日/周/月线：param=代码,周期,开始日期,结束日期,数量,复权类型
+		// 复权类型留空 = 不复权
+		String param = symbol + "," + periodType + ",,," + len + ",";
 		return QQ_FINANCE_URL_KLINE + "param=" + param;
 	}
 
@@ -297,9 +305,9 @@ public class QQFinance extends StockDataProvider {
 	}
 
 	/**
-	 * 解析 K 线数据。腾讯返回 JSON：
-	 * { "code":0, "data": { "sh600519": { "day": [["2024-01-01","open","close","high","low","volume"], ...] } } }
-	 * 不复权模式下 key 为 "day"/"week"/"month"/"m5" 等，不会出现 qfqday 等前缀键。
+	 * 解析 K 线数据。
+	 * 日/周/月线（fqkline 不复权）：data.股票代码.day/week/month = [[日期, 开盘, 收盘, 最高, 最低, 成交量], ...]
+	 * 分钟线（mkline）：data.股票代码.m5/m15/m30/m60 = [[时间(yyyyMMddHHmm), 开盘, 收盘, 最高, 最低, 成交量, {}, 涨跌幅], ...]
 	 */
 	public void handleResponseStockDataHistory(Stock stock, StockData stockData, String response) {
 		StopWatch.start();
@@ -323,6 +331,8 @@ public class QQFinance extends StockDataProvider {
 			if (stockNode == null) return;
 
 			String periodType = convertPeriodToQQType(stockData.getPeriod());
+			if (TextUtils.isEmpty(periodType)) return;
+
 			JSONArray klineArray = stockNode.getJSONArray(periodType);
 			if (klineArray == null || klineArray.isEmpty()) return;
 
@@ -332,25 +342,40 @@ public class QQFinance extends StockDataProvider {
 				bulkInsert = true;
 			}
 
+			boolean isMinute = Period.isMinutePeriod(stockData.getPeriod());
+
 			for (int i = 0; i < klineArray.size(); i++) {
 				JSONArray item = klineArray.getJSONArray(i);
 				if (item == null || item.size() < 6) continue;
 
-				String dateTimeStr = item.getString(0);
-				String[] parts = dateTimeStr.trim().split(" ");
-				stockData.setDate(parts[0]);
-				if (parts.length > 1 && Period.isMinutePeriod(stockData.getPeriod())) {
-					stockData.setTime(parts[1]);
-				} else {
-					stockData.setTime("");
-				}
+				if (isMinute) {
+					// 分钟线：[时间(yyyyMMddHHmm), 开盘, 收盘, 最高, 最低, 成交量, {}, 涨跌幅]
+					String timeStr = item.getString(0);          // 如 "202611191130"
+					if (TextUtils.isEmpty(timeStr) || timeStr.length() < 12) continue;
 
-				stockData.getCandle().init();
-				// 腾讯 K 线数组顺序：日期、开盘、收盘、最高、最低、成交量
-				stockData.getCandle().setOpen(item.getDouble(1));
-				stockData.getCandle().setClose(item.getDouble(2));
-				stockData.getCandle().setHigh(item.getDouble(3));
-				stockData.getCandle().setLow(item.getDouble(4));
+					stockData.setDate(timeStr.substring(0, 4) + "-"
+							+ timeStr.substring(4, 6) + "-"
+							+ timeStr.substring(6, 8));
+					stockData.setTime(timeStr.substring(8, 10) + ":"
+							+ timeStr.substring(10, 12) + ":00");
+
+					stockData.getCandle().init();
+					stockData.getCandle().setOpen(item.getDouble(1));
+					stockData.getCandle().setClose(item.getDouble(2));
+					stockData.getCandle().setHigh(item.getDouble(3));
+					stockData.getCandle().setLow(item.getDouble(4));
+				} else {
+					// 日/周/月线：[日期, 开盘, 收盘, 最高, 最低, 成交量]
+					String dateTimeStr = item.getString(0);
+					stockData.setDate(dateTimeStr.trim());
+					stockData.setTime("");
+
+					stockData.getCandle().init();
+					stockData.getCandle().setOpen(item.getDouble(1));
+					stockData.getCandle().setClose(item.getDouble(2));
+					stockData.getCandle().setHigh(item.getDouble(3));
+					stockData.getCandle().setLow(item.getDouble(4));
+				}
 
 				if (bulkInsert) {
 					stockData.setCreated(Utility.getCurrentDateTimeString());
