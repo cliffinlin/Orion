@@ -52,7 +52,7 @@ public class SinaFinance extends StockDataProvider {
 	public static final String SINA_FINANCE_HEAD_REFERER_VALUE = "http://vip.stock.finance.sina.com.cn/";
 
 	static StringBuffer mContentTitle = new StringBuffer();
-	ArrayList<ContentValues> ContentValuesList = new ArrayList<>();
+	ArrayList<ContentValues> mContentValuesList = new ArrayList<>();
 	ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
 	ArrayMap<String, String> mRequestHeader = new ArrayMap<>();
 
@@ -742,7 +742,7 @@ public class SinaFinance extends StockDataProvider {
 		String dateTimeString = "";
 		String[] dateTime = null;
 		JSONArray jsonArray = null;
-		ContentValuesList.clear();
+		mContentValuesList.clear();
 		ArrayMap<String, StockData> stockDataMap = new ArrayMap<>();
 
 		if (stock == null || stockData == null) {
@@ -780,7 +780,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				loadTDXDatabase(stock, stockData, ContentValuesList, stockDataMap);
+				loadTDXDatabase(stock, stockData, mContentValuesList, stockDataMap);
 			}
 
 			for (int i = 0; i < jsonArray.size(); i++) {
@@ -821,10 +821,10 @@ public class SinaFinance extends StockDataProvider {
 						if (Period.isMinutePeriod(stockData.getPeriod())) {
 							if (!stockDataMap.containsKey(stockData.getDateTime())) {
 								stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
-								ContentValuesList.add(stockData.getContentValues());
+								mContentValuesList.add(stockData.getContentValues());
 							}
 						} else {
-							ContentValuesList.add(stockData.getContentValues());
+							mContentValuesList.add(stockData.getContentValues());
 						}
 					} else {
 						if (!mStockDatabaseManager.isStockDataExist(stockData)) {
@@ -846,12 +846,12 @@ public class SinaFinance extends StockDataProvider {
 			if (bulkInsert) {
 				saveTDXDatabase(stock, stockData.getPeriod(), stockDataMap);
 
-				if (ContentValuesList.size() > 0) {
-					fixContentValuesList(stockData, ContentValuesList);
+				if (mContentValuesList.size() > 0) {
+					fixContentValuesList(stockData, mContentValuesList);
 
-					ContentValues[] contentValuesArray = new ContentValues[ContentValuesList
+					ContentValues[] contentValuesArray = new ContentValues[mContentValuesList
 							.size()];
-					contentValuesArray = ContentValuesList
+					contentValuesArray = mContentValuesList
 							.toArray(contentValuesArray);
 					mStockDatabaseManager.bulkInsertStockData(contentValuesArray);
 				}
@@ -1099,7 +1099,7 @@ public class SinaFinance extends StockDataProvider {
 		boolean bulkInsert = false;
 		String keyString = "";
 		String valueString = "";
-		ContentValuesList.clear();
+		mContentValuesList.clear();
 
 		if (stock == null || TextUtils.isEmpty(response)) {
 			Log.d("return, stock = "
@@ -1211,7 +1211,7 @@ public class SinaFinance extends StockDataProvider {
 									.getCurrentDateTimeString());
 							stockFinancial.setModified(Utility
 									.getCurrentDateTimeString());
-							ContentValuesList.add(stockFinancial
+							mContentValuesList.add(stockFinancial
 									.getContentValues());
 						} else {
 							if (!mStockDatabaseManager
@@ -1237,10 +1237,10 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				if (ContentValuesList.size() > 0) {
-					ContentValues[] contentValuesArray = new ContentValues[ContentValuesList
+				if (mContentValuesList.size() > 0) {
+					ContentValues[] contentValuesArray = new ContentValues[mContentValuesList
 							.size()];
-					contentValuesArray = ContentValuesList
+					contentValuesArray = mContentValuesList
 							.toArray(contentValuesArray);
 					mStockDatabaseManager
 							.bulkInsertStockFinancial(contentValuesArray);
@@ -1310,7 +1310,7 @@ public class SinaFinance extends StockDataProvider {
 		String dateString = "";
 		String dividendString = "";
 		String rDateString = "";
-		ContentValuesList.clear();
+		mContentValuesList.clear();
 
 		if (stock == null || TextUtils.isEmpty(response)) {
 			Log.d("return, stock = " + stock
@@ -1402,7 +1402,7 @@ public class SinaFinance extends StockDataProvider {
 								.getCurrentDateTimeString());
 						stockBonus.setModified(Utility
 								.getCurrentDateTimeString());
-						ContentValuesList.add(stockBonus.getContentValues());
+						mContentValuesList.add(stockBonus.getContentValues());
 					} else {
 						if (!mStockDatabaseManager
 								.isStockBonusExist(stockBonus)) {
@@ -1420,10 +1420,10 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				if (ContentValuesList.size() > 0) {
-					ContentValues[] contentValuesArray = new ContentValues[ContentValuesList
+				if (mContentValuesList.size() > 0) {
+					ContentValues[] contentValuesArray = new ContentValues[mContentValuesList
 							.size()];
-					contentValuesArray = ContentValuesList
+					contentValuesArray = mContentValuesList
 							.toArray(contentValuesArray);
 					mStockDatabaseManager
 							.bulkInsertStockBonus(contentValuesArray);
@@ -1491,7 +1491,7 @@ public class SinaFinance extends StockDataProvider {
 		boolean bulkInsert = false;
 		String dateString = "";
 		String stockShareString = "";
-		ContentValuesList.clear();
+		mContentValuesList.clear();
 
 		if (stock == null || TextUtils.isEmpty(response)) {
 			Log.d("return, stock = " + stock
@@ -1582,7 +1582,7 @@ public class SinaFinance extends StockDataProvider {
 								.getCurrentDateTimeString());
 						stockShare.setModified(Utility
 								.getCurrentDateTimeString());
-						ContentValuesList.add(stockShare.getContentValues());
+						mContentValuesList.add(stockShare.getContentValues());
 					} else {
 						if (!mStockDatabaseManager
 								.isStockShareExist(stockShare)) {
@@ -1600,10 +1600,10 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				if (ContentValuesList.size() > 0) {
-					ContentValues[] contentValuesArray = new ContentValues[ContentValuesList
+				if (mContentValuesList.size() > 0) {
+					ContentValues[] contentValuesArray = new ContentValues[mContentValuesList
 							.size()];
-					contentValuesArray = ContentValuesList
+					contentValuesArray = mContentValuesList
 							.toArray(contentValuesArray);
 					mStockDatabaseManager
 							.bulkInsertStockShare(contentValuesArray);
