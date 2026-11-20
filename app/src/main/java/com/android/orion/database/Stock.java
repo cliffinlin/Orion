@@ -1594,8 +1594,7 @@ public class Stock extends DatabaseTable {
 		} else if (hasFlag(FLAG_LONG)) {
 			return getLongLevel(period);
 		} else {
-			addFlag(FLAG_LONG);
-			return getLongLevel(period);
+			return StockTrend.LEVEL_NONE;
 		}
 	}
 

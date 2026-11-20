@@ -814,21 +814,23 @@ public class StockFavoriteListActivity extends ListActivity implements
         mStock.setId(stockId);
         mStockDatabaseManager.getStockById(mStock);
 
-        if (bandFlag == Stock.FLAG_SHORT) {
-            mStock.removeFlag(Stock.FLAG_MEDIUM);
-            mStock.removeFlag(Stock.FLAG_LONG);
-            mStock.addFlag(Stock.FLAG_SHORT);
-        } else if (bandFlag == Stock.FLAG_MEDIUM) {
-            mStock.removeFlag(Stock.FLAG_SHORT);
-            mStock.removeFlag(Stock.FLAG_LONG);
-            mStock.addFlag(Stock.FLAG_MEDIUM);
-        } else if (bandFlag == Stock.FLAG_LONG) {
-            mStock.removeFlag(Stock.FLAG_SHORT);
-            mStock.removeFlag(Stock.FLAG_MEDIUM);
-            mStock.addFlag(Stock.FLAG_LONG);
+        if (mStock.hasFlag(Stock.FLAG_TARGET)) {
+            if (bandFlag == Stock.FLAG_SHORT) {
+                mStock.removeFlag(Stock.FLAG_MEDIUM);
+                mStock.removeFlag(Stock.FLAG_LONG);
+                mStock.addFlag(Stock.FLAG_SHORT);
+            } else if (bandFlag == Stock.FLAG_MEDIUM) {
+                mStock.removeFlag(Stock.FLAG_SHORT);
+                mStock.removeFlag(Stock.FLAG_LONG);
+                mStock.addFlag(Stock.FLAG_MEDIUM);
+            } else if (bandFlag == Stock.FLAG_LONG) {
+                mStock.removeFlag(Stock.FLAG_SHORT);
+                mStock.removeFlag(Stock.FLAG_MEDIUM);
+                mStock.addFlag(Stock.FLAG_LONG);
+            }
+            mStockDatabaseManager.updateStockFlag(mStock);
+            mBackgroundHandler.downloadStockData(mStock);
         }
-        mStockDatabaseManager.updateStockFlag(mStock);
-        mBackgroundHandler.downloadStockData(mStock);
 
         Intent intent = new Intent(this, StockFavoriteChartListActivity.class);
         intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER, mSortOrder);
