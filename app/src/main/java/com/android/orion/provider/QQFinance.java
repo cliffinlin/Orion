@@ -81,7 +81,8 @@ public class QQFinance extends StockDataProvider {
 
 		if (Period.isMinutePeriod(period)) {
 			// 分钟线：param=代码,周期,开始日期,结束日期,数量
-			String param = symbol + "," + periodType + ",,," + len;
+			// 注意：mkline 只有 5 个字段，中间两个日期留空，即 ",," 后直接跟数量
+			String param = symbol + "," + periodType + ",," + len;
 			return QQ_FINANCE_URL_MKLINE + "param=" + param;
 		}
 
@@ -194,6 +195,175 @@ public class QQFinance extends StockDataProvider {
 		return RESULT_NONE;
 	}
 
+	public void handleResponseStockDataHistory(Stock stock, StockData stockData, String response) {
+		StopWatch.start();
+		boolean bulkInsert = false;
+		int defaultValue = 0;
+		JSONObject root = null;
+		JSONObject data = null;
+		JSONObject stockNode = null;
+		JSONArray klineArray = null;
+		String periodType = "";
+		String timeStr = "";
+		String dateStr = "";
+		String dateTimeStr = "";
+		String[] dateTime = null;
+		ArrayMap<String, StockData> stockDataMap = new ArrayMap<>();
+
+		mContentValuesList.clear();
+
+		if (stock == null || stockData == null) {
+			return;
+		}
+
+		if (TextUtils.isEmpty(response)) {
+			Log.d("return, stock = " + stock + " stockData = " + stockData + " response = " + response);
+			return;
+		}
+
+		try {
+			root = JSON.parseObject(response);
+			if (root == null) {
+				Log.d("return, root = " + root);
+				return;
+			}
+
+			data = root.getJSONObject("data");
+			if (data == null) {
+				Log.d("return, data = " + data);
+				return;
+			}
+
+			String symbol = stock.getSE() + stock.getCode();
+			stockNode = data.getJSONObject(symbol);
+			if (stockNode == null) {
+				stockNode = data.getJSONObject(symbol.toLowerCase());
+			}
+			if (stockNode == null) {
+				Log.d("return, stockNode = " + stockNode);
+				return;
+			}
+
+			periodType = convertPeriodToQQType(stockData.getPeriod());
+			if (TextUtils.isEmpty(periodType)) {
+				return;
+			}
+
+			klineArray = stockNode.getJSONArray(periodType);
+			if (klineArray == null) {
+				Log.d("return, klineArray = " + klineArray);
+				return;
+			}
+
+			if (klineArray.size() == 0) {
+				Log.d("return, klineArray.size() = " + klineArray.size());
+				return;
+			}
+
+			defaultValue = getAvailableHistoryLength(stockData.getPeriod());
+			if (TextUtils.isEmpty(stockData.getCreated()) || (defaultValue == klineArray.size())) {
+				mStockDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), stockData.getPeriod());
+				bulkInsert = true;
+			}
+
+			if (bulkInsert) {
+				loadTDXDatabase(stock, stockData, mContentValuesList, stockDataMap);
+			}
+
+			boolean isMinute = Period.isMinutePeriod(stockData.getPeriod());
+
+			for (int i = 0; i < klineArray.size(); i++) {
+				JSONArray item = klineArray.getJSONArray(i);
+				if (item == null || item.size() < 6) {
+					continue;
+				}
+
+				if (isMinute) {
+					timeStr = item.getString(0);
+					if (TextUtils.isEmpty(timeStr) || timeStr.length() < 12) {
+						continue;
+					}
+					stockData.setDate(timeStr.substring(0, 4) + Symbol.MINUS
+							+ timeStr.substring(4, 6) + Symbol.MINUS
+							+ timeStr.substring(6, 8));
+					stockData.setTime(timeStr.substring(8, 10) + ":"
+							+ timeStr.substring(10, 12) + ":00");
+				} else {
+					dateTimeStr = item.getString(0);
+					if (!TextUtils.isEmpty(dateTimeStr)) {
+						dateTime = dateTimeStr.trim().split(" ");
+						switch (dateTime.length) {
+							case 1:
+								stockData.setDate(dateTime[0]);
+								stockData.setTime("");
+								break;
+							case 2:
+								stockData.setDate(dateTime[0]);
+								if (Period.isMinutePeriod(stockData.getPeriod())) {
+									stockData.setTime(dateTime[1]);
+								}
+								break;
+							default:
+								break;
+						}
+					}
+				}
+
+				stockData.getMacd().init();
+				stockData.getCandle().init();
+				stockData.getCandle().setOpen(item.getDouble(1));
+				stockData.getCandle().setClose(item.getDouble(2));
+				stockData.getCandle().setHigh(item.getDouble(3));
+				stockData.getCandle().setLow(item.getDouble(4));
+
+				if (i == klineArray.size() - 1) {
+					mergeStockDataDay(stockData);
+				}
+
+				if (bulkInsert) {
+					stockData.setCreated(Utility.getCurrentDateTimeString());
+					stockData.setModified(Utility.getCurrentDateTimeString());
+					if (Period.isMinutePeriod(stockData.getPeriod())) {
+						if (!stockDataMap.containsKey(stockData.getDateTime())) {
+							stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
+							mContentValuesList.add(stockData.getContentValues());
+						}
+					} else {
+						mContentValuesList.add(stockData.getContentValues());
+					}
+				} else {
+					if (!mStockDatabaseManager.isStockDataExist(stockData)) {
+						stockData.setCreated(Utility.getCurrentDateTimeString());
+						stockData.setModified(Utility.getCurrentDateTimeString());
+						mStockDatabaseManager.insertStockData(stockData);
+					} else {
+						stockData.setModified(Utility.getCurrentDateTimeString());
+						mStockDatabaseManager.updateStockData(stockData, stockData.getContentValues());
+					}
+				}
+			}
+
+			if (bulkInsert) {
+				saveTDXDatabase(stock, stockData.getPeriod(), stockDataMap);
+
+				if (mContentValuesList.size() > 0) {
+					fixContentValuesList(stockData, mContentValuesList);
+
+					ContentValues[] contentValuesArray = new ContentValues[mContentValuesList.size()];
+					contentValuesArray = mContentValuesList.toArray(contentValuesArray);
+					mStockDatabaseManager.bulkInsertStockData(contentValuesArray);
+				}
+			}
+
+			Setting.setStockDataChanged(stock, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		StopWatch.stop();
+		Log.d(stock.toLogString() + Symbol.TAB + stockData.getPeriod() + Symbol.TAB + StopWatch.getIntervalString());
+	}
+
 	@Override
 	public int downloadStockDataRealTime(Stock stock) {
 		if (stock == null) return RESULT_NONE;
@@ -302,110 +472,6 @@ public class QQFinance extends StockDataProvider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * 解析 K 线数据。
-	 * 日/周/月线（fqkline 不复权）：data.股票代码.day/week/month = [[日期, 开盘, 收盘, 最高, 最低, 成交量], ...]
-	 * 分钟线（mkline）：data.股票代码.m5/m15/m30/m60 = [[时间(yyyyMMddHHmm), 开盘, 收盘, 最高, 最低, 成交量, {}, 涨跌幅], ...]
-	 */
-	public void handleResponseStockDataHistory(Stock stock, StockData stockData, String response) {
-		StopWatch.start();
-		if (stock == null || stockData == null || TextUtils.isEmpty(response)) return;
-
-		mContentValuesList.clear();
-		boolean bulkInsert = false;
-
-		try {
-			JSONObject root = JSON.parseObject(response);
-			if (root == null) return;
-
-			JSONObject data = root.getJSONObject("data");
-			if (data == null) return;
-
-			String symbol = stock.getSE() + stock.getCode();
-			JSONObject stockNode = data.getJSONObject(symbol);
-			if (stockNode == null) {
-				stockNode = data.getJSONObject(symbol.toLowerCase());
-			}
-			if (stockNode == null) return;
-
-			String periodType = convertPeriodToQQType(stockData.getPeriod());
-			if (TextUtils.isEmpty(periodType)) return;
-
-			JSONArray klineArray = stockNode.getJSONArray(periodType);
-			if (klineArray == null || klineArray.isEmpty()) return;
-
-			int defaultValue = getAvailableHistoryLength(stockData.getPeriod());
-			if (TextUtils.isEmpty(stockData.getCreated()) || klineArray.size() == defaultValue) {
-				mStockDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), stockData.getPeriod());
-				bulkInsert = true;
-			}
-
-			boolean isMinute = Period.isMinutePeriod(stockData.getPeriod());
-
-			for (int i = 0; i < klineArray.size(); i++) {
-				JSONArray item = klineArray.getJSONArray(i);
-				if (item == null || item.size() < 6) continue;
-
-				if (isMinute) {
-					// 分钟线：[时间(yyyyMMddHHmm), 开盘, 收盘, 最高, 最低, 成交量, {}, 涨跌幅]
-					String timeStr = item.getString(0);          // 如 "202611191130"
-					if (TextUtils.isEmpty(timeStr) || timeStr.length() < 12) continue;
-
-					stockData.setDate(timeStr.substring(0, 4) + "-"
-							+ timeStr.substring(4, 6) + "-"
-							+ timeStr.substring(6, 8));
-					stockData.setTime(timeStr.substring(8, 10) + ":"
-							+ timeStr.substring(10, 12) + ":00");
-
-					stockData.getCandle().init();
-					stockData.getCandle().setOpen(item.getDouble(1));
-					stockData.getCandle().setClose(item.getDouble(2));
-					stockData.getCandle().setHigh(item.getDouble(3));
-					stockData.getCandle().setLow(item.getDouble(4));
-				} else {
-					// 日/周/月线：[日期, 开盘, 收盘, 最高, 最低, 成交量]
-					String dateTimeStr = item.getString(0);
-					stockData.setDate(dateTimeStr.trim());
-					stockData.setTime("");
-
-					stockData.getCandle().init();
-					stockData.getCandle().setOpen(item.getDouble(1));
-					stockData.getCandle().setClose(item.getDouble(2));
-					stockData.getCandle().setHigh(item.getDouble(3));
-					stockData.getCandle().setLow(item.getDouble(4));
-				}
-
-				if (bulkInsert) {
-					stockData.setCreated(Utility.getCurrentDateTimeString());
-					stockData.setModified(Utility.getCurrentDateTimeString());
-					mContentValuesList.add(stockData.getContentValues());
-				} else {
-					if (!mStockDatabaseManager.isStockDataExist(stockData)) {
-						stockData.setCreated(Utility.getCurrentDateTimeString());
-						mStockDatabaseManager.insertStockData(stockData);
-					} else {
-						stockData.setModified(Utility.getCurrentDateTimeString());
-						mStockDatabaseManager.updateStockData(stockData, stockData.getContentValues());
-					}
-				}
-			}
-
-			if (bulkInsert && !mContentValuesList.isEmpty()) {
-				fixContentValuesList(stockData, mContentValuesList);
-				ContentValues[] array = mContentValuesList.toArray(new ContentValues[0]);
-				mStockDatabaseManager.bulkInsertStockData(array);
-			}
-
-			Setting.setStockDataChanged(stock, true);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		StopWatch.stop();
-		Log.d(stock.toLogString() + Symbol.TAB + stockData.getPeriod() + Symbol.TAB + StopWatch.getIntervalString());
 	}
 
 	/**
