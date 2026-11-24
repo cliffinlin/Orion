@@ -916,8 +916,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 			interval = System.currentTimeMillis() - Setting.getDownloadStockDataTimeMillis(stock);
 			if (Market.isTradingHours() || (interval > Config.downloadStockDataInterval)) {
-//__TEST_CASE__
-				if (true) {
+
+				if (true) {//__TEST_CASE__
 					if (QQFinance.getInstance().downloadStockDataHistory(stock) == RESULT_FAILED) {
 						StockService.getInstance().onDisconnected();
 						return;
@@ -928,15 +928,29 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 						return;
 					}
 				}
-//__TEST_CASE__
-				if (downloadStockDataRealTime(stock) == RESULT_FAILED) {
-					StockService.getInstance().onDisconnected();
-					return;
+
+				if (true) {//__TEST_CASE__
+					if (QQFinance.getInstance().downloadStockDataRealTime(stock) == RESULT_FAILED) {
+						StockService.getInstance().onDisconnected();
+						return;
+					}
+				} else {
+					if (downloadStockDataRealTime(stock) == RESULT_FAILED) {
+						StockService.getInstance().onDisconnected();
+						return;
+					}
 				}
 
-				if (downloadStockRealTime(stock) == RESULT_FAILED) {
-					StockService.getInstance().onDisconnected();
-					return;
+				if (true) {//__TEST_CASE__
+					if (QQFinance.getInstance().downloadStockRealTime(stock) == RESULT_FAILED) {
+						StockService.getInstance().onDisconnected();
+						return;
+					}
+				} else {
+					if (downloadStockRealTime(stock) == RESULT_FAILED) {
+						StockService.getInstance().onDisconnected();
+						return;
+					}
 				}
 
 				if (Market.isTradingHours()) {
