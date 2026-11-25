@@ -38,6 +38,9 @@ public class BackgroundHandler extends Handler {
 	public static final int MESSAGE_DOWNLOAD_STOCK_DATA = 1202;
 	public static final int MESSAGE_DOWNLOAD_STOCK_FINANCIAL = 1203;
 
+	public static final int MESSAGE_ANALYZE = 1300;
+	public static final int MESSAGE_ANALYZE_STOCK = 1301;
+
 	public static final int MESSAGE_IMPORT_TDX_DATA_FILE = 999999 + 1;
 	private final IBackgroundHandler mHandler;
 	private final IStockDataProvider mStockDataProvider = StockDataProvider.getInstance();
@@ -120,6 +123,14 @@ public class BackgroundHandler extends Handler {
 		sendMessage(obtainMessage(MESSAGE_DOWNLOAD_STOCK_FINANCIAL, stock));
 	}
 
+	public void analyze() {
+		sendEmptyMessage(MESSAGE_ANALYZE);
+	}
+
+	public void analyze(Stock stock) {
+		sendMessage(obtainMessage(MESSAGE_ANALYZE_STOCK, stock));
+	}
+
 	public void importTDXDataFile(ArrayList<Uri> uriList) {
 		sendMessage(obtainMessage(MESSAGE_IMPORT_TDX_DATA_FILE, uriList));
 	}
@@ -185,6 +196,14 @@ public class BackgroundHandler extends Handler {
 				Stock stock = (Stock) msg.obj;
 				Setting.setDownloadStockTimeMillis(stock, 0);
 				mStockDataProvider.download(stock);
+				break;
+			}
+			case MESSAGE_ANALYZE:
+				mStockDataProvider.analyze();
+				break;
+			case MESSAGE_ANALYZE_STOCK: {
+				Stock stock = (Stock) msg.obj;
+				mStockDataProvider.analyze(stock);
 				break;
 			}
 			case MESSAGE_IMPORT_TDX_DATA_FILE:

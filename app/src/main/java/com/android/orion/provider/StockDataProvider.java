@@ -54,6 +54,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	public static final int RESULT_NONE = 0;
 	public static final int RESULT_FAILED = -1;
 	public static final int SEND_MESSAGE_DELAY_DOWNLOAD = 500;
+	public static final int SEND_MESSAGE_DELAY_ANALYZE = 500;
 
 	protected static volatile IStockDataProvider mInstance;
 	ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<>();
@@ -272,7 +273,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 	}
 
-	void sendAnalyzeMessage(Stock stock) {
+	void sendAnalyzeMessage(Stock stock, boolean delayed) {
 		if (stock == null) {
 			return;
 		}
@@ -283,7 +284,11 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 		Message msg = mHandler.obtainMessage(messageID, stock);
 		msg.arg1 = MESSAGE_TYPE_ANALYZE;
-		mHandler.sendMessageAtFrontOfQueue(msg);
+		if (delayed) {
+			mHandler.sendMessageDelayed(msg, SEND_MESSAGE_DELAY_ANALYZE);
+		} else {
+			mHandler.sendMessageAtFrontOfQueue(msg);
+		}
 	}
 
 	void removeDownloadMessage(Stock stock) {
@@ -316,11 +321,33 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	}
 
 	@Override
+	public void analyze() {
+		if (!Utility.isNetworkConnected(mContext)) {
+			Log.d("return, No network connection");
+			return;
+		}
+
+		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
+		if (mStockArrayMap.isEmpty()) {
+			Log.d("return, Stock array map is empty");
+			return;
+		}
+
+		int index = 0;
+		for (Stock stock : mStockArrayMap.values()) {
+			if (stock != null) {
+				Log.d("index=" + index++ + " " + stock.toLogString());
+				sendAnalyzeMessage(stock, true);
+			}
+		}
+	}
+
+	@Override
 	public void analyze(Stock stock) {
 		if (stock == null) {
 			return;
 		}
-		sendAnalyzeMessage(stock);
+		sendAnalyzeMessage(stock, false);
 	}
 
 	@Override

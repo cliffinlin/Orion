@@ -833,7 +833,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                 mStock.addFlag(Stock.FLAG_LONG);
             }
             mStockDatabaseManager.updateStockFlag(mStock);
-            mBackgroundHandler.downloadStockData(mStock);
+            mBackgroundHandler.analyze(mStock);
         }
 
         openFavoriteChartList(stockId);

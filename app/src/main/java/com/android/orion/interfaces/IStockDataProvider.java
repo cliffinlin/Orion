@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 public interface IStockDataProvider {
 
+	void analyze();
+
 	void analyze(Stock stock);
 
 	void download();
