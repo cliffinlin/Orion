@@ -793,11 +793,15 @@ public class StockFavoriteListActivity extends ListActivity implements
         startActivity(intent);
     }
 
-    private void handleRightListItemClick(long id) {
+    private void openFavoriteChartList(long stockId) {
         Intent intent = new Intent(this, StockFavoriteChartListActivity.class);
         intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER, mSortOrder);
-        intent.putExtra(Constant.EXTRA_STOCK_ID, id);
+        intent.putExtra(Constant.EXTRA_STOCK_ID, stockId);
         startActivity(intent);
+    }
+
+    private void handleRightListItemClick(long id) {
+        openFavoriteChartList(id);
     }
 
     private void onBandCellClick(long stockId, int bandFlag) {
@@ -814,7 +818,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         mStock.setId(stockId);
         mStockDatabaseManager.getStockById(mStock);
 
-        if (mStock.hasFlag(Stock.FLAG_TARGET)) {
+        if (mStock.hasFlag(Stock.FLAG_TARGET) && !mStock.hasFlag(bandFlag)) {
             if (bandFlag == Stock.FLAG_SHORT) {
                 mStock.removeFlag(Stock.FLAG_MEDIUM);
                 mStock.removeFlag(Stock.FLAG_LONG);
@@ -832,10 +836,7 @@ public class StockFavoriteListActivity extends ListActivity implements
             mBackgroundHandler.downloadStockData(mStock);
         }
 
-        Intent intent = new Intent(this, StockFavoriteChartListActivity.class);
-        intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER, mSortOrder);
-        intent.putExtra(Constant.EXTRA_STOCK_ID, stockId);
-        startActivity(intent);
+        openFavoriteChartList(stockId);
     }
 
     private int getBandFlagFromColumn(String columnName) {

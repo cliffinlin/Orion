@@ -280,11 +280,6 @@ public class StorageActivity extends DatabaseActivity {
 								stock.setFlag(Integer.parseInt(parser.nextText()));
 							}
 						} else if (parseType == XML_PARSE_TYPE_STOCK_TRADE) {
-							//__TEST_CASE__
-							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_TARGET_LEVEL)) {
-								stock.setLongLevel(parser.nextText());//__TEST_CASE__
-							}
-							//__TEST_CASE__
 							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_SHORT_LEVEL)) {
 								stock.setShortLevel(parser.nextText());
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_MEDIUM_LEVEL)) {

@@ -38,7 +38,6 @@ public class DatabaseContract {
 	public static final String COLUMN_MEDIUM = "medium";
 	public static final String COLUMN_LONG = "long";
 	public static final String COLUMN_LEVEL = "level";
-	public static final String COLUMN_TARGET_LEVEL = COLUMN_TARGET + "_" + COLUMN_LEVEL;
 	public static final String COLUMN_SHORT_LEVEL = COLUMN_SHORT + "_" + COLUMN_LEVEL;
 	public static final String COLUMN_MEDIUM_LEVEL = COLUMN_MEDIUM + "_" + COLUMN_LEVEL;
 	public static final String COLUMN_LONG_LEVEL = COLUMN_LONG + "_" + COLUMN_LEVEL;
