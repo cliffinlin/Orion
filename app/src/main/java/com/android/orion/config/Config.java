@@ -2,6 +2,7 @@ package com.android.orion.config;
 
 import android.graphics.Color;
 
+import com.android.orion.provider.QQFinance;
 import com.android.orion.provider.SinaFinance;
 import com.android.orion.constant.Constant;
 
@@ -42,6 +43,7 @@ public class Config {
 	public static final int MACD_NORMALIZED_VALUE = 10;
 
 	public static String stockDataProvider = SinaFinance.PROVIDER_NAME;
+	public static String klineDataProvider = QQFinance.PROVIDER_NAME;
 
 	public static long alarmInterval = Constant.MINUTE_IN_MILLIS;
 	public static long downloadSleep = Constant.SECOND_IN_MILLIS;
