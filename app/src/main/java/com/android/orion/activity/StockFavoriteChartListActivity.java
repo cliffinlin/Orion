@@ -8,7 +8,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -82,9 +81,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		Utils.init(this);
 		// For chart init only
 
-		mStockDataProvider.registerAnalyzeListener(this);
-		mStockDataProvider.registerDownloadListener(this);
-
 		setContentView(R.layout.activity_stock_data_chart_list);
 
 		onNewIntent();
@@ -131,7 +127,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		super.onNewIntent(intent);
 
 		onNewIntent();
-		updateStockDataChartItemList();
+		initListView();
 		restartLoader();
 	}
 
@@ -232,31 +228,11 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	}
 
 	@Override
-	public void onAnalyzeFinish(String stockCode) {
-		mAnalyzingStockCode = "";
-		refreshIfCurrentStock(stockCode);
-	}
-
-	@Override
-	public void onDownloadComplete(String stockCode) {
-		refreshIfCurrentStock(stockCode);
-	}
-
-	private void refreshIfCurrentStock(String stockCode) {
-		if (!TextUtils.equals(mStock.getCode(), stockCode)) {
-			return;
-		}
-		if (isFinishing() || isDestroyed()) {
-			return;
-		}
-		runOnUiThread(this::restartLoader);
-	}
-
-	@Override
 	protected void onResume() {
 		super.onResume();
 
 		onNewIntent();
+		initListView();
 		updateStockDataChartItemList();
 		restartLoader();
 	}
@@ -311,21 +287,30 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	void initListView() {
 		mListView = findViewById(R.id.listView);
 
-		if (mStockDataChartList == null || mStockDataChartList.isEmpty()) {
+		if (mStockDataChartList == null) {
 			mStockDataChartList = new ArrayList<>();
-			mStockDataChartItemList = new ArrayList<>();
-			mStockDataChartItemMainList = new ArrayList<>();
-			mStockDataChartItemSubList = new ArrayList<>();
+		}
 
-			for (int i = 0; i < Period.PERIODS.length; i++) {
-				mStockDataChartList.add(new StockDataChart(mStock, Period.PERIODS[i]));
-				mStockDataChartItemMainList.add(new StockDataChartItemMain(
-						mStockDataChartList.get(i)));
-				mStockDataChartItemSubList.add(new StockDataChartItemSub(
-						mStockDataChartList.get(i)));
-				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
-				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
-			}
+		if (mStockDataChartItemList == null) {
+			mStockDataChartItemList = new ArrayList<>();
+		}
+
+		if (mStockDataChartItemMainList == null) {
+			mStockDataChartItemMainList = new ArrayList<>();
+		}
+
+		if (mStockDataChartItemSubList == null) {
+			mStockDataChartItemSubList = new ArrayList<>();
+		}
+
+		for (int i = 0; i < Period.PERIODS.length; i++) {
+			mStockDataChartList.add(new StockDataChart(mStock, Period.PERIODS[i]));
+			mStockDataChartItemMainList.add(new StockDataChartItemMain(
+					mStockDataChartList.get(i)));
+			mStockDataChartItemSubList.add(new StockDataChartItemSub(
+					mStockDataChartList.get(i)));
+			mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
+			mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
 		}
 
 		if (mStockDataChartItemList != null && !mStockDataChartItemList.isEmpty()) {
@@ -547,9 +532,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
 			}
 		}
-		if (mStockDataChartArrayAdapter != null) {
-			mStockDataChartArrayAdapter.notifyDataSetChanged();
-		}
 	}
 
 	void navigateStock(int step) {
@@ -738,7 +720,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 		@Override
 		public int getViewTypeCount() {
-			return 2;
+			return mStockDataChartItemList != null ? mStockDataChartItemList.size() : 0;
 		}
 
 		@Override
